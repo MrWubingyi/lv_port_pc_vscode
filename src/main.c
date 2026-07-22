@@ -73,6 +73,7 @@ int main(int argc, char **argv)
   // lv_demo_widgets();
     /* 创建自己的仪表盘 */
   dashboard_create();
+  dashboard_start_simulation();
 
   while(1) {
     /* Periodically call the lv_task handler.
