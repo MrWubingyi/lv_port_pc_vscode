@@ -1,4 +1,6 @@
 #include "dashboard.h"
+#include <lvgl/core/lv_obj_style.h>
+#include <lvgl/draw/lv_color.h>
 
 static lv_obj_t *speed_label;
 static lv_obj_t *gear_label;
@@ -11,13 +13,17 @@ void dashboard_create(void)
 {
     lv_obj_t *screen = lv_obj_create(NULL);
 
+    //移除默认样式
     lv_obj_remove_style_all(screen);
+    //设置尺寸
     lv_obj_set_size(screen, 320, 480);
+    // 设置背景颜色
     lv_obj_set_style_bg_color(
         screen,
         lv_color_hex(0x080C12),
         LV_PART_MAIN
     );
+    //设置背景不透明度
     lv_obj_set_style_bg_opa(
         screen,
         LV_OPA_COVER,
@@ -27,6 +33,7 @@ void dashboard_create(void)
     /* 顶部状态图标，先用圆形代替 */
     lv_obj_t *status = lv_obj_create(screen);
     lv_obj_set_size(status, 24, 24);
+    // 设置圆角半径
     lv_obj_set_style_radius(
         status,
         LV_RADIUS_CIRCLE,
@@ -37,13 +44,18 @@ void dashboard_create(void)
         lv_color_hex(0x38E07B),
         LV_PART_MAIN
     );
+    // 设置边框宽度
     lv_obj_set_style_border_width(status, 0, LV_PART_MAIN);
+    // 非常重要的定位函数：
+    // lv_obj_align(对象, 对齐基准, x偏移, y偏移);
     lv_obj_align(status, LV_ALIGN_TOP_MID, 0, 35);
 
     /* 速度 */
     speed_label = lv_label_create(screen);
-    lv_label_set_text(speed_label, "88");
+    lv_label_set_text(speed_label, "0");
     lv_obj_set_width(speed_label, 300);
+
+    // 设置 Label 内部的文字对齐方式。
     lv_obj_set_style_text_align(
         speed_label,
         LV_TEXT_ALIGN_CENTER,
@@ -68,6 +80,11 @@ void dashboard_create(void)
         unit_label,
         lv_color_hex(0x8A96A8),
         LV_PART_MAIN
+    );
+    lv_obj_set_style_text_font(
+      unit_label,
+      &font_unit_28,
+      LV_PART_MAIN
     );
     lv_obj_align(unit_label, LV_ALIGN_TOP_MID, 0, 230);
 
