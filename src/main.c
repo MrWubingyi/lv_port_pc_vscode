@@ -9,6 +9,7 @@
 
 #ifndef _DEFAULT_SOURCE
   #define _DEFAULT_SOURCE /* needed for usleep() */
+#include "dashboard.h"
 #endif
 
 #include <stdlib.h>
@@ -69,7 +70,9 @@ int main(int argc, char **argv)
   /* - lv_demo_stress(); */
   /* - lv_example_label_1(); */
   /* - etc. */
-  lv_demo_widgets();
+  // lv_demo_widgets();
+    /* 创建自己的仪表盘 */
+  dashboard_create();
 
   while(1) {
     /* Periodically call the lv_task handler.
@@ -94,4 +97,3 @@ int main(int argc, char **argv)
 /**********************
  *   STATIC FUNCTIONS
  **********************/
-

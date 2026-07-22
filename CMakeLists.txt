@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12.4)
 project(lvgl C CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Set the correct FreeRTOS port for your system (e.g., Posix for WSL)
 set(FREERTOS_PORT GCC_POSIX CACHE STRING "Port for FreeRTOS on Posix environment")
 
@@ -67,9 +69,26 @@ add_compile_definitions($<$<BOOL:${LV_USE_FFMPEG}>:LV_USE_FFMPEG=1>)
 
 # Add LVGL subdirectory
 add_subdirectory(lvgl)
-target_include_directories(lvgl PUBLIC ${PROJECT_SOURCE_DIR} ${SDL2_INCLUDE_DIRS})
 
-set(MAIN_SOURCES src/mouse_cursor_icon.c src/hal/hal.c)
+target_include_directories(lvgl
+    PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+    PRIVATE
+        ${SDL2_INCLUDE_DIRS}
+)
+
+set(MAIN_SOURCES
+    src/mouse_cursor_icon.c
+    src/hal/hal.c
+
+    app/dashboard.c
+    app/fonts/font_speed_128.c
+    app/fonts/font_unit_28.c
+    app/fonts/font_gear_80.c
+    app/images/icon_status.c
+
+)
+
 set(MAIN_LIBS lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES})
 
 # Create the main executable, depending on the FreeRTOS option
@@ -142,6 +161,12 @@ if(LVGL_PRO_PROJECT_DIR)
 endif()
 
 add_executable(main ${MAIN_SOURCES})
+
+target_include_directories(main PRIVATE
+    ${SDL2_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/app
+)
+
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
 target_link_libraries(main ${MAIN_LIBS})
 
