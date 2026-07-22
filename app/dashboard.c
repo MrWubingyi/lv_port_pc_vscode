@@ -3,6 +3,10 @@
 static lv_obj_t *speed_label;
 static lv_obj_t *gear_label;
 
+LV_FONT_DECLARE(font_speed_128);
+LV_FONT_DECLARE(font_unit_28);
+LV_FONT_DECLARE(font_gear_80);
+
 void dashboard_create(void)
 {
     lv_obj_t *screen = lv_obj_create(NULL);
@@ -52,7 +56,7 @@ void dashboard_create(void)
     );
     lv_obj_set_style_text_font(
         speed_label,
-        &lv_font_montserrat_48,
+        &font_speed_128,
         LV_PART_MAIN
     );
     lv_obj_align(speed_label, LV_ALIGN_TOP_MID, 0, 130);
@@ -72,7 +76,7 @@ void dashboard_create(void)
     lv_label_set_text(gear_label, "D");
     lv_obj_set_style_text_font(
         gear_label,
-        &lv_font_montserrat_48,
+        &font_gear_80,
         LV_PART_MAIN
     );
     lv_obj_set_style_text_color(
