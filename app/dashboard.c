@@ -15,6 +15,13 @@ static bool manual_mode;
 static int32_t screen_col_dsc[] = {LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
 static int32_t dashboard_row_dsc[] = {LV_GRID_FR(1), 48, LV_GRID_TEMPLATE_LAST};
 static int32_t control_row_dsc[] = {48, LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+/* 可复用 Style 作为静态资源存在，由 dashboard_styles_init/reset 统一管理。 */
+static lv_style_t style_screen;
+static lv_style_t style_button;
+static lv_style_t style_button_pressed;
+static lv_style_t style_text_light;
+static lv_style_t style_panel;
+static bool styles_ready;
 LV_FONT_DECLARE(font_speed_128);
 LV_FONT_DECLARE(font_speed_100);
 LV_FONT_DECLARE(font_unit_28);
@@ -46,6 +53,72 @@ static const ctrl_action_t status_actions[] = {
     {CTRL_STATUS, dashboard_status_error},
     {CTRL_STATUS, dashboard_status_offline}};
 
+static void dashboard_styles_init(void) {
+  if (styles_ready)
+    return;
+
+  /* 初始化两个 Screen 共享的背景 Style。 */
+  lv_style_init(&style_screen);
+  /* 为 Screen Style 设置深色背景。 */
+  lv_style_set_bg_color(&style_screen, lv_color_hex(0x080C12));
+  /* 为 Screen Style 设置完全不透明的背景。 */
+  lv_style_set_bg_opa(&style_screen, LV_OPA_COVER);
+  /* 为 Screen Style 清除默认内边距。 */
+  lv_style_set_pad_all(&style_screen, 0);
+
+  /* 初始化所有普通按钮共享的 Style。 */
+  lv_style_init(&style_button);
+  /* 为按钮 Style 设置圆角。 */
+  lv_style_set_radius(&style_button, 6);
+  /* 为按钮 Style 设置默认背景色。 */
+  lv_style_set_bg_color(&style_button, lv_color_hex(0x243044));
+  /* 为按钮 Style 清除内边距。 */
+  lv_style_set_pad_all(&style_button, 0);
+
+  /* 初始化按钮按下状态共享的 Style。 */
+  lv_style_init(&style_button_pressed);
+  /* 为按下状态设置更亮的背景色，提供点击反馈。 */
+  lv_style_set_bg_color(&style_button_pressed, lv_color_hex(0x3A4A62));
+
+  /* 初始化按钮文字和页面标题共享的浅色文字 Style。 */
+  lv_style_init(&style_text_light);
+  /* 为浅色文字 Style 设置白色。 */
+  lv_style_set_text_color(&style_text_light, lv_color_white());
+
+  /* 初始化 PC 调试 Panel Style。 */
+  lv_style_init(&style_panel);
+  /* 为 Panel Style 设置背景颜色。 */
+  lv_style_set_bg_color(&style_panel, lv_color_hex(0x111923));
+  /* 为 Panel Style 设置完全不透明的背景。 */
+  lv_style_set_bg_opa(&style_panel, LV_OPA_COVER);
+  /* 为 Panel Style 设置边框颜色。 */
+  lv_style_set_border_color(&style_panel, lv_color_hex(0x2B3A4E));
+  /* 为 Panel Style 设置边框宽度。 */
+  lv_style_set_border_width(&style_panel, 1);
+  /* 为 Panel Style 设置圆角。 */
+  lv_style_set_radius(&style_panel, 10);
+  /* 为 Panel Style 设置四周内边距。 */
+  lv_style_set_pad_all(&style_panel, 4);
+
+  styles_ready = true;
+}
+
+static void dashboard_styles_reset(void) {
+  if (!styles_ready)
+    return;
+
+  /* reset Panel Style 持有的属性资源。 */
+  lv_style_reset(&style_panel);
+  /* reset 浅色文字 Style 持有的属性资源。 */
+  lv_style_reset(&style_text_light);
+  /* reset 按钮按下状态 Style 持有的属性资源。 */
+  lv_style_reset(&style_button_pressed);
+  /* reset 普通按钮 Style 持有的属性资源。 */
+  lv_style_reset(&style_button);
+  /* reset Screen Style 持有的属性资源。 */
+  lv_style_reset(&style_screen);
+  styles_ready = false;
+}
 uint32_t dashboard_status_get_color(enum dashboard_status_enum status) {
   size_t n = sizeof(dashboard_status) / sizeof(dashboard_status[0]);
   for (size_t i = 0; i < n; i++)
@@ -59,11 +132,10 @@ static void dashboard_apply_speed(int speed) {
     speed = 0;
   if (speed > MAX_SPEED)
     speed = MAX_SPEED;
-
   current_speed = speed;
-
+  /* 为 speed_label 按格式更新文本内容。 */
   lv_label_set_text_fmt(speed_label, "%d", speed);
-
+  /* 为 speed_arc 设置圆弧当前值。 */
   lv_arc_set_value(speed_arc, speed);
 }
 
@@ -169,19 +241,17 @@ static lv_obj_t *button_create(lv_obj_t *parent, const char *text,
   lv_obj_t *b = lv_button_create(parent);
   /* 为 b 设置组件宽度和高度。 */
   lv_obj_set_size(b, 44, 30);
-  /* 为 b 设置圆角半径。 */
-  lv_obj_set_style_radius(b, 6, 0);
-  /* 为 b 设置背景颜色。 */
-  lv_obj_set_style_bg_color(b, lv_color_hex(0x243044), 0);
-  /* 为 b 设置四周内边距。 */
-  lv_obj_set_style_pad_all(b, 0, 0);
+  /* 为按钮主部件添加可复用的默认 Style。 */
+  lv_obj_add_style(b, &style_button, LV_PART_MAIN);
+  /* 为按钮按下状态添加可复用的反馈 Style。 */
+  lv_obj_add_style(b, &style_button_pressed, LV_PART_MAIN | LV_STATE_PRESSED);
   lv_obj_add_event_cb(b, cb, LV_EVENT_CLICKED, (void *)data);
   /* 创建按钮文字 Label；以 Button 为父对象，使二者共享生命周期。 */
   lv_obj_t *l = lv_label_create(b);
   /* 为 l 设置显示文本。 */
   lv_label_set_text(l, text);
-  /* 为 l 设置文字颜色。 */
-  lv_obj_set_style_text_color(l, lv_color_white(), 0);
+  /* 为按钮 Label 添加共享的浅色文字 Style。 */
+  lv_obj_add_style(l, &style_text_light, LV_PART_MAIN);
   lv_obj_center(l);
   return b;
 }
@@ -248,18 +318,8 @@ static void debug_panel_create(lv_obj_t *screen) {
   /* 将调试 Panel 放入 Screen Grid 的第 2 行，并在单元格内居中。 */
   lv_obj_set_grid_cell(p, LV_GRID_ALIGN_CENTER, 0, 1,
                        LV_GRID_ALIGN_CENTER, 1, 1);
-  /* 为 p 设置背景颜色。 */
-  lv_obj_set_style_bg_color(p, lv_color_hex(0x111923), 0);
-  /* 为 p 设置背景不透明度。 */
-  lv_obj_set_style_bg_opa(p, LV_OPA_COVER, 0);
-  /* 为 p 设置边框颜色。 */
-  lv_obj_set_style_border_color(p, lv_color_hex(0x2B3A4E), 0);
-  /* 为 p 设置边框宽度。 */
-  lv_obj_set_style_border_width(p, 1, 0);
-  /* 为 p 设置圆角半径。 */
-  lv_obj_set_style_radius(p, 10, 0);
-  /* 为 p 设置四周内边距。 */
-  lv_obj_set_style_pad_all(p, 4, 0);
+  /* 为 PC 调试 Panel 添加集中定义的可复用 Style。 */
+  lv_obj_add_style(p, &style_panel, LV_PART_MAIN);
   /* 为 p 设置 Flex 主轴排列方向。 */
   lv_obj_set_flex_flow(p, LV_FLEX_FLOW_COLUMN);
   /* 为 p 设置 Flex 主轴、交叉轴和轨道对齐方式。 */
@@ -286,22 +346,67 @@ static void debug_panel_create(lv_obj_t *screen) {
   for (size_t i = 0; i < 4; i++)
     button_create(r, s[i], control_cb, &status_actions[i]);
 }
+static void dashboard_object_refs_clear(void) {
+  dashboard_screen = NULL;
+  control_screen = NULL;
+  speed_label = NULL;
+  gear_label = NULL;
+  status_icon = NULL;
+  speed_arc = NULL;
+  mode_button = NULL;
+  mode_label = NULL;
+}
+
+void dashboard_destroy(void) {
+  /* Timer 可能继续访问界面对象，所以必须在删除 Screen 前停止并删除。 */
+  if (simulation_timer != NULL) {
+    lv_timer_delete(simulation_timer);
+    simulation_timer = NULL;
+  }
+
+  lv_obj_t *active_screen = lv_screen_active();
+  if (active_screen == dashboard_screen || active_screen == control_screen) {
+    /* 创建不引用业务 Style 的临时 Screen，避免直接删除当前活动 Screen。 */
+    lv_obj_t *fallback_screen = lv_obj_create(NULL);
+    lv_screen_load(fallback_screen);
+  }
+
+  /* 删除父 Screen 会递归删除其全部 Label、Arc、Button 和容器子对象。 */
+  if (dashboard_screen != NULL)
+    lv_obj_delete(dashboard_screen);
+  if (control_screen != NULL)
+    lv_obj_delete(control_screen);
+
+  dashboard_object_refs_clear();
+  current_speed = 0;
+  manual_mode = false;
+  simulation.tick = 0;
+  simulation.speed = 0;
+
+  /* 必须先删除所有引用 Style 的对象，最后才能 reset Style 资源。 */
+  dashboard_styles_reset();
+}
 void dashboard_create(void) {
+  if (dashboard_screen != NULL) {
+    lv_screen_load(dashboard_screen);
+    return;
+  }
+
+  dashboard_styles_init();
+
   /* 创建仪表盘根 Screen；NULL 表示它没有普通父对象。 */
   dashboard_screen = lv_obj_create(NULL);
-  lv_obj_t *main_screen = dashboard_screen;
-  lv_obj_remove_style_all(main_screen);
+  lv_obj_t *screen = dashboard_screen;
+  lv_obj_remove_style_all(screen);
   /* 为 screen 设置组件宽度和高度。 */
-  lv_obj_set_size(main_screen, 320, 480);
-  /* 为 screen 设置背景颜色。 */
-  lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x080C12), 0);
-  /* 为 screen 设置背景不透明度。 */
-  lv_obj_set_style_bg_opa(main_screen, LV_OPA_COVER, 0);
+  lv_obj_set_size(screen, 320, 480);
+  /* 为仪表 Screen 添加两个页面共享的背景 Style。 */
+  lv_obj_add_style(screen, &style_screen, LV_PART_MAIN);
   /* 为 screen 设置一列两行的 Grid 模板。 */
-  lv_obj_set_grid_dsc_array(main_screen, screen_col_dsc, dashboard_row_dsc);
+  lv_obj_set_grid_dsc_array(screen, screen_col_dsc, dashboard_row_dsc);
 
   /* 创建仪表区容器，集中承载 Scale、Arc、图标和文字。 */
-  lv_obj_t *gauge_area = lv_obj_create(main_screen);
+  lv_obj_t *gauge_area = lv_obj_create(screen);
   lv_obj_remove_style_all(gauge_area);
   /* 将 gauge_area 拉伸填满 Screen Grid 的第 1 行。 */
   lv_obj_set_grid_cell(gauge_area, LV_GRID_ALIGN_STRETCH, 0, 1,
@@ -416,7 +521,7 @@ void dashboard_create(void) {
 
   /* 创建进入调试页的导航 Button。 */
   lv_obj_t *debug_button =
-      button_create(main_screen, "DEBUG", open_control_screen_cb, NULL);
+      button_create(screen, "DEBUG", open_control_screen_cb, NULL);
   /* 为 debug_button 设置适合导航文字的宽度。 */
   lv_obj_set_width(debug_button, 88);
   /* 将 DEBUG 按钮放入仪表 Screen Grid 的第 2 行并居中。 */
@@ -428,10 +533,8 @@ void dashboard_create(void) {
   lv_obj_remove_style_all(control_screen);
   /* 为 control_screen 设置与模拟器一致的尺寸。 */
   lv_obj_set_size(control_screen, 320, 480);
-  /* 为 control_screen 设置深色背景。 */
-  lv_obj_set_style_bg_color(control_screen, lv_color_hex(0x080C12), 0);
-  /* 为 control_screen 设置完全不透明的背景。 */
-  lv_obj_set_style_bg_opa(control_screen, LV_OPA_COVER, 0);
+  /* 为控制 Screen 添加与仪表 Screen 相同的背景 Style。 */
+  lv_obj_add_style(control_screen, &style_screen, LV_PART_MAIN);
   /* 为 control_screen 设置标题行和内容行 Grid 模板。 */
   lv_obj_set_grid_dsc_array(control_screen, screen_col_dsc, control_row_dsc);
 
@@ -448,8 +551,8 @@ void dashboard_create(void) {
   lv_obj_t *control_title = lv_label_create(control_screen);
   /* 为 control_title 设置标题文字。 */
   lv_label_set_text(control_title, "PC DEBUG");
-  /* 为 control_title 设置白色文字。 */
-  lv_obj_set_style_text_color(control_title, lv_color_white(), 0);
+  /* 为页面标题复用与按钮文字相同的浅色文字 Style。 */
+  lv_obj_add_style(control_title, &style_text_light, LV_PART_MAIN);
   /* 将标题放入控制 Screen 第 1 行中央。 */
   lv_obj_set_grid_cell(control_title, LV_GRID_ALIGN_CENTER, 0, 1,
                        LV_GRID_ALIGN_CENTER, 0, 1);
