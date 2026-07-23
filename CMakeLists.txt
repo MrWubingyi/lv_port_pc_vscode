@@ -83,6 +83,7 @@ set(MAIN_SOURCES
 
     app/dashboard.c
     app/fonts/font_speed_128.c
+    app/fonts/font_speed_100.c
     app/fonts/font_unit_28.c
     app/fonts/font_gear_80.c
     app/images/icon_status.c

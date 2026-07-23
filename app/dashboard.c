@@ -10,6 +10,7 @@ static lv_timer_t *simulation_timer;
 static int current_speed;
 static bool manual_mode;
 LV_FONT_DECLARE(font_speed_128);
+LV_FONT_DECLARE(font_speed_100);
 LV_FONT_DECLARE(font_unit_28);
 LV_FONT_DECLARE(font_gear_80);
 LV_IMAGE_DECLARE(icon_status);
@@ -46,17 +47,49 @@ uint32_t dashboard_status_get_color(enum dashboard_status_enum status) {
       return dashboard_status[i].color;
   return dashboard_status[0].color;
 }
-void dashboard_set_speed(int speed) {
+
+static void dashboard_apply_speed(int speed) {
   if (speed < 0)
     speed = 0;
   if (speed > MAX_SPEED)
     speed = MAX_SPEED;
+
   current_speed = speed;
-  /* 为 speed_label 按格式更新文本内容。 */
+
   lv_label_set_text_fmt(speed_label, "%d", speed);
-  /* 为 speed_arc 设置圆弧当前值。 */
+
   lv_arc_set_value(speed_arc, speed);
 }
+
+static void speed_anim_exec_cb(void *obj, int32_t value) {
+  LV_UNUSED(obj);
+  dashboard_apply_speed((int)value);
+}
+
+void dashboard_set_speed(int target_speed) {
+  if (target_speed < 0)
+    target_speed = 0;
+  if (target_speed > MAX_SPEED)
+    target_speed = MAX_SPEED;
+
+  lv_anim_delete(speed_arc, speed_anim_exec_cb);
+
+  lv_anim_t animation;
+  lv_anim_init(&animation);
+
+  lv_anim_set_var(&animation, speed_arc);
+
+  lv_anim_set_exec_cb(&animation, speed_anim_exec_cb);
+
+  lv_anim_set_values(&animation, current_speed, target_speed);
+
+  lv_anim_set_duration(&animation, 300);
+
+  lv_anim_set_path_cb(&animation, lv_anim_path_ease_out);
+
+  lv_anim_start(&animation);
+}
+
 void dashboard_set_gear(char gear) {
   char text[2] = {gear, '\0'};
   /* 为 gear_label 设置显示文本。 */
@@ -307,21 +340,25 @@ void dashboard_create(void) {
   /* 为 status_icon 设置图片重着色不透明度。 */
   lv_obj_set_style_image_recolor_opa(status_icon, LV_OPA_COVER, 0);
   /* 为 status_icon 设置图片缩放比例。 */
-  lv_image_set_scale(status_icon, 55);
-  lv_obj_align(status_icon, LV_ALIGN_TOP_MID, 0, 58);
+  lv_image_set_scale(status_icon, 40);
+  lv_obj_align(status_icon, LV_ALIGN_TOP_MID, 0, 75);
 
   /* 创建速度数字 Label，显示经过边界限制后的当前速度。 */
   speed_label = lv_label_create(screen);
   /* 为 speed_label 设置显示文本。 */
   lv_label_set_text(speed_label, "0");
   /* 为 speed_label 设置组件宽度。 */
-  lv_obj_set_width(speed_label, 150);
+  lv_obj_set_width(speed_label, LV_SIZE_CONTENT);
+  lv_label_set_long_mode(
+    speed_label,
+    LV_LABEL_LONG_CLIP
+);
   /* 为 speed_label 设置文字对齐方式。 */
   lv_obj_set_style_text_align(speed_label, LV_TEXT_ALIGN_CENTER, 0);
   /* 为 speed_label 设置文字颜色。 */
   lv_obj_set_style_text_color(speed_label, lv_color_white(), 0);
   /* 为 speed_label 设置文字字体。 */
-  lv_obj_set_style_text_font(speed_label, &font_speed_128, 0);
+  lv_obj_set_style_text_font(speed_label, &font_speed_100, 0);
   lv_obj_align(speed_label, LV_ALIGN_TOP_MID, 0, 82);
 
   /* 创建速度单位 Label，以便单独设置字体和颜色。 */
@@ -332,7 +369,7 @@ void dashboard_create(void) {
   lv_obj_set_style_text_color(unit, lv_color_hex(0x8A96A8), 0);
   /* 为 unit 设置文字字体。 */
   lv_obj_set_style_text_font(unit, &font_unit_28, 0);
-  lv_obj_align(unit, LV_ALIGN_TOP_MID, 0, 192);
+  lv_obj_align(unit, LV_ALIGN_TOP_MID, 0, 200);
 
   /* 创建档位 Label，显示 P、R、N、D 中的当前档位。 */
   gear_label = lv_label_create(screen);
@@ -342,10 +379,9 @@ void dashboard_create(void) {
   lv_obj_set_style_text_font(gear_label, &font_gear_80, 0);
   /* 为 gear_label 设置文字颜色。 */
   lv_obj_set_style_text_color(gear_label, lv_color_hex(0x38E07B), 0);
-  lv_obj_align(gear_label, LV_ALIGN_TOP_MID, 0, 218);
+  lv_obj_align(gear_label, LV_ALIGN_TOP_MID, 0, 228);
 
   /* 创建屏幕底部的 PC 调试控制区。 */
   debug_panel_create(screen);
   lv_screen_load(screen);
 }
-
