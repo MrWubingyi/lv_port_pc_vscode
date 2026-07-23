@@ -9,6 +9,10 @@ static lv_obj_t *mode_button, *mode_label;
 static lv_timer_t *simulation_timer;
 static int current_speed;
 static bool manual_mode;
+
+/* Screen 使用一列两行 Grid：上方仪表区固定 326 px，下方调试区占用剩余空间。 */
+static int32_t screen_col_dsc[] = {LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+static int32_t screen_row_dsc[] = {326, LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
 LV_FONT_DECLARE(font_speed_128);
 LV_FONT_DECLARE(font_speed_100);
 LV_FONT_DECLARE(font_unit_28);
@@ -225,8 +229,10 @@ static void debug_panel_create(lv_obj_t *screen) {
   /* 创建 PC 调试 Panel，承载模式、速度、档位和状态控制行。 */
   lv_obj_t *p = lv_obj_create(screen);
   /* 为 p 设置组件宽度和高度。 */
-  lv_obj_set_size(p, 310, 150);
-  lv_obj_align(p, LV_ALIGN_BOTTOM_MID, 0, -4);
+  lv_obj_set_size(p, 310, 146);
+  /* 将调试 Panel 放入 Screen Grid 的第 2 行，并在单元格内居中。 */
+  lv_obj_set_grid_cell(p, LV_GRID_ALIGN_CENTER, 0, 1,
+                       LV_GRID_ALIGN_CENTER, 1, 1);
   /* 为 p 设置背景颜色。 */
   lv_obj_set_style_bg_color(p, lv_color_hex(0x111923), 0);
   /* 为 p 设置背景不透明度。 */
@@ -275,9 +281,20 @@ void dashboard_create(void) {
   lv_obj_set_style_bg_color(screen, lv_color_hex(0x080C12), 0);
   /* 为 screen 设置背景不透明度。 */
   lv_obj_set_style_bg_opa(screen, LV_OPA_COVER, 0);
+  /* 为 screen 设置一列两行的 Grid 模板。 */
+  lv_obj_set_grid_dsc_array(screen, screen_col_dsc, screen_row_dsc);
+
+  /* 创建仪表区容器，集中承载 Scale、Arc、图标和文字。 */
+  lv_obj_t *gauge_area = lv_obj_create(screen);
+  lv_obj_remove_style_all(gauge_area);
+  /* 将 gauge_area 拉伸填满 Screen Grid 的第 1 行。 */
+  lv_obj_set_grid_cell(gauge_area, LV_GRID_ALIGN_STRETCH, 0, 1,
+                       LV_GRID_ALIGN_STRETCH, 0, 1);
+  /* 为 gauge_area 清除内边距，内部绝对对齐以容器左上角为基准。 */
+  lv_obj_set_style_pad_all(gauge_area, 0, 0);
 
   /* 创建圆形 Scale，显示速度主刻度、次刻度和数字标签。 */
-  lv_obj_t *scale = lv_scale_create(screen);
+  lv_obj_t *scale = lv_scale_create(gauge_area);
   /* 为 scale 设置组件宽度和高度。 */
   lv_obj_set_size(scale, 260, 260);
   lv_obj_align(scale, LV_ALIGN_TOP_MID, 0, 14);
@@ -310,7 +327,7 @@ void dashboard_create(void) {
   lv_obj_set_style_text_color(scale, lv_color_hex(0x9AA8BA), LV_PART_INDICATOR);
 
   /* 创建只读 Arc，以彩色圆弧长度显示当前速度进度。 */
-  speed_arc = lv_arc_create(screen);
+  speed_arc = lv_arc_create(gauge_area);
   /* 为 speed_arc 设置组件宽度和高度。 */
   lv_obj_set_size(speed_arc, 286, 286);
   lv_obj_align(speed_arc, LV_ALIGN_TOP_MID, 0, 2);
@@ -334,7 +351,7 @@ void dashboard_create(void) {
                              LV_PART_INDICATOR);
 
   /* 创建状态 Image，通过重着色表达正常、警告、故障和离线。 */
-  status_icon = lv_image_create(screen);
+  status_icon = lv_image_create(gauge_area);
   /* 为 status_icon 设置图片资源。 */
   lv_image_set_src(status_icon, &icon_status);
   /* 为 status_icon 设置图片重着色不透明度。 */
@@ -344,7 +361,7 @@ void dashboard_create(void) {
   lv_obj_align(status_icon, LV_ALIGN_TOP_MID, 0, 75);
 
   /* 创建速度数字 Label，显示经过边界限制后的当前速度。 */
-  speed_label = lv_label_create(screen);
+  speed_label = lv_label_create(gauge_area);
   /* 为 speed_label 设置显示文本。 */
   lv_label_set_text(speed_label, "0");
   /* 为 speed_label 设置组件宽度。 */
@@ -362,7 +379,7 @@ void dashboard_create(void) {
   lv_obj_align(speed_label, LV_ALIGN_TOP_MID, 0, 82);
 
   /* 创建速度单位 Label，以便单独设置字体和颜色。 */
-  lv_obj_t *unit = lv_label_create(screen);
+  lv_obj_t *unit = lv_label_create(gauge_area);
   /* 为 unit 设置显示文本。 */
   lv_label_set_text(unit, "km/h");
   /* 为 unit 设置文字颜色。 */
@@ -372,7 +389,7 @@ void dashboard_create(void) {
   lv_obj_align(unit, LV_ALIGN_TOP_MID, 0, 200);
 
   /* 创建档位 Label，显示 P、R、N、D 中的当前档位。 */
-  gear_label = lv_label_create(screen);
+  gear_label = lv_label_create(gauge_area);
   /* 为 gear_label 设置显示文本。 */
   lv_label_set_text(gear_label, "P");
   /* 为 gear_label 设置文字字体。 */
