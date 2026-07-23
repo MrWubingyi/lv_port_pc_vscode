@@ -6,13 +6,15 @@
 
 static lv_obj_t *speed_label, *gear_label, *status_icon, *speed_arc;
 static lv_obj_t *mode_button, *mode_label;
+static lv_obj_t *dashboard_screen, *control_screen;
 static lv_timer_t *simulation_timer;
 static int current_speed;
 static bool manual_mode;
 
-/* Screen 使用一列两行 Grid：上方仪表区固定 326 px，下方调试区占用剩余空间。 */
+/* 两个 Screen 都使用一列 Grid；各自通过行模板划分内容区和导航区。 */
 static int32_t screen_col_dsc[] = {LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
-static int32_t screen_row_dsc[] = {326, LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+static int32_t dashboard_row_dsc[] = {LV_GRID_FR(1), 48, LV_GRID_TEMPLATE_LAST};
+static int32_t control_row_dsc[] = {48, LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
 LV_FONT_DECLARE(font_speed_128);
 LV_FONT_DECLARE(font_speed_100);
 LV_FONT_DECLARE(font_unit_28);
@@ -212,6 +214,19 @@ static void mode_cb(lv_event_t *e) {
     lv_obj_set_style_bg_color(mode_button, lv_color_hex(0x176B45), 0);
   }
 }
+static void open_control_screen_cb(lv_event_t *event) {
+  LV_UNUSED(event);
+  /* 使用向左移动动画加载控制 Screen；false 表示不自动删除旧 Screen。 */
+  lv_screen_load_anim(control_screen, LV_SCREEN_LOAD_ANIM_MOVE_LEFT, 300, 0,
+                      false);
+}
+
+static void back_dashboard_screen_cb(lv_event_t *event) {
+  LV_UNUSED(event);
+  /* 使用向右移动动画返回仪表 Screen，并继续保留控制 Screen。 */
+  lv_screen_load_anim(dashboard_screen, LV_SCREEN_LOAD_ANIM_MOVE_RIGHT, 300, 0,
+                      false);
+}
 static lv_obj_t *row_create(lv_obj_t *parent) {
   /* 创建无背景行容器，用 Flex 横向排列同一组控制按钮。 */
   lv_obj_t *r = lv_obj_create(parent);
@@ -229,7 +244,7 @@ static void debug_panel_create(lv_obj_t *screen) {
   /* 创建 PC 调试 Panel，承载模式、速度、档位和状态控制行。 */
   lv_obj_t *p = lv_obj_create(screen);
   /* 为 p 设置组件宽度和高度。 */
-  lv_obj_set_size(p, 310, 146);
+  lv_obj_set_size(p, 310, 250);
   /* 将调试 Panel 放入 Screen Grid 的第 2 行，并在单元格内居中。 */
   lv_obj_set_grid_cell(p, LV_GRID_ALIGN_CENTER, 0, 1,
                        LV_GRID_ALIGN_CENTER, 1, 1);
@@ -273,19 +288,20 @@ static void debug_panel_create(lv_obj_t *screen) {
 }
 void dashboard_create(void) {
   /* 创建仪表盘根 Screen；NULL 表示它没有普通父对象。 */
-  lv_obj_t *screen = lv_obj_create(NULL);
-  lv_obj_remove_style_all(screen);
+  dashboard_screen = lv_obj_create(NULL);
+  lv_obj_t *main_screen = dashboard_screen;
+  lv_obj_remove_style_all(main_screen);
   /* 为 screen 设置组件宽度和高度。 */
-  lv_obj_set_size(screen, 320, 480);
+  lv_obj_set_size(main_screen, 320, 480);
   /* 为 screen 设置背景颜色。 */
-  lv_obj_set_style_bg_color(screen, lv_color_hex(0x080C12), 0);
+  lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x080C12), 0);
   /* 为 screen 设置背景不透明度。 */
-  lv_obj_set_style_bg_opa(screen, LV_OPA_COVER, 0);
+  lv_obj_set_style_bg_opa(main_screen, LV_OPA_COVER, 0);
   /* 为 screen 设置一列两行的 Grid 模板。 */
-  lv_obj_set_grid_dsc_array(screen, screen_col_dsc, screen_row_dsc);
+  lv_obj_set_grid_dsc_array(main_screen, screen_col_dsc, dashboard_row_dsc);
 
   /* 创建仪表区容器，集中承载 Scale、Arc、图标和文字。 */
-  lv_obj_t *gauge_area = lv_obj_create(screen);
+  lv_obj_t *gauge_area = lv_obj_create(main_screen);
   lv_obj_remove_style_all(gauge_area);
   /* 将 gauge_area 拉伸填满 Screen Grid 的第 1 行。 */
   lv_obj_set_grid_cell(gauge_area, LV_GRID_ALIGN_STRETCH, 0, 1,
@@ -398,7 +414,49 @@ void dashboard_create(void) {
   lv_obj_set_style_text_color(gear_label, lv_color_hex(0x38E07B), 0);
   lv_obj_align(gear_label, LV_ALIGN_TOP_MID, 0, 228);
 
-  /* 创建屏幕底部的 PC 调试控制区。 */
-  debug_panel_create(screen);
-  lv_screen_load(screen);
+  /* 创建进入调试页的导航 Button。 */
+  lv_obj_t *debug_button =
+      button_create(main_screen, "DEBUG", open_control_screen_cb, NULL);
+  /* 为 debug_button 设置适合导航文字的宽度。 */
+  lv_obj_set_width(debug_button, 88);
+  /* 将 DEBUG 按钮放入仪表 Screen Grid 的第 2 行并居中。 */
+  lv_obj_set_grid_cell(debug_button, LV_GRID_ALIGN_CENTER, 0, 1,
+                       LV_GRID_ALIGN_CENTER, 1, 1);
+
+  /* 创建独立的控制 Screen；切换时保留仪表 Screen 和其全部对象。 */
+  control_screen = lv_obj_create(NULL);
+  lv_obj_remove_style_all(control_screen);
+  /* 为 control_screen 设置与模拟器一致的尺寸。 */
+  lv_obj_set_size(control_screen, 320, 480);
+  /* 为 control_screen 设置深色背景。 */
+  lv_obj_set_style_bg_color(control_screen, lv_color_hex(0x080C12), 0);
+  /* 为 control_screen 设置完全不透明的背景。 */
+  lv_obj_set_style_bg_opa(control_screen, LV_OPA_COVER, 0);
+  /* 为 control_screen 设置标题行和内容行 Grid 模板。 */
+  lv_obj_set_grid_dsc_array(control_screen, screen_col_dsc, control_row_dsc);
+
+  /* 创建返回仪表页的导航 Button。 */
+  lv_obj_t *back_button =
+      button_create(control_screen, "BACK", back_dashboard_screen_cb, NULL);
+  /* 为 back_button 设置导航按钮宽度。 */
+  lv_obj_set_width(back_button, 70);
+  /* 将 BACK 按钮放入控制 Screen 第 1 行左侧。 */
+  lv_obj_set_grid_cell(back_button, LV_GRID_ALIGN_START, 0, 1,
+                       LV_GRID_ALIGN_CENTER, 0, 1);
+
+  /* 创建控制页面标题 Label。 */
+  lv_obj_t *control_title = lv_label_create(control_screen);
+  /* 为 control_title 设置标题文字。 */
+  lv_label_set_text(control_title, "PC DEBUG");
+  /* 为 control_title 设置白色文字。 */
+  lv_obj_set_style_text_color(control_title, lv_color_white(), 0);
+  /* 将标题放入控制 Screen 第 1 行中央。 */
+  lv_obj_set_grid_cell(control_title, LV_GRID_ALIGN_CENTER, 0, 1,
+                       LV_GRID_ALIGN_CENTER, 0, 1);
+
+  /* 创建控制 Screen 第 2 行中的 PC 调试控制区。 */
+  debug_panel_create(control_screen);
+
+  /* 首次进入应用时直接加载仪表 Screen，不使用切换动画。 */
+  lv_screen_load(dashboard_screen);
 }
