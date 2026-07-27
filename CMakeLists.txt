@@ -77,20 +77,34 @@ target_include_directories(lvgl
         ${SDL2_INCLUDE_DIRS}
 )
 
+file(GLOB APP_SOURSE
+    "${PROJECT_SOURCE_DIR}/app/*.c"
+    "${PROJECT_SOURCE_DIR}/app/fonts/*.c"
+    "${PROJECT_SOURCE_DIR}/app/images/*.c"
+    "${PROJECT_SOURCE_DIR}/model/*.c"
+    "${PROJECT_SOURCE_DIR}/network/*.c"
+)
+
+set(APP_LIBS
+   cjson)
+
+set(APP_INCLUDEIDR
+    ${PROJECT_SOURCE_DIR}/app
+    ${PROJECT_SOURCE_DIR}/app/fonts
+    ${PROJECT_SOURCE_DIR}/app/images
+    ${PROJECT_SOURCE_DIR}/model
+    ${PROJECT_SOURCE_DIR}/network
+  )
+
 set(MAIN_SOURCES
     src/mouse_cursor_icon.c
     src/hal/hal.c
 
-    app/dashboard.c
-    app/fonts/font_speed_128.c
-    app/fonts/font_speed_100.c
-    app/fonts/font_unit_28.c
-    app/fonts/font_gear_80.c
-    app/images/icon_status.c
-
+    ${APP_SOURSE}
 )
 
-set(MAIN_LIBS lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES})
+
+set(MAIN_LIBS lvgl  lvgl::thorvg ${SDL2_LIBRARIES})
 
 # Create the main executable, depending on the FreeRTOS option
 if(USE_FREERTOS)
@@ -165,11 +179,11 @@ add_executable(main ${MAIN_SOURCES})
 
 target_include_directories(main PRIVATE
     ${SDL2_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/app
+    ${APP_INCLUDEIDR}
 )
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
-target_link_libraries(main ${MAIN_LIBS})
+target_link_libraries(main ${MAIN_LIBS} ${APP_LIBS})
 
 # On Windows, GUI applications do not show a console by default,
 # which hides log output. This ensures a console is available for logging.
@@ -223,10 +237,3 @@ else()
     message(STATUS "AddressSanitizer disabled")
 endif()
 endif()
-
-add_executable(vehicle_tcp_server
-    tools/vehicle_tcp_server/vehicle_tcp_server.c
-    tools/vehicle_tcp_server/vehicle_state.c)
-target_link_libraries(vehicle_tcp_server
-    cjson
-    )

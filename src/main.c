@@ -10,6 +10,8 @@
 #ifndef _DEFAULT_SOURCE
   #define _DEFAULT_SOURCE /* needed for usleep() */
 #include "dashboard.h"
+#include "vehicle_state_store.h"
+#include "vehicle_tcp_server.h"
 #endif
 
 #include <stdlib.h>
@@ -73,8 +75,12 @@ int main(int argc, char **argv)
   // lv_demo_widgets();
     /* 创建自己的仪表盘 */
   dashboard_create();
+  vehicle_state_store_init();
   dashboard_start_simulation();
 
+  if (!vehicle_tcp_server_start(19090)) {
+    fprintf(stderr, "Failed to start TCP server\n");
+  }
   while(1) {
     /* Periodically call the lv_task handler.
      * It could be done in a timer interrupt or an OS task too.*/

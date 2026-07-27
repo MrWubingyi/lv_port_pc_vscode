@@ -1,6 +1,15 @@
 ﻿#include "dashboard.h"
+#include "vehicle_state_store.h"
 #include <stdbool.h>
 #include <stddef.h>
+
+#include <time.h>
+
+#define VEHICLE_REFRESH_PERIOD_MS 100
+#define VEHICLE_TIMEOUT_MS 3000
+
+static lv_timer_t *vehicle_refresh_timer;
+
 #define MAX_SPEED 200
 #define SPEED_STEP 10
 
@@ -52,6 +61,41 @@ static const ctrl_action_t status_actions[] = {
     {CTRL_STATUS, dashboard_status_warning},
     {CTRL_STATUS, dashboard_status_error},
     {CTRL_STATUS, dashboard_status_offline}};
+
+static uint64_t dashboard_monotonic_ms(void) {
+  struct timespec time_value;
+
+  clock_gettime(CLOCK_MONOTONIC, &time_value);
+
+  return (uint64_t)time_value.tv_sec * 1000U +
+         (uint64_t)time_value.tv_nsec / 1000000U;
+}
+
+static void vehicle_refresh_timer_cb(lv_timer_t *timer) {
+  LV_UNUSED(timer);
+
+  vehicle_state_t state;
+  uint64_t last_receive_ms;
+
+  bool valid = vehicle_state_store_get_snapshot(&state, &last_receive_ms);
+
+  if (!valid) {
+    dashboard_set_status(status_icon, dashboard_status_offline);
+    return;
+  }
+
+  uint64_t now_ms = dashboard_monotonic_ms();
+
+  if (now_ms - last_receive_ms > VEHICLE_TIMEOUT_MS) {
+    dashboard_set_status(status_icon, dashboard_status_offline);
+    return;
+  }
+
+  dashboard_set_speed(state.speed_kph);
+  dashboard_set_gear(state.gear);
+
+  dashboard_set_status(status_icon, dashboard_status_normal);
+}
 
 static void dashboard_styles_init(void) {
   if (styles_ready)
@@ -229,6 +273,11 @@ void dashboard_start_simulation(void) {
   if (simulation_timer == NULL)
     simulation_timer = lv_timer_create(simulation_cb, 100, NULL);
   lv_timer_resume(simulation_timer);
+  if (vehicle_refresh_timer == NULL) {
+    vehicle_refresh_timer = lv_timer_create(vehicle_refresh_timer_cb,
+                                            VEHICLE_REFRESH_PERIOD_MS, NULL);
+    lv_timer_resume(vehicle_refresh_timer);
+  }
 }
 void dashboard_stop_simulation(void) {
   if (simulation_timer != NULL)
@@ -316,8 +365,8 @@ static void debug_panel_create(lv_obj_t *screen) {
   /* 为 p 设置组件宽度和高度。 */
   lv_obj_set_size(p, 310, 250);
   /* 将调试 Panel 放入 Screen Grid 的第 2 行，并在单元格内居中。 */
-  lv_obj_set_grid_cell(p, LV_GRID_ALIGN_CENTER, 0, 1,
-                       LV_GRID_ALIGN_CENTER, 1, 1);
+  lv_obj_set_grid_cell(p, LV_GRID_ALIGN_CENTER, 0, 1, LV_GRID_ALIGN_CENTER, 1,
+                       1);
   /* 为 PC 调试 Panel 添加集中定义的可复用 Style。 */
   lv_obj_add_style(p, &style_panel, LV_PART_MAIN);
   /* 为 p 设置 Flex 主轴排列方向。 */
@@ -362,6 +411,11 @@ void dashboard_destroy(void) {
   if (simulation_timer != NULL) {
     lv_timer_delete(simulation_timer);
     simulation_timer = NULL;
+  }
+
+  if (vehicle_refresh_timer != NULL) {
+    lv_timer_delete(vehicle_refresh_timer);
+    vehicle_refresh_timer = NULL;
   }
 
   lv_obj_t *active_screen = lv_screen_active();
@@ -487,10 +541,7 @@ void dashboard_create(void) {
   lv_label_set_text(speed_label, "0");
   /* 为 speed_label 设置组件宽度。 */
   lv_obj_set_width(speed_label, LV_SIZE_CONTENT);
-  lv_label_set_long_mode(
-    speed_label,
-    LV_LABEL_LONG_CLIP
-);
+  lv_label_set_long_mode(speed_label, LV_LABEL_LONG_CLIP);
   /* 为 speed_label 设置文字对齐方式。 */
   lv_obj_set_style_text_align(speed_label, LV_TEXT_ALIGN_CENTER, 0);
   /* 为 speed_label 设置文字颜色。 */

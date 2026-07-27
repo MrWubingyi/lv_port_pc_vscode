@@ -1,4 +1,10 @@
+#include "vehicle_tcp_server.h"
 #include "vehicle_state.h"
+#include "vehicle_state_store.h"
+
+#include <pthread.h>
+#include <stdatomic.h>
+
 #include <arpa/inet.h>
 #include <errno.h>
 #include <netinet/in.h>
@@ -14,13 +20,16 @@
 #define RECEIVE_BUFFER_SIZE 1024
 #define LINE_BUFFER_SIZE 4096
 
-static volatile sig_atomic_t running = 1;
+static pthread_t server_thread;
+static atomic_bool server_running;
+
 static int server_fd = -1;
 static int client_fd = -1;
 
+static uint16_t configured_port;
+
 static void signal_handler(int signal_number) {
   (void)signal_number;
-  running = 0;
 
   if (client_fd >= 0) {
     shutdown(client_fd, SHUT_RDWR);
@@ -38,7 +47,7 @@ static void process_vehicle_frame(const char *frame) {
     fprintf(stderr, "Discarded frame: %s\n", frame);
     return;
   }
-
+  vehicle_state_store_update(&state);
   vehicle_state_print(&state);
 }
 
@@ -47,7 +56,7 @@ static void receive_client_data(int socket_fd) {
   char line_buffer[LINE_BUFFER_SIZE];
   size_t line_length = 0;
 
-  while (running) {
+  while (atomic_load(&server_running)) {
     ssize_t received =
         recv(socket_fd, receive_buffer, sizeof(receive_buffer), 0);
 
@@ -94,7 +103,8 @@ static void receive_client_data(int socket_fd) {
   }
 }
 
-int main(void) {
+int server_thread_main(void *arg) {
+  (void)arg;
   signal(SIGINT, signal_handler);
   signal(SIGTERM, signal_handler);
 
@@ -133,7 +143,7 @@ int main(void) {
 
   printf("Listening on 0.0.0.0:%d\n", SERVER_PORT);
 
-  while (running) {
+  while (atomic_load(&server_running)) {
     struct sockaddr_in client_address;
     socklen_t client_length = sizeof(client_address);
 
@@ -141,7 +151,7 @@ int main(void) {
         accept(server_fd, (struct sockaddr *)&client_address, &client_length);
 
     if (client_fd < 0) {
-      if (!running) {
+      if (!atomic_load(&server_running)) {
         break;
       }
 
@@ -168,4 +178,40 @@ int main(void) {
 
   printf("Server stopped\n");
   return EXIT_SUCCESS;
+}
+
+bool vehicle_tcp_server_start(uint16_t port) {
+  if (atomic_load(&server_running)) {
+    return true;
+  }
+
+  configured_port = port;
+  atomic_store(&server_running, true);
+
+  int result = pthread_create(&server_thread, NULL, server_thread_main, NULL);
+
+  if (result != 0) {
+    atomic_store(&server_running, false);
+    return false;
+  }
+
+  return true;
+}
+void vehicle_tcp_server_stop(void) {
+  if (!atomic_exchange(&server_running, false)) {
+    return;
+  }
+
+  if (client_fd >= 0) {
+    shutdown(client_fd, SHUT_RDWR);
+  }
+
+  if (server_fd >= 0) {
+    shutdown(server_fd, SHUT_RDWR);
+  }
+
+  pthread_join(server_thread, NULL);
+
+  client_fd = -1;
+  server_fd = -1;
 }
