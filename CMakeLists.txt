@@ -223,3 +223,10 @@ else()
     message(STATUS "AddressSanitizer disabled")
 endif()
 endif()
+
+add_executable(vehicle_tcp_server
+    tools/vehicle_tcp_server/vehicle_tcp_server.c
+    tools/vehicle_tcp_server/vehicle_state.c)
+target_link_libraries(vehicle_tcp_server
+    cjson
+    )
