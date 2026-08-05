@@ -103,7 +103,7 @@ static void receive_client_data(int socket_fd) {
   }
 }
 
-int server_thread_main(void *arg) {
+static void *server_thread_main(void *arg) {
   (void)arg;
   // signal(SIGINT, signal_handler);
   // signal(SIGTERM, signal_handler);
@@ -112,7 +112,7 @@ int server_thread_main(void *arg) {
 
   if (server_fd < 0) {
     perror("socket");
-    return EXIT_FAILURE;
+    return NULL;
   }
 
   int reuse_address = 1;
@@ -121,7 +121,7 @@ int server_thread_main(void *arg) {
                  sizeof(reuse_address)) < 0) {
     perror("setsockopt");
     close(server_fd);
-    return EXIT_FAILURE;
+    return NULL;
   }
 
   struct sockaddr_in server_address = {.sin_family = AF_INET,
@@ -132,13 +132,13 @@ int server_thread_main(void *arg) {
            sizeof(server_address)) < 0) {
     perror("bind");
     close(server_fd);
-    return EXIT_FAILURE;
+    return NULL;
   }
 
   if (listen(server_fd, 1) < 0) {
     perror("listen");
     close(server_fd);
-    return EXIT_FAILURE;
+    return NULL;
   }
 
   printf("Listening on 0.0.0.0:%d\n", SERVER_PORT);
@@ -177,7 +177,7 @@ int server_thread_main(void *arg) {
   }
 
   printf("Server stopped\n");
-  return EXIT_SUCCESS;
+  return NULL;
 }
 
 bool vehicle_tcp_server_start(uint16_t port) {

@@ -13,6 +13,20 @@ static bool is_valid_gear(const char *gear) {
   return strchr("PRND", gear[0]) != NULL;
 }
 
+static bool read_optional_int(const cJSON *root, const char *name,
+                              int minimum, int maximum, int *value) {
+  const cJSON *item = cJSON_GetObjectItemCaseSensitive(root, name);
+  if (item == NULL) {
+    return true;
+  }
+  if (!cJSON_IsNumber(item) || item->valuedouble < minimum ||
+      item->valuedouble > maximum) {
+    return false;
+  }
+  *value = item->valueint;
+  return true;
+}
+
 bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
   if (json_text == NULL || state == NULL) {
     return false;
@@ -63,7 +77,28 @@ bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
                             .speed_kph = speed->valueint,
                             .rpm = rpm->valueint,
                             .gear = gear->valuestring[0],
-                            .soc = soc->valueint};
+                            .soc = soc->valueint,
+                            .range_km = soc->valueint * 12,
+                            .outside_temp_c = -5,
+                            .load_tenths = 64,
+                            .load_max_tenths = 220,
+                            .trip_tenths = 0};
+
+  bool optional_fields_valid =
+      read_optional_int(root, "rangeKm", 0, 5000, &parsed.range_km) &&
+      read_optional_int(root, "outsideTempC", -100, 100,
+                        &parsed.outside_temp_c) &&
+      read_optional_int(root, "loadTenths", 0, 5000,
+                        &parsed.load_tenths) &&
+      read_optional_int(root, "loadMaxTenths", 0, 5000,
+                        &parsed.load_max_tenths) &&
+      read_optional_int(root, "tripTenths", 0, 1000000000,
+                        &parsed.trip_tenths);
+  if (!optional_fields_valid) {
+    fprintf(stderr, "Invalid optional vehicle field\n");
+    cJSON_Delete(root);
+    return false;
+  }
 
   *state = parsed;
 

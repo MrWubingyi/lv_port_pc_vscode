@@ -12,6 +12,11 @@ typedef struct {
     int rpm;
     char gear;
     int soc;
+    int range_km;
+    int outside_temp_c;
+    int load_tenths;
+    int load_max_tenths;
+    int trip_tenths;
 } vehicle_state_t;
 
 bool vehicle_state_parse_json(

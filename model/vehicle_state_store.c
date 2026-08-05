@@ -10,6 +10,7 @@ static pthread_mutex_t state_mutex =
 static vehicle_state_t current_state;
 static uint64_t current_receive_ms;
 static bool state_valid;
+static vehicle_state_source_t current_source;
 
 static uint64_t monotonic_time_ms(void)
 {
@@ -29,6 +30,7 @@ void vehicle_state_store_init(void)
     current_state.gear = '-';
     current_receive_ms = 0;
     state_valid = false;
+    current_source = VEHICLE_STATE_SOURCE_NONE;
 
     pthread_mutex_unlock(&state_mutex);
 }
@@ -46,8 +48,31 @@ void vehicle_state_store_update(
     current_state = *state;
     current_receive_ms = monotonic_time_ms();
     state_valid = true;
+    current_source = VEHICLE_STATE_SOURCE_NETWORK;
 
     pthread_mutex_unlock(&state_mutex);
+}
+
+bool vehicle_state_store_update_simulated(const vehicle_state_t *state,
+                                          uint64_t network_timeout_ms)
+{
+    if(state == NULL) {
+        return false;
+    }
+
+    pthread_mutex_lock(&state_mutex);
+    uint64_t now = monotonic_time_ms();
+    bool network_is_fresh = current_source == VEHICLE_STATE_SOURCE_NETWORK &&
+        now - current_receive_ms <= network_timeout_ms;
+
+    if(!network_is_fresh) {
+        current_state = *state;
+        current_receive_ms = now;
+        current_source = VEHICLE_STATE_SOURCE_SIMULATED;
+        state_valid = true;
+    }
+    pthread_mutex_unlock(&state_mutex);
+    return !network_is_fresh;
 }
 
 bool vehicle_state_store_get_snapshot(
@@ -70,5 +95,27 @@ bool vehicle_state_store_get_snapshot(
 
     pthread_mutex_unlock(&state_mutex);
 
+    return valid;
+}
+
+
+bool vehicle_state_store_get_snapshot_ex(vehicle_state_t *state,
+                                         uint64_t *last_receive_ms,
+                                         vehicle_state_source_t *source)
+{
+    if(state == NULL || last_receive_ms == NULL || source == NULL) {
+        return false;
+    }
+
+    pthread_mutex_lock(&state_mutex);
+    bool valid = state_valid;
+    if(valid) {
+        *state = current_state;
+        *last_receive_ms = current_receive_ms;
+        *source = current_source;
+    } else {
+        *source = VEHICLE_STATE_SOURCE_NONE;
+    }
+    pthread_mutex_unlock(&state_mutex);
     return valid;
 }

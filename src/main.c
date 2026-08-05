@@ -13,11 +13,13 @@
 
 #include "ui.h"
 #include "ui_bridge.h"
+#include "vehicle_fake_data.h"
 #include "vehicle_state_store.h"
 #include "vehicle_tcp_server.h"
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <signal.h>
 #ifdef _MSC_VER
   #include <Windows.h>
 #else
@@ -30,6 +32,14 @@
 #include <SDL.h>
 
 #include "hal/hal.h"
+
+static volatile sig_atomic_t application_running = 1;
+
+static void request_shutdown(int signal_number)
+{
+  (void)signal_number;
+  application_running = 0;
+}
 
 /*********************
  *      DEFINES
@@ -76,6 +86,8 @@ int main(int argc, char **argv)
   /* - etc. */
   // lv_demo_widgets();
   vehicle_state_store_init();
+  signal(SIGINT, request_shutdown);
+  signal(SIGTERM, request_shutdown);
   /* Create the EEZ Studio generated UI, then connect it to vehicle data. */
   ui_init();
   ui_bridge_init();
@@ -83,7 +95,10 @@ int main(int argc, char **argv)
   if (!vehicle_tcp_server_start(19090)) {
     fprintf(stderr, "Failed to start TCP server\n");
   }
-  while(1) {
+  if (!vehicle_fake_data_start()) {
+    fprintf(stderr, "Failed to start fake vehicle data\n");
+  }
+  while(application_running) {
     ui_tick();
     /* Periodically call the lv_task handler.
      * It could be done in a timer interrupt or an OS task too.*/
@@ -97,6 +112,9 @@ int main(int argc, char **argv)
     usleep(sleep_time_ms * 1000);
 #endif
   }
+
+  vehicle_fake_data_stop();
+  vehicle_tcp_server_stop();
 
   return 0;
 }
