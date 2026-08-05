@@ -27,6 +27,15 @@ static bool read_optional_int(const cJSON *root, const char *name,
   return true;
 }
 
+static bool read_optional_bool(const cJSON *root, const char *name,
+                               bool *value) {
+  const cJSON *item = cJSON_GetObjectItemCaseSensitive(root, name);
+  if (item == NULL) return true;
+  if (!cJSON_IsBool(item)) return false;
+  *value = cJSON_IsTrue(item);
+  return true;
+}
+
 bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
   if (json_text == NULL || state == NULL) {
     return false;
@@ -84,6 +93,7 @@ bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
                             .load_max_tenths = 220,
                             .trip_tenths = 0};
 
+  int steering_buttons = 0;
   bool optional_fields_valid =
       read_optional_int(root, "rangeKm", 0, 5000, &parsed.range_km) &&
       read_optional_int(root, "outsideTempC", -100, 100,
@@ -93,12 +103,24 @@ bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
       read_optional_int(root, "loadMaxTenths", 0, 5000,
                         &parsed.load_max_tenths) &&
       read_optional_int(root, "tripTenths", 0, 1000000000,
-                        &parsed.trip_tenths);
+                        &parsed.trip_tenths) &&
+      read_optional_bool(root, "engineWarning", &parsed.engine_warning) &&
+      read_optional_int(root, "steeringButtons", 0, 0x7fffffff,
+                        &steering_buttons) &&
+      read_optional_bool(root, "seatbeltWarning", &parsed.seatbelt_warning) &&
+      read_optional_bool(root, "handbrake", &parsed.handbrake) &&
+      read_optional_bool(root, "parkingBrake", &parsed.handbrake) &&
+      read_optional_bool(root, "brakingWarning", &parsed.braking_warning) &&
+      read_optional_bool(root, "coolantWarning", &parsed.coolant_warning) &&
+      read_optional_bool(root, "highBeam", &parsed.high_beam) &&
+      read_optional_bool(root, "lowBeam", &parsed.low_beam);
   if (!optional_fields_valid) {
     fprintf(stderr, "Invalid optional vehicle field\n");
     cJSON_Delete(root);
     return false;
   }
+
+  parsed.steering_buttons = (uint32_t)steering_buttons;
 
   *state = parsed;
 

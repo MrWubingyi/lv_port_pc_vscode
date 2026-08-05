@@ -93,6 +93,7 @@ set(APP_LIBS
    cjson)
 
 set(APP_INCLUDEIDR
+    ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/app
     ${PROJECT_SOURCE_DIR}/app/fonts
     ${PROJECT_SOURCE_DIR}/app/images

@@ -1,7 +1,8 @@
 #include "ui_bridge.h"
 
 #include "screens.h"
-#include "vehicle_state_store.h"
+#include "vehicle_data.h"
+#include "debug_panel.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -16,6 +17,43 @@ static lv_obj_t *right_ticks[RIGHT_TICK_COUNT];
 static lv_point_precise_t tick_points[LEFT_TICK_COUNT + RIGHT_TICK_COUNT][2];
 static int left_tick_state[LEFT_TICK_COUNT];
 static int right_tick_state[RIGHT_TICK_COUNT];
+static vehicle_data_t *dashboard_vehicle_data;
+static debug_panel_t *dashboard_debug_panel;
+static lv_obj_t *warning_icons[6];
+static lv_obj_t *menu_items[6];
+static int selected_menu_item;
+
+static void update_warning_icons(void) {
+    for (int i = 0; i < 6; ++i) {
+        bool active = debug_panel_get_warning(dashboard_debug_panel, i);
+        if (warning_icons[i] != NULL)
+            lv_obj_set_style_opa(warning_icons[i],
+                                 active ? LV_OPA_COVER : LV_OPA_20,
+                                 LV_PART_MAIN);
+    }
+}
+
+static void select_menu_item(int index) {
+    const int count = (int)(sizeof(menu_items) / sizeof(menu_items[0]));
+    index = (index + count) % count;
+    for (int i = 0; i < count; ++i) {
+        if (menu_items[i] == NULL) continue;
+        if (i == index)
+            lv_obj_add_state(menu_items[i], LV_STATE_CHECKED);
+        else
+            lv_obj_remove_state(menu_items[i], LV_STATE_CHECKED);
+    }
+    selected_menu_item = index;
+}
+
+static void update_menu_navigation(void) {
+    uint32_t actions =
+        debug_panel_take_steering_actions(dashboard_debug_panel);
+    if (actions & DEBUG_STEERING_LEFT)
+        select_menu_item(selected_menu_item - 1);
+    if (actions & DEBUG_STEERING_RIGHT)
+        select_menu_item(selected_menu_item + 1);
+}
 
 static void animate_tick_opa(void *obj, int32_t value) {
     lv_obj_set_style_line_opa((lv_obj_t *)obj, (uint8_t)value, LV_PART_MAIN);
@@ -77,15 +115,12 @@ static void update_clock(void) {
     }
 }
 
-static void set_connection_state(vehicle_state_source_t source) {
+static void set_connection_state(bool connected) {
     const char *title = "Waiting for vehicle";
     uint32_t color = 0xFF9F43;
-    if (source == VEHICLE_STATE_SOURCE_NETWORK) {
+    if (connected) {
         title = "Vehicle online";
         color = 0x59D6EA;
-    } else if (source == VEHICLE_STATE_SOURCE_SIMULATED) {
-        title = "Demo data";
-        color = 0xA8D672;
     }
     lv_label_set_text(objects.lbl_status_title, title);
     lv_obj_set_style_text_color(
@@ -120,13 +155,15 @@ static void refresh_cb(lv_timer_t *timer) {
 
     vehicle_state_t state;
     uint64_t last_receive_ms;
-    vehicle_state_source_t source;
-    bool valid = vehicle_state_store_get_snapshot_ex(
-        &state, &last_receive_ms, &source);
+    bool valid = vehicle_data_get_snapshot(
+        dashboard_vehicle_data, &state, &last_receive_ms);
     (void)last_receive_ms;
 
     update_clock();
-    set_connection_state(valid ? source : VEHICLE_STATE_SOURCE_NONE);
+    set_connection_state(valid);
+    debug_panel_update(dashboard_debug_panel, &state, valid);
+    update_warning_icons();
+    update_menu_navigation();
     if (!valid) {
         return;
     }
@@ -157,9 +194,25 @@ static void refresh_cb(lv_timer_t *timer) {
     update_scale_ticks(speed, state.rpm < 0 ? 0 : state.rpm);
 }
 
-void ui_bridge_init(void) {
+void ui_bridge_init(vehicle_data_t *vehicle_data) {
+    dashboard_vehicle_data = vehicle_data;
     update_clock();
-    set_connection_state(VEHICLE_STATE_SOURCE_NONE);
+    set_connection_state(false);
     create_scale_ticks();
+    warning_icons[0] = lv_obj_get_child(objects.panel_left_warning, 0);
+    warning_icons[1] = lv_obj_get_child(objects.panel_left_warning, 1);
+    warning_icons[2] = lv_obj_get_child(objects.panel_left_warning, 2);
+    warning_icons[3] = lv_obj_get_child(objects.panel_right_warning, 0);
+    warning_icons[4] = lv_obj_get_child(objects.panel_right_warning, 1);
+    warning_icons[5] = lv_obj_get_child(objects.panel_right_warning, 2);
+    menu_items[0] = objects.menu_item_defult;
+    menu_items[1] = objects.menu_item_vehicle;
+    menu_items[2] = objects.menu_item_trip_meter;
+    menu_items[3] = objects.menu_item_driving_assistance;
+    menu_items[4] = objects.menu_item_fuel_level;
+    menu_items[5] = objects.menu_item_settings;
+    dashboard_debug_panel = debug_panel_create();
+    update_warning_icons();
+    select_menu_item(0);
     lv_timer_create(refresh_cb, UI_REFRESH_PERIOD_MS, NULL);
 }

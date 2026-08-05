@@ -32,6 +32,8 @@ extern "C" {
  * library
  */
 lv_display_t * sdl_hal_init(int32_t w, int32_t h);
+lv_display_t * sdl_hal_add_display(int32_t w, int32_t h,
+                                   const char *title);
 
 /**********************
  *      MACROS

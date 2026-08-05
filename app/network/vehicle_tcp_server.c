@@ -1,6 +1,6 @@
 #include "vehicle_tcp_server.h"
 #include "vehicle_state.h"
-#include "vehicle_state_store.h"
+#include "vehicle_data.h"
 
 #include <pthread.h>
 #include <stdatomic.h>
@@ -16,7 +16,6 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define SERVER_PORT 19090
 #define RECEIVE_BUFFER_SIZE 1024
 #define LINE_BUFFER_SIZE 4096
 
@@ -27,6 +26,7 @@ static int server_fd = -1;
 static int client_fd = -1;
 
 static uint16_t configured_port;
+static vehicle_data_t *target_vehicle_data;
 
 static void signal_handler(int signal_number) {
   (void)signal_number;
@@ -47,7 +47,7 @@ static void process_vehicle_frame(const char *frame) {
     fprintf(stderr, "Discarded frame: %s\n", frame);
     return;
   }
-  vehicle_state_store_update(&state);
+  vehicle_data_update_from_tcp(target_vehicle_data, &state);
   vehicle_state_print(&state);
 }
 
@@ -125,7 +125,7 @@ static void *server_thread_main(void *arg) {
   }
 
   struct sockaddr_in server_address = {.sin_family = AF_INET,
-                                       .sin_port = htons(SERVER_PORT),
+                                       .sin_port = htons(configured_port),
                                        .sin_addr.s_addr = htonl(INADDR_ANY)};
 
   if (bind(server_fd, (struct sockaddr *)&server_address,
@@ -141,7 +141,7 @@ static void *server_thread_main(void *arg) {
     return NULL;
   }
 
-  printf("Listening on 0.0.0.0:%d\n", SERVER_PORT);
+  printf("Listening on 0.0.0.0:%u\n", configured_port);
 
   while (atomic_load(&server_running)) {
     struct sockaddr_in client_address;
@@ -180,12 +180,16 @@ static void *server_thread_main(void *arg) {
   return NULL;
 }
 
-bool vehicle_tcp_server_start(uint16_t port) {
+bool vehicle_tcp_server_start(uint16_t port, vehicle_data_t *vehicle_data) {
+  if (port == 0 || vehicle_data == NULL) {
+    return false;
+  }
   if (atomic_load(&server_running)) {
     return true;
   }
 
   configured_port = port;
+  target_vehicle_data = vehicle_data;
   atomic_store(&server_running, true);
 
   int result = pthread_create(&server_thread, NULL, server_thread_main, NULL);

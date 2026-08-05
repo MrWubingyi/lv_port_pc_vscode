@@ -4,7 +4,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool vehicle_tcp_server_start(uint16_t port);
+typedef struct vehicle_data vehicle_data_t;
+
+bool vehicle_tcp_server_start(uint16_t port, vehicle_data_t *vehicle_data);
 void vehicle_tcp_server_stop(void);
 
 #endif

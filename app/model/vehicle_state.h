@@ -17,6 +17,14 @@ typedef struct {
     int load_tenths;
     int load_max_tenths;
     int trip_tenths;
+    bool engine_warning;
+    uint32_t steering_buttons;
+    bool seatbelt_warning;
+    bool handbrake;
+    bool braking_warning;
+    bool coolant_warning;
+    bool high_beam;
+    bool low_beam;
 } vehicle_state_t;
 
 bool vehicle_state_parse_json(
