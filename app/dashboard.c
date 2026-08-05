@@ -15,7 +15,9 @@ static lv_timer_t *vehicle_refresh_timer;
 
 static lv_obj_t *speed_label, *gear_label, *status_icon, *speed_arc;
 static lv_obj_t *mode_button, *mode_label;
-static lv_obj_t *dashboard_screen, *control_screen;
+static lv_obj_t *dashboard_screen, *debug_screen;
+static lv_display_t *dashboard_display, *debug_display;
+static lv_indev_t *debug_mouse, *debug_mousewheel, *debug_keyboard;
 static lv_timer_t *simulation_timer;
 static int current_speed;
 static bool manual_mode;
@@ -273,11 +275,6 @@ void dashboard_start_simulation(void) {
   if (simulation_timer == NULL)
     simulation_timer = lv_timer_create(simulation_cb, 100, NULL);
   lv_timer_resume(simulation_timer);
-  if (vehicle_refresh_timer == NULL) {
-    vehicle_refresh_timer = lv_timer_create(vehicle_refresh_timer_cb,
-                                            VEHICLE_REFRESH_PERIOD_MS, NULL);
-    lv_timer_resume(vehicle_refresh_timer);
-  }
 }
 void dashboard_stop_simulation(void) {
   if (simulation_timer != NULL)
@@ -319,7 +316,7 @@ static void control_cb(lv_event_t *e) {
 static void mode_cb(lv_event_t *e) {
   LV_UNUSED(e);
   manual_mode = !manual_mode;
-  if (manual_mode) {
+  if (!manual_mode) {
     dashboard_stop_simulation();
     /* 为 mode_label 设置显示文本。 */
     lv_label_set_text(mode_label, "MANUAL");
@@ -332,19 +329,6 @@ static void mode_cb(lv_event_t *e) {
     /* 为 mode_button 设置背景颜色。 */
     lv_obj_set_style_bg_color(mode_button, lv_color_hex(0x176B45), 0);
   }
-}
-static void open_control_screen_cb(lv_event_t *event) {
-  LV_UNUSED(event);
-  /* 使用向左移动动画加载控制 Screen；false 表示不自动删除旧 Screen。 */
-  lv_screen_load_anim(control_screen, LV_SCREEN_LOAD_ANIM_MOVE_LEFT, 300, 0,
-                      false);
-}
-
-static void back_dashboard_screen_cb(lv_event_t *event) {
-  LV_UNUSED(event);
-  /* 使用向右移动动画返回仪表 Screen，并继续保留控制 Screen。 */
-  lv_screen_load_anim(dashboard_screen, LV_SCREEN_LOAD_ANIM_MOVE_RIGHT, 300, 0,
-                      false);
 }
 static lv_obj_t *row_create(lv_obj_t *parent) {
   /* 创建无背景行容器，用 Flex 横向排列同一组控制按钮。 */
@@ -377,12 +361,12 @@ static void debug_panel_create(lv_obj_t *screen) {
   /* 创建第一行：减速、自动/手动模式、加速按钮。 */
   lv_obj_t *r = row_create(p);
   button_create(r, "-10", control_cb, &speed_actions[0]);
-  mode_button = button_create(r, "AUTO", mode_cb, NULL);
+  mode_button = button_create(r, "MANUAL", mode_cb, NULL);
   mode_label = lv_obj_get_child(mode_button, 0);
   /* 为 mode_button 设置组件宽度。 */
   lv_obj_set_width(mode_button, 88);
   /* 为 mode_button 设置背景颜色。 */
-  lv_obj_set_style_bg_color(mode_button, lv_color_hex(0x176B45), 0);
+  lv_obj_set_style_bg_color(mode_button, lv_color_hex(0xC47A16), 0);
   button_create(r, "+10", control_cb, &speed_actions[1]);
   /* 创建第二行：P、R、N、D 档位按钮。 */
   r = row_create(p);
@@ -395,9 +379,76 @@ static void debug_panel_create(lv_obj_t *screen) {
   for (size_t i = 0; i < 4; i++)
     button_create(r, s[i], control_cb, &status_actions[i]);
 }
+
+static void debug_display_delete_cb(lv_event_t *event) {
+  LV_UNUSED(event);
+
+  /* SDL 关闭窗口时会删除 display；同步清理只属于调试窗口的输入设备。 */
+  if (debug_mouse != NULL)
+    lv_indev_delete(debug_mouse);
+  if (debug_mousewheel != NULL)
+    lv_indev_delete(debug_mousewheel);
+  if (debug_keyboard != NULL)
+    lv_indev_delete(debug_keyboard);
+
+  debug_mouse = NULL;
+  debug_mousewheel = NULL;
+  debug_keyboard = NULL;
+  debug_screen = NULL;
+  debug_display = NULL;
+  mode_button = NULL;
+  mode_label = NULL;
+}
+
+static void open_debug_window_cb() {
+
+  /* 重复点击时复用仍然存在的调试窗口。 */
+  if (debug_display != NULL) {
+    lv_refr_now(debug_display);
+    return;
+  }
+
+  debug_display = lv_sdl_window_create(320, 320);
+  if (debug_display == NULL)
+    return;
+
+  lv_sdl_window_set_title(debug_display, "Dashboard Debug Panel");
+  lv_display_add_event_cb(debug_display, debug_display_delete_cb,
+                          LV_EVENT_DELETE, NULL);
+
+  debug_mouse = lv_sdl_mouse_create();
+  lv_indev_set_display(debug_mouse, debug_display);
+  debug_mousewheel = lv_sdl_mousewheel_create();
+  lv_indev_set_display(debug_mousewheel, debug_display);
+  debug_keyboard = lv_sdl_keyboard_create();
+  lv_indev_set_display(debug_keyboard, debug_display);
+
+  lv_display_t *previous_display = lv_display_get_default();
+  lv_display_set_default(debug_display);
+
+  debug_screen = lv_obj_create(NULL);
+  lv_obj_remove_style_all(debug_screen);
+  lv_obj_set_size(debug_screen, 320, 320);
+  lv_obj_add_style(debug_screen, &style_screen, LV_PART_MAIN);
+  lv_obj_set_grid_dsc_array(debug_screen, screen_col_dsc, control_row_dsc);
+
+  lv_obj_t *control_title = lv_label_create(debug_screen);
+  lv_label_set_text(control_title, "PC DEBUG");
+  lv_obj_add_style(control_title, &style_text_light, LV_PART_MAIN);
+  lv_obj_set_grid_cell(control_title, LV_GRID_ALIGN_CENTER, 0, 1,
+                       LV_GRID_ALIGN_CENTER, 0, 1);
+
+  debug_panel_create(debug_screen);
+  lv_screen_load(debug_screen);
+
+  lv_display_set_default(previous_display);
+}
+
 static void dashboard_object_refs_clear(void) {
   dashboard_screen = NULL;
-  control_screen = NULL;
+  debug_screen = NULL;
+  dashboard_display = NULL;
+  debug_display = NULL;
   speed_label = NULL;
   gear_label = NULL;
   status_icon = NULL;
@@ -418,8 +469,11 @@ void dashboard_destroy(void) {
     vehicle_refresh_timer = NULL;
   }
 
-  lv_obj_t *active_screen = lv_screen_active();
-  if (active_screen == dashboard_screen || active_screen == control_screen) {
+  if (debug_display != NULL)
+    lv_display_delete(debug_display);
+
+  lv_obj_t *active_screen = lv_display_get_screen_active(dashboard_display);
+  if (active_screen == dashboard_screen) {
     /* 创建不引用业务 Style 的临时 Screen，避免直接删除当前活动 Screen。 */
     lv_obj_t *fallback_screen = lv_obj_create(NULL);
     lv_screen_load(fallback_screen);
@@ -428,8 +482,6 @@ void dashboard_destroy(void) {
   /* 删除父 Screen 会递归删除其全部 Label、Arc、Button 和容器子对象。 */
   if (dashboard_screen != NULL)
     lv_obj_delete(dashboard_screen);
-  if (control_screen != NULL)
-    lv_obj_delete(control_screen);
 
   dashboard_object_refs_clear();
   current_speed = 0;
@@ -447,6 +499,7 @@ void dashboard_create(void) {
   }
 
   dashboard_styles_init();
+  dashboard_display = lv_display_get_default();
 
   /* 创建仪表盘根 Screen；NULL 表示它没有普通父对象。 */
   dashboard_screen = lv_obj_create(NULL);
@@ -461,6 +514,7 @@ void dashboard_create(void) {
 
   /* 创建仪表区容器，集中承载 Scale、Arc、图标和文字。 */
   lv_obj_t *gauge_area = lv_obj_create(screen);
+  lv_obj_align(gauge_area, LV_ALIGN_TOP_MID, 0, 50);
   lv_obj_remove_style_all(gauge_area);
   /* 将 gauge_area 拉伸填满 Screen Grid 的第 1 行。 */
   lv_obj_set_grid_cell(gauge_area, LV_GRID_ALIGN_STRETCH, 0, 1,
@@ -570,47 +624,12 @@ void dashboard_create(void) {
   lv_obj_set_style_text_color(gear_label, lv_color_hex(0x38E07B), 0);
   lv_obj_align(gear_label, LV_ALIGN_TOP_MID, 0, 228);
 
-  /* 创建进入调试页的导航 Button。 */
-  lv_obj_t *debug_button =
-      button_create(screen, "DEBUG", open_control_screen_cb, NULL);
-  /* 为 debug_button 设置适合导航文字的宽度。 */
-  lv_obj_set_width(debug_button, 88);
-  /* 将 DEBUG 按钮放入仪表 Screen Grid 的第 2 行并居中。 */
-  lv_obj_set_grid_cell(debug_button, LV_GRID_ALIGN_CENTER, 0, 1,
-                       LV_GRID_ALIGN_CENTER, 1, 1);
-
-  /* 创建独立的控制 Screen；切换时保留仪表 Screen 和其全部对象。 */
-  control_screen = lv_obj_create(NULL);
-  lv_obj_remove_style_all(control_screen);
-  /* 为 control_screen 设置与模拟器一致的尺寸。 */
-  lv_obj_set_size(control_screen, 320, 480);
-  /* 为控制 Screen 添加与仪表 Screen 相同的背景 Style。 */
-  lv_obj_add_style(control_screen, &style_screen, LV_PART_MAIN);
-  /* 为 control_screen 设置标题行和内容行 Grid 模板。 */
-  lv_obj_set_grid_dsc_array(control_screen, screen_col_dsc, control_row_dsc);
-
-  /* 创建返回仪表页的导航 Button。 */
-  lv_obj_t *back_button =
-      button_create(control_screen, "BACK", back_dashboard_screen_cb, NULL);
-  /* 为 back_button 设置导航按钮宽度。 */
-  lv_obj_set_width(back_button, 70);
-  /* 将 BACK 按钮放入控制 Screen 第 1 行左侧。 */
-  lv_obj_set_grid_cell(back_button, LV_GRID_ALIGN_START, 0, 1,
-                       LV_GRID_ALIGN_CENTER, 0, 1);
-
-  /* 创建控制页面标题 Label。 */
-  lv_obj_t *control_title = lv_label_create(control_screen);
-  /* 为 control_title 设置标题文字。 */
-  lv_label_set_text(control_title, "PC DEBUG");
-  /* 为页面标题复用与按钮文字相同的浅色文字 Style。 */
-  lv_obj_add_style(control_title, &style_text_light, LV_PART_MAIN);
-  /* 将标题放入控制 Screen 第 1 行中央。 */
-  lv_obj_set_grid_cell(control_title, LV_GRID_ALIGN_CENTER, 0, 1,
-                       LV_GRID_ALIGN_CENTER, 0, 1);
-
-  /* 创建控制 Screen 第 2 行中的 PC 调试控制区。 */
-  debug_panel_create(control_screen);
-
   /* 首次进入应用时直接加载仪表 Screen，不使用切换动画。 */
   lv_screen_load(dashboard_screen);
+
+  /* 接收数据的刷新不依赖 AUTO/MANUAL 模式，初始化后立即开始同步。 */
+  vehicle_refresh_timer = lv_timer_create(
+      vehicle_refresh_timer_cb, VEHICLE_REFRESH_PERIOD_MS, NULL);
+
+  open_debug_window_cb();
 }

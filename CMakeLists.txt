@@ -81,6 +81,7 @@ file(GLOB APP_SOURSE
     "${PROJECT_SOURCE_DIR}/app/*.c"
     "${PROJECT_SOURCE_DIR}/app/fonts/*.c"
     "${PROJECT_SOURCE_DIR}/app/images/*.c"
+    "${PROJECT_SOURCE_DIR}/app/ui/*.c"
     "${PROJECT_SOURCE_DIR}/model/*.c"
     "${PROJECT_SOURCE_DIR}/network/*.c"
 )
@@ -92,6 +93,7 @@ set(APP_INCLUDEIDR
     ${PROJECT_SOURCE_DIR}/app
     ${PROJECT_SOURCE_DIR}/app/fonts
     ${PROJECT_SOURCE_DIR}/app/images
+    ${PROJECT_SOURCE_DIR}/app/ui
     ${PROJECT_SOURCE_DIR}/model
     ${PROJECT_SOURCE_DIR}/network
   )

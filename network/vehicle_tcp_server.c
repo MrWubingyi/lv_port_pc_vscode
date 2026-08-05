@@ -105,8 +105,8 @@ static void receive_client_data(int socket_fd) {
 
 int server_thread_main(void *arg) {
   (void)arg;
-  signal(SIGINT, signal_handler);
-  signal(SIGTERM, signal_handler);
+  // signal(SIGINT, signal_handler);
+  // signal(SIGTERM, signal_handler);
 
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
 

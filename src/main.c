@@ -9,10 +9,12 @@
 
 #ifndef _DEFAULT_SOURCE
   #define _DEFAULT_SOURCE /* needed for usleep() */
-#include "dashboard.h"
+#endif
+
+#include "ui.h"
+#include "ui_bridge.h"
 #include "vehicle_state_store.h"
 #include "vehicle_tcp_server.h"
-#endif
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -64,7 +66,7 @@ int main(int argc, char **argv)
   lv_init();
 
   /*Initialize the HAL (display, input devices, tick) for LVGL*/
-  sdl_hal_init(320, 480);
+  sdl_hal_init(800, 480);
 
   /* Run the default demo */
   /* To try a different demo or example, replace this with one of: */
@@ -73,15 +75,16 @@ int main(int argc, char **argv)
   /* - lv_example_label_1(); */
   /* - etc. */
   // lv_demo_widgets();
-    /* 创建自己的仪表盘 */
-  dashboard_create();
   vehicle_state_store_init();
-  dashboard_start_simulation();
+  /* Create the EEZ Studio generated UI, then connect it to vehicle data. */
+  ui_init();
+  ui_bridge_init();
 
   if (!vehicle_tcp_server_start(19090)) {
     fprintf(stderr, "Failed to start TCP server\n");
   }
   while(1) {
+    ui_tick();
     /* Periodically call the lv_task handler.
      * It could be done in a timer interrupt or an OS task too.*/
     uint32_t sleep_time_ms = lv_timer_handler();
