@@ -6,6 +6,9 @@ set(CMAKE_BUILD_TYPE Debug)
 # Set the correct FreeRTOS port for your system (e.g., Posix for WSL)
 set(FREERTOS_PORT GCC_POSIX CACHE STRING "Port for FreeRTOS on Posix environment")
 
+set(CMAKE_C_COMPILER_LAUNCHER ccache)
+set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+
 set(LVGL_PRO_PROJECT_DIR
     ""
     CACHE PATH "Path to LVGL Pro Project folder")
@@ -82,8 +85,8 @@ file(GLOB APP_SOURSE
     "${PROJECT_SOURCE_DIR}/app/fonts/*.c"
     "${PROJECT_SOURCE_DIR}/app/images/*.c"
     "${PROJECT_SOURCE_DIR}/app/ui/*.c"
-    "${PROJECT_SOURCE_DIR}/model/*.c"
-    "${PROJECT_SOURCE_DIR}/network/*.c"
+    "${PROJECT_SOURCE_DIR}/app/model/*.c"
+    "${PROJECT_SOURCE_DIR}/app/network/*.c"
 )
 
 set(APP_LIBS
@@ -94,8 +97,8 @@ set(APP_INCLUDEIDR
     ${PROJECT_SOURCE_DIR}/app/fonts
     ${PROJECT_SOURCE_DIR}/app/images
     ${PROJECT_SOURCE_DIR}/app/ui
-    ${PROJECT_SOURCE_DIR}/model
-    ${PROJECT_SOURCE_DIR}/network
+    ${PROJECT_SOURCE_DIR}/app/model
+    ${PROJECT_SOURCE_DIR}/app/network
   )
 
 set(MAIN_SOURCES
