@@ -22,6 +22,7 @@ static debug_panel_t *dashboard_debug_panel;
 static lv_obj_t *warning_icons[6];
 static lv_obj_t *menu_items[6];
 static int selected_menu_item;
+static lv_timer_t *refresh_timer;
 
 static void update_warning_icons(void) {
     for (int i = 0; i < 6; ++i) {
@@ -153,6 +154,8 @@ static void update_active_lines(int speed, int rpm) {
 static void refresh_cb(lv_timer_t *timer) {
     LV_UNUSED(timer);
 
+    if (dashboard_vehicle_data == NULL) return;
+
     vehicle_state_t state;
     uint64_t last_receive_ms;
     bool valid = vehicle_data_get_snapshot(
@@ -214,5 +217,17 @@ void ui_bridge_init(vehicle_data_t *vehicle_data) {
     dashboard_debug_panel = debug_panel_create();
     update_warning_icons();
     select_menu_item(0);
-    lv_timer_create(refresh_cb, UI_REFRESH_PERIOD_MS, NULL);
+    refresh_timer = lv_timer_create(refresh_cb, UI_REFRESH_PERIOD_MS, NULL);
+}
+
+void ui_bridge_deinit(void) {
+    /* Display deletion can happen from SDL's event timer.  Remove this timer
+       synchronously so the same lv_timer_handler() pass cannot update objects
+       after LVGL has detached and deleted their screen. */
+    if (refresh_timer != NULL) {
+        lv_timer_delete(refresh_timer);
+        refresh_timer = NULL;
+    }
+
+    dashboard_vehicle_data = NULL;
 }

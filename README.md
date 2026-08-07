@@ -1,4 +1,4 @@
-# VSCode Simulator project for LVGL
+﻿# VSCode Simulator project for LVGL
 
 [LVGL](https://github.com/lvgl/lvgl) is written mainly for microcontrollers and embedded systems, however you can run the library **on your PC** as well without any embedded hardware. The code written on PC can be simply copied when your are using an embedded system.
 
@@ -152,6 +152,61 @@ To allow debugging inside VSCode you will also require a GDB [extension](https:/
 
 The project can use **SDL** but it can be easily relaced by any other built-in LVGL dirvers.
 
+## Dashboard Simulator verification
+
+Run the following commands from the project root:
+
+```bash
+cd /root/develop/dashboard_simulator
+./build.sh
+./build/bin/main
+```
+
+A successful build ends with:
+
+```text
+[100%] Built target main
+```
+
+### Runtime and waiting-state verification
+
+Run the simulator from the build directory:
+
+```bash
+cd /root/develop/dashboard_simulator/build
+./bin/main
+```
+
+The verified session contains the following state transitions:
+
+```text
+Listening on 0.0.0.0:19090
+Connected: 192.168.31.85:52450
+Parsed: seq=3 time=1786063931711 speed=0 km/h rpm=800 gear=P soc=70%
+Client disconnected
+```
+
+The initial no-data state and the client-disconnected state intentionally map to the same `Waiting for vehicle` UI. Invalid speed is sanitized in the Android data/model layer before the value reaches LVGL, so LVGL does not provide a separate invalid-speed screen.
+### CPU and memory baseline (Debug/assert-enabled)
+
+With the simulator running, refresh the resource observation once every two seconds and collect 30 samples (about one minute):
+
+```bash
+PID=$(pgrep -n -x main)
+ps -p "$PID" -o pid,cmd
+top -b -d 2 -n 30 -p "$PID" | tee "lvgl_top_$(date +%Y%m%d_%H%M%S).log"
+```
+
+Evidence: [`evidence/lvgl_top_20260807_085335.log`](evidence/lvgl_top_20260807_085335.log)
+
+Recorded on 2026-08-07 in the Ubuntu LVGL Simulator with LVGL memory-integrity, object-sanity, and style-sanity assertions enabled:
+
+- 30 samples from 08:53:35 to 08:54:33 (about 58 seconds).
+- Process CPU: 20.37% average, 6.7% minimum, 26.9% maximum.
+- Resident memory: 115952 KiB (about 113.23 MiB), stable across all samples; `%MEM` remained 0.8%.
+- System swap usage remained 0 MiB.
+
+This is a short-run Debug/assert-enabled CPU and memory baseline. The enabled checks make LVGL slower and use additional RAM, so these values must not be treated as Release-build performance. The two-second interval is the resource-sampling refresh period, not the LVGL UI render period or FPS. This evidence does not represent a long-duration stability test.
 ## Integration with LVGL Pro
 
 This project supports integration with LVGL Pro projects for UI development.
@@ -187,3 +242,6 @@ int main(void) {
     /* ... rest of your application ...*/
 }
 ```
+
+
+

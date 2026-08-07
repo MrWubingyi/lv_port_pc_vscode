@@ -34,6 +34,9 @@ extern const lv_img_dsc_t img_icon_high_beam_24;
 extern const lv_img_dsc_t img_icon_check_engine_24;
 extern const lv_img_dsc_t img_vehicle_truck;
 extern const lv_img_dsc_t img_bar_fuel;
+extern const lv_img_dsc_t img_icon_turn_right_32;
+extern const lv_img_dsc_t img_icon_turn_left_32;
+extern const lv_img_dsc_t img_icon_door_unlocked_24;
 
 #ifndef EXT_IMG_DESC_T
 #define EXT_IMG_DESC_T
@@ -43,7 +46,7 @@ typedef struct _ext_img_desc_t {
 } ext_img_desc_t;
 #endif
 
-extern const ext_img_desc_t images[27];
+extern const ext_img_desc_t images[30];
 
 #ifdef __cplusplus
 }

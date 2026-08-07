@@ -43,6 +43,7 @@ static void request_shutdown(int signal_number)
 static void main_display_delete_event(lv_event_t *event)
 {
   LV_UNUSED(event);
+  ui_bridge_deinit();
   application_running = 0;
 }
 

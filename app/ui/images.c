@@ -1,6 +1,6 @@
 #include "images.h"
 
-const ext_img_desc_t images[27] = {
+const ext_img_desc_t images[30] = {
     { "dashboard_background", &img_dashboard_background },
     { "icon_abs_16", &img_icon_abs_16 },
     { "icon_airbag_16", &img_icon_airbag_16 },
@@ -28,4 +28,7 @@ const ext_img_desc_t images[27] = {
     { "icon_check_engine_24", &img_icon_check_engine_24 },
     { "vehicle_truck", &img_vehicle_truck },
     { "bar_fuel", &img_bar_fuel },
+    { "icon_turn_right_32", &img_icon_turn_right_32 },
+    { "icon_turn_left_32", &img_icon_turn_left_32 },
+    { "icon_door_unlocked_24", &img_icon_door_unlocked_24 },
 };

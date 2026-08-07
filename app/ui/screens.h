@@ -26,6 +26,7 @@ typedef struct _objects_t {
     lv_obj_t *menu_item_fuel_level;
     lv_obj_t *menu_item_settings;
     lv_obj_t *panel_left_warning;
+    lv_obj_t *door_unlocked;
     lv_obj_t *panel_right_warning;
     lv_obj_t *obj0;
     lv_obj_t *panel_left_info;
@@ -55,6 +56,8 @@ typedef struct _objects_t {
     lv_obj_t *lbl_load_max;
     lv_obj_t *bar_load;
     lv_obj_t *lbl_load_unit;
+    lv_obj_t *turn_left;
+    lv_obj_t *turn_right;
     lv_obj_t *panel_right_gauge;
     lv_obj_t *line_right_main;
     lv_obj_t *line_right_red_zone;
