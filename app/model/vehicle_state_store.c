@@ -27,7 +27,9 @@ void vehicle_state_store_init(void)
     pthread_mutex_lock(&state_mutex);
 
     memset(&current_state, 0, sizeof(current_state));
-    current_state.gear = '-';
+    current_state.gear = 0;
+    current_state.door_lock = true;
+    current_state.turn_signal = 0;
     current_receive_ms = 0;
     state_valid = false;
     current_source = VEHICLE_STATE_SOURCE_NONE;

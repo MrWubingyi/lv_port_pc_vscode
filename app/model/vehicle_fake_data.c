@@ -44,15 +44,39 @@ static void *fake_thread_main(void *unused)
         unsigned int load_phase = cycle_tick < 150U ? cycle_tick : 300U - cycle_tick;
         int load_tenths = 64 + (int)(load_phase * 90U / 150U);
 
-        trip_milli_tenths += (uint64_t)speed * 1000U / 36000U;
+        int turn_sig = 0;
+        if (cycle_tick >= 30U && cycle_tick < 80U) {
+            turn_sig = 1; /* LEFT */
+        } else if (cycle_tick >= 120U && cycle_tick < 170U) {
+            turn_sig = 2; /* RIGHT */
+        } else if (cycle_tick >= 210U && cycle_tick < 260U) {
+            turn_sig = 3; /* HAZARD */
+        }
+
+        bool is_p_gear = cycle_tick < 20U;
+        bool door_locked = !is_p_gear;
+        bool high_beam_on = (cycle_tick >= 60U && cycle_tick < 120U);
+        double coolant_temp = (cycle_tick >= 220U && cycle_tick < 280U) ? 108.5 : 88.0;
+
         vehicle_state_t state = {
             .version = 1,
             .sequence = tick,
             .timestamp_ms = (uint64_t)tick * FAKE_PERIOD_MS,
             .speed_kph = speed,
             .rpm = speed == 0 ? 0 : 500 + speed * 18,
-            .gear = cycle_tick < 20U ? 'P' : 'D',
+            .gear = is_p_gear ? 0 : 3, /* 0: P, 3: D */
             .soc = soc,
+            .turn_signal = turn_sig,
+            .door_lock = door_locked,
+            .parking_brake = is_p_gear,
+            .warning = (coolant_temp > 105.0 || soc <= 15) ? 1 : 0,
+            .validity = 0,
+            .high_beam_lights_state = high_beam_on ? 1 : 0,
+            .high_beam = high_beam_on,
+            .engine_coolant_temp = coolant_temp,
+            .coolant_warning = (coolant_temp > 105.0),
+            .ev_battery_level = (double)soc,
+            .battery_warning = (soc <= 15),
             .range_km = soc * 12,
             .outside_temp_c = -5,
             .load_tenths = load_tenths,

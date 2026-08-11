@@ -51,7 +51,7 @@ static void process_vehicle_frame(const char *frame) {
   vehicle_state_print(&state);
 }
 
-static void receive_client_data(int socket_fd) {
+static void receive_client_data(int socket_fd, const char *client_ip, uint16_t client_port) {
   char receive_buffer[RECEIVE_BUFFER_SIZE];
   char line_buffer[LINE_BUFFER_SIZE];
   size_t line_length = 0;
@@ -61,7 +61,8 @@ static void receive_client_data(int socket_fd) {
         recv(socket_fd, receive_buffer, sizeof(receive_buffer), 0);
 
     if (received == 0) {
-      printf("Client disconnected\n");
+      printf("Client disconnected: %s:%u (connection closed by peer)\n", client_ip, client_port);
+      fflush(stdout);
       break;
     }
 
@@ -70,7 +71,8 @@ static void receive_client_data(int socket_fd) {
         continue;
       }
 
-      perror("recv");
+      printf("Client disconnected: %s:%u (recv error: %s)\n", client_ip, client_port, strerror(errno));
+      fflush(stdout);
       break;
     }
 
@@ -142,6 +144,7 @@ static void *server_thread_main(void *arg) {
   }
 
   printf("Listening on 0.0.0.0:%u\n", configured_port);
+  fflush(stdout);
 
   while (atomic_load(&server_running)) {
     struct sockaddr_in client_address;
@@ -160,12 +163,15 @@ static void *server_thread_main(void *arg) {
     }
 
     char client_ip[INET_ADDRSTRLEN];
-
     inet_ntop(AF_INET, &client_address.sin_addr, client_ip, sizeof(client_ip));
+    uint16_t client_port = ntohs(client_address.sin_port);
 
-    printf("Connected: %s:%u\n", client_ip, ntohs(client_address.sin_port));
+    printf("Connected: %s:%u\n", client_ip, client_port);
+    fflush(stdout);
 
-    receive_client_data(client_fd);
+    receive_client_data(client_fd, client_ip, client_port);
+
+    vehicle_data_set_tcp_disconnected(target_vehicle_data);
 
     close(client_fd);
     client_fd = -1;
@@ -177,6 +183,7 @@ static void *server_thread_main(void *arg) {
   }
 
   printf("Server stopped\n");
+  fflush(stdout);
   return NULL;
 }
 
@@ -201,9 +208,14 @@ bool vehicle_tcp_server_start(uint16_t port, vehicle_data_t *vehicle_data) {
 
   return true;
 }
+
 void vehicle_tcp_server_stop(void) {
   if (!atomic_exchange(&server_running, false)) {
     return;
+  }
+
+  if (target_vehicle_data != NULL) {
+    vehicle_data_set_tcp_disconnected(target_vehicle_data);
   }
 
   if (client_fd >= 0) {

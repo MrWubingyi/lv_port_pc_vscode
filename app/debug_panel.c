@@ -177,6 +177,10 @@ void debug_panel_update(debug_panel_t *panel, const vehicle_state_t *state,
         for (int i = 0; i < 7; ++i) {
             if (!panel->state_overridden[i]) panel->states[i] = incoming[i];
         }
+    } else if (!connected) {
+        for (int i = 0; i < 7; ++i) {
+            if (!panel->state_overridden[i]) panel->states[i] = false;
+        }
     }
     for (int i = 0; i < 7; ++i) {
         lv_label_set_text(panel->values[i], state_text(panel->states[i]));

@@ -1,4 +1,4 @@
-﻿#include "dashboard.h"
+#include "dashboard.h"
 #include "vehicle_state_store.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -81,20 +81,19 @@ static void vehicle_refresh_timer_cb(lv_timer_t *timer) {
 
   bool valid = vehicle_state_store_get_snapshot(&state, &last_receive_ms);
 
-  if (!valid) {
-    dashboard_set_status(status_icon, dashboard_status_offline);
-    return;
-  }
-
   uint64_t now_ms = dashboard_monotonic_ms();
 
-  if (now_ms - last_receive_ms > VEHICLE_TIMEOUT_MS) {
+  if (!valid || (now_ms - last_receive_ms > VEHICLE_TIMEOUT_MS)) {
+    dashboard_set_speed(0);
+    dashboard_set_gear('-');
     dashboard_set_status(status_icon, dashboard_status_offline);
     return;
   }
 
   dashboard_set_speed(state.speed_kph);
-  dashboard_set_gear(state.gear);
+  static const char gear_chars[] = {'P', 'R', 'N', 'D'};
+  char gear_char = (state.gear >= 0 && state.gear <= 3) ? gear_chars[state.gear] : '-';
+  dashboard_set_gear(gear_char);
 
   dashboard_set_status(status_icon, dashboard_status_normal);
 }

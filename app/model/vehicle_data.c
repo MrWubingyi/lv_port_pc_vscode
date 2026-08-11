@@ -1,6 +1,7 @@
 #include "vehicle_data.h"
 
 #include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -29,7 +30,8 @@ vehicle_data_t *vehicle_data_create(void)
         free(data);
         return NULL;
     }
-    data->tcp_state.gear = '-';
+    data->tcp_state.gear = 0;
+    data->tcp_state.door_lock = true;
     return data;
 }
 
@@ -67,6 +69,12 @@ void vehicle_data_apply_uart_override(vehicle_data_t *data,
     if((fields & VEHICLE_DATA_FIELD_LOAD_MAX) != 0U) data->uart_values.load_max_tenths = values->load_max_tenths;
     if((fields & VEHICLE_DATA_FIELD_TRIP) != 0U) data->uart_values.trip_tenths = values->trip_tenths;
     if((fields & VEHICLE_DATA_FIELD_ENGINE_WARNING) != 0U) data->uart_values.engine_warning = values->engine_warning;
+    if((fields & VEHICLE_DATA_FIELD_TURN_SIGNAL) != 0U) data->uart_values.turn_signal = values->turn_signal;
+    if((fields & VEHICLE_DATA_FIELD_DOOR_LOCK) != 0U) data->uart_values.door_lock = values->door_lock;
+    if((fields & VEHICLE_DATA_FIELD_COOLANT_WARNING) != 0U) data->uart_values.coolant_warning = values->coolant_warning;
+    if((fields & VEHICLE_DATA_FIELD_HIGH_BEAM) != 0U) data->uart_values.high_beam = values->high_beam;
+    if((fields & VEHICLE_DATA_FIELD_BATTERY_WARNING) != 0U) data->uart_values.battery_warning = values->battery_warning;
+    if((fields & VEHICLE_DATA_FIELD_SEATBELT_WARNING) != 0U) data->uart_values.seatbelt_warning = values->seatbelt_warning;
     data->uart_fields |= fields;
     pthread_mutex_unlock(&data->mutex);
 }
@@ -80,6 +88,20 @@ void vehicle_data_clear_uart_override(vehicle_data_t *data,
     pthread_mutex_unlock(&data->mutex);
 }
 
+#define VEHICLE_TIMEOUT_MS 3000U
+
+void vehicle_data_set_tcp_disconnected(vehicle_data_t *data)
+{
+    if(data == NULL) return;
+    pthread_mutex_lock(&data->mutex);
+    if(data->tcp_valid) {
+        data->tcp_valid = false;
+        printf("[VehicleData] TCP disconnected, state invalidated\n");
+        fflush(stdout);
+    }
+    pthread_mutex_unlock(&data->mutex);
+}
+
 #define APPLY_OVERRIDE(field_mask, member) \
     do { if((fields & (field_mask)) != 0U) state->member = uart.member; } while(0)
 
@@ -88,6 +110,14 @@ bool vehicle_data_get_snapshot(vehicle_data_t *data, vehicle_state_t *state,
 {
     if(data == NULL || state == NULL || last_tcp_receive_ms == NULL) return false;
     pthread_mutex_lock(&data->mutex);
+    if(data->tcp_valid) {
+        uint64_t now_ms = monotonic_time_ms();
+        if(now_ms - data->last_tcp_receive_ms > VEHICLE_TIMEOUT_MS) {
+            data->tcp_valid = false;
+            printf("[VehicleData] TCP receive timeout (> %u ms), state invalidated\n", VEHICLE_TIMEOUT_MS);
+            fflush(stdout);
+        }
+    }
     bool valid = data->tcp_valid;
     if(valid) {
         *state = data->tcp_state;
@@ -104,6 +134,12 @@ bool vehicle_data_get_snapshot(vehicle_data_t *data, vehicle_state_t *state,
         APPLY_OVERRIDE(VEHICLE_DATA_FIELD_LOAD_MAX, load_max_tenths);
         APPLY_OVERRIDE(VEHICLE_DATA_FIELD_TRIP, trip_tenths);
         APPLY_OVERRIDE(VEHICLE_DATA_FIELD_ENGINE_WARNING, engine_warning);
+        APPLY_OVERRIDE(VEHICLE_DATA_FIELD_TURN_SIGNAL, turn_signal);
+        APPLY_OVERRIDE(VEHICLE_DATA_FIELD_DOOR_LOCK, door_lock);
+        APPLY_OVERRIDE(VEHICLE_DATA_FIELD_COOLANT_WARNING, coolant_warning);
+        APPLY_OVERRIDE(VEHICLE_DATA_FIELD_HIGH_BEAM, high_beam);
+        APPLY_OVERRIDE(VEHICLE_DATA_FIELD_BATTERY_WARNING, battery_warning);
+        APPLY_OVERRIDE(VEHICLE_DATA_FIELD_SEATBELT_WARNING, seatbelt_warning);
     }
     pthread_mutex_unlock(&data->mutex);
     return valid;

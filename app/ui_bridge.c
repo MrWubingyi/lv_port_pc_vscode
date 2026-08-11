@@ -168,6 +168,36 @@ static void refresh_cb(lv_timer_t *timer) {
     update_warning_icons();
     update_menu_navigation();
     if (!valid) {
+        if (objects.lbl_speed != NULL) lv_label_set_text(objects.lbl_speed, "0");
+        if (objects.lbl_gear != NULL) lv_label_set_text(objects.lbl_gear, "-");
+        if (objects.bar_fuel != NULL) {
+            lv_bar_set_value(objects.bar_fuel, 0, LV_ANIM_OFF);
+            lv_obj_set_style_bg_color(objects.bar_fuel, lv_color_hex(0x59D6EA), LV_PART_INDICATOR);
+        }
+        if (objects.img_fuel != NULL) {
+            lv_obj_set_style_opa(objects.img_fuel, LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor_opa(objects.img_fuel, LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+        if (objects.lbl_range != NULL) lv_label_set_text(objects.lbl_range, "0 km");
+        if (objects.lbl_load_current != NULL) lv_label_set_text(objects.lbl_load_current, "0.0");
+        if (objects.lbl_load_max != NULL) lv_label_set_text(objects.lbl_load_max, "0.0");
+        if (objects.bar_load != NULL) lv_bar_set_value(objects.bar_load, 0, LV_ANIM_OFF);
+        if (objects.lbl_outside_temperature != NULL) lv_label_set_text(objects.lbl_outside_temperature, "0 °C");
+        if (objects.lbl_trip_distance != NULL) lv_label_set_text(objects.lbl_trip_distance, "T1 0.0 km");
+
+        for (int i = 0; i < 6; ++i) {
+            if (warning_icons[i] != NULL) {
+                lv_obj_set_style_opa(warning_icons[i], LV_OPA_20, LV_PART_MAIN);
+                lv_obj_set_style_image_recolor_opa(warning_icons[i], LV_OPA_TRANSP, LV_PART_MAIN);
+            }
+        }
+
+        if (objects.turn_left != NULL) lv_obj_set_style_opa(objects.turn_left, LV_OPA_20, LV_PART_MAIN);
+        if (objects.turn_right != NULL) lv_obj_set_style_opa(objects.turn_right, LV_OPA_20, LV_PART_MAIN);
+        if (objects.door_unlocked != NULL) lv_obj_set_style_opa(objects.door_unlocked, LV_OPA_20, LV_PART_MAIN);
+
+        update_active_lines(0, 0);
+        update_scale_ticks(0, 0);
         return;
     }
 
@@ -177,10 +207,12 @@ static void refresh_cb(lv_timer_t *timer) {
     int load_percent = state.load_tenths * 100 / load_max;
     if (load_percent < 0) load_percent = 0;
     if (load_percent > 100) load_percent = 100;
-    char gear[2] = {state.gear ? state.gear : '-', '\0'};
+
+    static const char gear_chars[] = {'P', 'R', 'N', 'D'};
+    char gear_str[2] = {(state.gear >= 0 && state.gear <= 3) ? gear_chars[state.gear] : '-', '\0'};
 
     lv_label_set_text_fmt(objects.lbl_speed, "%d", speed);
-    lv_label_set_text(objects.lbl_gear, gear);
+    lv_label_set_text(objects.lbl_gear, gear_str);
     lv_bar_set_value(objects.bar_fuel, soc, LV_ANIM_ON);
     lv_label_set_text_fmt(objects.lbl_range, "%d km", state.range_km);
     lv_label_set_text_fmt(objects.lbl_load_current, "%d.%d",
@@ -193,6 +225,87 @@ static void refresh_cb(lv_timer_t *timer) {
                           state.outside_temp_c);
     lv_label_set_text_fmt(objects.lbl_trip_distance, "T1 %d.%d km",
                           state.trip_tenths / 10, state.trip_tenths % 10);
+
+    /* Seat belt warning logic */
+    if (warning_icons[0] != NULL) {
+        bool belt_warn = debug_panel_get_warning(dashboard_debug_panel, 0) || state.seatbelt_warning;
+        lv_obj_set_style_opa(warning_icons[0],
+                             belt_warn ? LV_OPA_COVER : LV_OPA_20,
+                             LV_PART_MAIN);
+        if (belt_warn) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[0], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[0], lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(warning_icons[0], LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
+    /* High beam light indicator logic */
+    if (warning_icons[5] != NULL) {
+        lv_obj_set_style_opa(warning_icons[5],
+                             state.high_beam ? LV_OPA_COVER : LV_OPA_20,
+                             LV_PART_MAIN);
+        if (state.high_beam) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[5], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[5], lv_color_hex(0x2094FA), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(warning_icons[5], LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
+    /* Coolant / Engine temp warning logic */
+    if (warning_icons[4] != NULL) {
+        bool coolant_warn = state.coolant_warning || (state.engine_coolant_temp > 105.0);
+        lv_obj_set_style_opa(warning_icons[4],
+                             coolant_warn ? LV_OPA_COVER : LV_OPA_20,
+                             LV_PART_MAIN);
+        if (coolant_warn) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[4], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[4], lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(warning_icons[4], LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
+    /* EV Battery / SOC warning logic (SOC <= 15%) */
+    bool bat_low = state.battery_warning || (soc <= 15);
+    if (objects.bar_fuel != NULL) {
+        uint32_t fuel_color = bat_low ? 0xFF3B30 : 0x59D6EA;
+        lv_obj_set_style_bg_color(objects.bar_fuel, lv_color_hex(fuel_color), LV_PART_INDICATOR);
+    }
+    if (objects.img_fuel != NULL) {
+        lv_obj_set_style_opa(objects.img_fuel, bat_low ? LV_OPA_COVER : LV_OPA_COVER, LV_PART_MAIN);
+        if (bat_low) {
+            lv_obj_set_style_image_recolor_opa(objects.img_fuel, LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(objects.img_fuel, lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(objects.img_fuel, LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
+    /* Door lock logic: door_lock == false means unlocked (show warning icon) */
+    if (objects.door_unlocked != NULL) {
+        lv_obj_set_style_opa(objects.door_unlocked,
+                             state.door_lock ? LV_OPA_20 : LV_OPA_COVER,
+                             LV_PART_MAIN);
+    }
+
+    /* Turn signal logic: 0: NONE, 1: LEFT, 2: RIGHT, 3: HAZARD */
+    static uint32_t turn_blink_count = 0;
+    turn_blink_count++;
+    bool blink_on = (turn_blink_count / 5) % 2 == 0;
+    bool left_active = (state.turn_signal == 1 || state.turn_signal == 3);
+    bool right_active = (state.turn_signal == 2 || state.turn_signal == 3);
+
+    if (objects.turn_left != NULL) {
+        uint8_t left_opa = (left_active && blink_on) ? LV_OPA_COVER : LV_OPA_20;
+        lv_obj_set_style_opa(objects.turn_left, left_opa, LV_PART_MAIN);
+    }
+    if (objects.turn_right != NULL) {
+        uint8_t right_opa = (right_active && blink_on) ? LV_OPA_COVER : LV_OPA_20;
+        lv_obj_set_style_opa(objects.turn_right, right_opa, LV_PART_MAIN);
+    }
+
     update_active_lines(speed, state.rpm < 0 ? 0 : state.rpm);
     update_scale_ticks(speed, state.rpm < 0 ? 0 : state.rpm);
 }
