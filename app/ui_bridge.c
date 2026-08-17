@@ -3,6 +3,7 @@
 #include "screens.h"
 #include "vehicle_data.h"
 #include "debug_panel.h"
+#include "ui/ui_image_runtime.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -153,6 +154,8 @@ static void update_active_lines(int speed, int rpm) {
 
 static void refresh_cb(lv_timer_t *timer) {
     LV_UNUSED(timer);
+
+    ui_image_runtime_process_pending();
 
     if (dashboard_vehicle_data == NULL) return;
 
@@ -343,4 +346,5 @@ void ui_bridge_deinit(void) {
     }
 
     dashboard_vehicle_data = NULL;
+    ui_image_runtime_deinit();
 }

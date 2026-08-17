@@ -7,6 +7,7 @@
 #include "vars.h"
 #include "styles.h"
 #include "ui.h"
+#include "ui_image_runtime.h"
 
 #include <string.h>
 
@@ -36,7 +37,7 @@ void create_screen_main() {
             objects.img_background = obj;
             lv_obj_set_pos(obj, 0, 0);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_image_set_src(obj, &img_dashboard_background);
+            ui_image_runtime_bind(obj, &img_dashboard_background);
         }
         {
             // panel_top_menu
@@ -94,7 +95,7 @@ void create_screen_main() {
                             lv_obj_t *obj = lv_image_create(parent_obj);
                             lv_obj_set_pos(obj, 0, 0);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                            lv_image_set_src(obj, &img_menu_defult_16);
+                            ui_image_runtime_bind(obj, &img_menu_defult_16);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
@@ -128,7 +129,7 @@ void create_screen_main() {
                             lv_obj_t *obj = lv_image_create(parent_obj);
                             lv_obj_set_pos(obj, 0, 0);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                            lv_image_set_src(obj, &img_menu_vehicle_16);
+                            ui_image_runtime_bind(obj, &img_menu_vehicle_16);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
@@ -161,7 +162,7 @@ void create_screen_main() {
                             lv_obj_t *obj = lv_image_create(parent_obj);
                             lv_obj_set_pos(obj, 0, 0);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                            lv_image_set_src(obj, &img_menu_trip_meter_16);
+                            ui_image_runtime_bind(obj, &img_menu_trip_meter_16);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
@@ -194,7 +195,7 @@ void create_screen_main() {
                             lv_obj_t *obj = lv_image_create(parent_obj);
                             lv_obj_set_pos(obj, 0, 0);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                            lv_image_set_src(obj, &img_menu_driving_assistance_16);
+                            ui_image_runtime_bind(obj, &img_menu_driving_assistance_16);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
@@ -227,7 +228,7 @@ void create_screen_main() {
                             lv_obj_t *obj = lv_image_create(parent_obj);
                             lv_obj_set_pos(obj, 0, 0);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                            lv_image_set_src(obj, &img_menu_fuel_level_16);
+                            ui_image_runtime_bind(obj, &img_menu_fuel_level_16);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
@@ -260,7 +261,7 @@ void create_screen_main() {
                             lv_obj_t *obj = lv_image_create(parent_obj);
                             lv_obj_set_pos(obj, 0, 0);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                            lv_image_set_src(obj, &img_meunu_settings_16);
+                            ui_image_runtime_bind(obj, &img_meunu_settings_16);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
@@ -290,19 +291,19 @@ void create_screen_main() {
                     lv_obj_t *obj = lv_image_create(parent_obj);
                     lv_obj_set_pos(obj, 0, 24);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_seat_belt_24);
+                    ui_image_runtime_bind(obj, &img_icon_seat_belt_24);
                 }
                 {
                     lv_obj_t *obj = lv_image_create(parent_obj);
                     lv_obj_set_pos(obj, 70, 24);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_parking_break_24);
+                    ui_image_runtime_bind(obj, &img_icon_parking_break_24);
                 }
                 {
                     lv_obj_t *obj = lv_image_create(parent_obj);
                     lv_obj_set_pos(obj, 100, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_brake_warning_24);
+                    ui_image_runtime_bind(obj, &img_icon_brake_warning_24);
                 }
                 {
                     // door_unlocked
@@ -310,7 +311,7 @@ void create_screen_main() {
                     objects.door_unlocked = obj;
                     lv_obj_set_pos(obj, 107, 24);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_door_unlocked_24);
+                    ui_image_runtime_bind(obj, &img_icon_door_unlocked_24);
                 }
             }
         }
@@ -337,21 +338,21 @@ void create_screen_main() {
                     lv_obj_t *obj = lv_image_create(parent_obj);
                     lv_obj_set_pos(obj, 0, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_check_engine_24);
+                    ui_image_runtime_bind(obj, &img_icon_check_engine_24);
                 }
                 {
                     lv_obj_t *obj = lv_image_create(parent_obj);
                     objects.obj0 = obj;
                     lv_obj_set_pos(obj, 36, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_coolant_24);
+                    ui_image_runtime_bind(obj, &img_icon_coolant_24);
                     lv_obj_set_style_image_recolor(obj, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                 }
                 {
                     lv_obj_t *obj = lv_image_create(parent_obj);
                     lv_obj_set_pos(obj, 70, 24);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_high_beam_24);
+                    ui_image_runtime_bind(obj, &img_icon_high_beam_24);
                 }
             }
         }
@@ -681,7 +682,7 @@ void create_screen_main() {
                     objects.img_vehicle = obj;
                     lv_obj_set_pos(obj, 85, 101);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_vehicle_truck);
+                    ui_image_runtime_bind(obj, &img_vehicle_truck);
                 }
                 {
                     // lbl_load_current
@@ -729,7 +730,7 @@ void create_screen_main() {
                     objects.turn_left = obj;
                     lv_obj_set_pos(obj, 0, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_turn_left_32);
+                    ui_image_runtime_bind(obj, &img_icon_turn_left_32);
                 }
                 {
                     // turn_right
@@ -737,7 +738,7 @@ void create_screen_main() {
                     objects.turn_right = obj;
                     lv_obj_set_pos(obj, 249, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_icon_turn_right_32);
+                    ui_image_runtime_bind(obj, &img_icon_turn_right_32);
                 }
             }
         }
@@ -1033,7 +1034,7 @@ void create_screen_main() {
                     objects.img_fuel = obj;
                     lv_obj_set_pos(obj, 0, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_image_set_src(obj, &img_bar_fuel);
+                    ui_image_runtime_bind(obj, &img_bar_fuel);
                 }
                 {
                     // bar_fuel

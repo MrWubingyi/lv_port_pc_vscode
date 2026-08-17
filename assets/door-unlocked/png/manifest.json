@@ -1,0 +1,41 @@
+{
+  "source": "D:\\Obsidian\\Obsidian-Note\\generated-icons\\door-unlocked\\source.html",
+  "selector": "#icon-source",
+  "sizes": [
+    16,
+    24,
+    32
+  ],
+  "files": [
+    {
+      "size": 16,
+      "file": "16x16.png",
+      "validation": {
+        "width": 16,
+        "height": 16,
+        "visiblePixels": 129,
+        "transparentCorners": true
+      }
+    },
+    {
+      "size": 24,
+      "file": "24x24.png",
+      "validation": {
+        "width": 24,
+        "height": 24,
+        "visiblePixels": 263,
+        "transparentCorners": true
+      }
+    },
+    {
+      "size": 32,
+      "file": "32x32.png",
+      "validation": {
+        "width": 32,
+        "height": 32,
+        "visiblePixels": 428,
+        "transparentCorners": true
+      }
+    }
+  ]
+}

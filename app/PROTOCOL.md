@@ -124,3 +124,54 @@
 }
 
 ```
+
+## 5. 运行时图片资源接口
+
+图片接口与车辆数据共用同一个 TCP 连接，仍采用“一行一个 JSON”的帧格式。
+运行时替换仅在以 `-DUI_USE_PNG_ASSETS=ON` 构建时可用。为避免通过 TCP
+访问任意系统文件，传入的图片必须已经上传到项目 `assets` 目录（可以位于其
+子目录），并且必须是具有有效 PNG 文件头的常规文件。
+
+### 5.1 替换图片
+
+请求：
+
+```json
+{"type":"image.set","name":"dashboard_background","path":"uploads/new-background.png"}
+```
+
+`path` 可以是相对 `assets` 的路径、`assets` 内的绝对路径，或 LVGL 的
+`A:/absolute/path.png` 路径。成功返回表示请求已进入 UI 线程队列；图片通常
+会在下一个 100 ms UI 刷新周期内切换：
+
+```json
+{"type":"image.set.result","ok":true,"status":"queued","name":"dashboard_background","path":"A:/absolute/assets/uploads/new-background.png"}
+```
+
+名称不存在、文件越界、文件不存在或不是 PNG 时会返回：
+
+```json
+{"type":"image.set.result","ok":false,"error":"unknown image name"}
+```
+
+### 5.2 获取全部图片路径
+
+请求：
+
+```json
+{"type":"image.list"}
+```
+
+返回：
+
+```json
+{"type":"image.list.result","ok":true,"images":[{"name":"dashboard_background","path":"A:/absolute/assets/lvgl-cluster-blue-gradient-800-480.png"}]}
+```
+
+如果变更尚未由 UI 线程应用，资源项还包含 `pendingPath`；如果 LVGL 解码失败，
+则保留原路径并在资源项中返回 `lastError`。可通过下面的命令直接测试：
+
+```bash
+printf '%s\n' '{"type":"image.list"}' | nc 127.0.0.1 19090
+printf '%s\n' '{"type":"image.set","name":"vehicle_truck","path":"uploads/truck.png"}' | nc 127.0.0.1 19090
+```

@@ -1,0 +1,3498 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 280  of event 'task-clock:ppp'
+# Event count (approx.): 2828282800
+#
+# Children      Self  Command     Shared Object          Symbol                                       
+# ........  ........  ..........  .....................  .............................................
+#
+    14.29%     0.00%  main        libc.so.6              [.] __libc_start_call_main
+            |
+            ---__libc_start_call_main
+               main
+               lv_timer_handler.part.0
+               |          
+               |--12.86%--lv_display_refr_timer
+               |          |          
+               |          |--10.71%--refr_area
+               |          |          refr_configured_layer
+               |          |          |          
+               |          |           --10.36%--lv_obj_refr.part.0
+               |          |                     |          
+               |          |                      --10.00%--lv_obj_redraw
+               |          |                                |          
+               |          |                                |--8.57%--lv_obj_refr.part.0
+               |          |                                |          lv_obj_redraw
+               |          |                                |          |          
+               |          |                                |          |--4.64%--lv_obj_refr.part.0
+               |          |                                |          |          |          
+               |          |                                |          |           --4.29%--lv_obj_redraw
+               |          |                                |          |                     lv_obj_send_event
+               |          |                                |          |                     lv_obj_event_base
+               |          |                                |          |                     |          
+               |          |                                |          |                     |--2.14%--lv_line_event
+               |          |                                |          |                     |          |          
+               |          |                                |          |                     |           --1.43%--lv_draw_line
+               |          |                                |          |                     |                     lv_draw_finalize_task_creation
+               |          |                                |          |                     |                     lv_draw_dispatch_layer
+               |          |                                |          |                     |                     dispatch
+               |          |                                |          |                     |                     lv_draw_sw_line
+               |          |                                |          |                     |                     |          
+               |          |                                |          |                     |                      --0.71%--lv_draw_sw_blend
+               |          |                                |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+               |          |                                |          |                     |          
+               |          |                                |          |                      --1.43%--lv_label_event
+               |          |                                |          |                                |          
+               |          |                                |          |                                 --0.71%--lv_draw_finalize_task_creation
+               |          |                                |          |                                           lv_draw_dispatch_layer
+               |          |                                |          |          
+               |          |                                |           --3.57%--lv_obj_send_event
+               |          |                                |                     lv_obj_event_base
+               |          |                                |                     |          
+               |          |                                |                     |--2.50%--lv_image_event
+               |          |                                |                     |          lv_draw_image
+               |          |                                |                     |          lv_draw_finalize_task_creation
+               |          |                                |                     |          lv_draw_dispatch_layer
+               |          |                                |                     |          dispatch
+               |          |                                |                     |          lv_draw_image_normal_helper
+               |          |                                |                     |          img_decode_and_draw
+               |          |                                |                     |          img_draw_core
+               |          |                                |                     |          lv_draw_sw_blend
+               |          |                                |                     |          |          
+               |          |                                |                     |           --2.14%--lv_draw_sw_blend_image_to_rgb888
+               |          |                                |                     |          
+               |          |                                |                      --1.07%--lv_obj_draw
+               |          |                                |                                lv_draw_rect
+               |          |                                |                                lv_draw_finalize_task_creation
+               |          |                                |                                lv_draw_dispatch_layer
+               |          |                                |                                dispatch
+               |          |                                |                                |          
+               |          |                                |                                 --0.71%--lv_draw_sw_box_shadow
+               |          |                                |          
+               |          |                                 --1.43%--lv_obj_send_event
+               |          |                                           |          
+               |          |                                            --1.07%--lv_obj_event_base
+               |          |                                                      lv_obj_draw
+               |          |                                                      lv_draw_rect
+               |          |                                                      lv_draw_finalize_task_creation
+               |          |                                                      lv_draw_dispatch_layer
+               |          |                                                      dispatch
+               |          |                                                      lv_draw_sw_fill
+               |          |                                                      lv_draw_sw_blend
+               |          |                                                      lv_draw_sw_blend_color_to_rgb888
+               |          |          
+               |          |--1.43%--lv_obj_update_layout
+               |          |          |          
+               |          |           --0.71%--layout_update_core
+               |          |          
+               |           --0.71%--draw_buf_flush
+               |          
+                --1.07%--refresh_cb
+
+    14.29%     0.00%  main        main                   [.] main
+            |
+            ---main
+               lv_timer_handler.part.0
+               |          
+               |--12.86%--lv_display_refr_timer
+               |          |          
+               |          |--10.71%--refr_area
+               |          |          refr_configured_layer
+               |          |          |          
+               |          |           --10.36%--lv_obj_refr.part.0
+               |          |                     |          
+               |          |                      --10.00%--lv_obj_redraw
+               |          |                                |          
+               |          |                                |--8.57%--lv_obj_refr.part.0
+               |          |                                |          lv_obj_redraw
+               |          |                                |          |          
+               |          |                                |          |--4.64%--lv_obj_refr.part.0
+               |          |                                |          |          |          
+               |          |                                |          |           --4.29%--lv_obj_redraw
+               |          |                                |          |                     lv_obj_send_event
+               |          |                                |          |                     lv_obj_event_base
+               |          |                                |          |                     |          
+               |          |                                |          |                     |--2.14%--lv_line_event
+               |          |                                |          |                     |          |          
+               |          |                                |          |                     |           --1.43%--lv_draw_line
+               |          |                                |          |                     |                     lv_draw_finalize_task_creation
+               |          |                                |          |                     |                     lv_draw_dispatch_layer
+               |          |                                |          |                     |                     dispatch
+               |          |                                |          |                     |                     lv_draw_sw_line
+               |          |                                |          |                     |                     |          
+               |          |                                |          |                     |                      --0.71%--lv_draw_sw_blend
+               |          |                                |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+               |          |                                |          |                     |          
+               |          |                                |          |                      --1.43%--lv_label_event
+               |          |                                |          |                                |          
+               |          |                                |          |                                 --0.71%--lv_draw_finalize_task_creation
+               |          |                                |          |                                           lv_draw_dispatch_layer
+               |          |                                |          |          
+               |          |                                |           --3.57%--lv_obj_send_event
+               |          |                                |                     lv_obj_event_base
+               |          |                                |                     |          
+               |          |                                |                     |--2.50%--lv_image_event
+               |          |                                |                     |          lv_draw_image
+               |          |                                |                     |          lv_draw_finalize_task_creation
+               |          |                                |                     |          lv_draw_dispatch_layer
+               |          |                                |                     |          dispatch
+               |          |                                |                     |          lv_draw_image_normal_helper
+               |          |                                |                     |          img_decode_and_draw
+               |          |                                |                     |          img_draw_core
+               |          |                                |                     |          lv_draw_sw_blend
+               |          |                                |                     |          |          
+               |          |                                |                     |           --2.14%--lv_draw_sw_blend_image_to_rgb888
+               |          |                                |                     |          
+               |          |                                |                      --1.07%--lv_obj_draw
+               |          |                                |                                lv_draw_rect
+               |          |                                |                                lv_draw_finalize_task_creation
+               |          |                                |                                lv_draw_dispatch_layer
+               |          |                                |                                dispatch
+               |          |                                |                                |          
+               |          |                                |                                 --0.71%--lv_draw_sw_box_shadow
+               |          |                                |          
+               |          |                                 --1.43%--lv_obj_send_event
+               |          |                                           |          
+               |          |                                            --1.07%--lv_obj_event_base
+               |          |                                                      lv_obj_draw
+               |          |                                                      lv_draw_rect
+               |          |                                                      lv_draw_finalize_task_creation
+               |          |                                                      lv_draw_dispatch_layer
+               |          |                                                      dispatch
+               |          |                                                      lv_draw_sw_fill
+               |          |                                                      lv_draw_sw_blend
+               |          |                                                      lv_draw_sw_blend_color_to_rgb888
+               |          |          
+               |          |--1.43%--lv_obj_update_layout
+               |          |          |          
+               |          |           --0.71%--layout_update_core
+               |          |          
+               |           --0.71%--draw_buf_flush
+               |          
+                --1.07%--refresh_cb
+
+    14.29%     0.00%  main        main                   [.] lv_timer_handler.part.0
+            |
+            ---lv_timer_handler.part.0
+               |          
+               |--12.86%--lv_display_refr_timer
+               |          |          
+               |          |--10.71%--refr_area
+               |          |          refr_configured_layer
+               |          |          |          
+               |          |           --10.36%--lv_obj_refr.part.0
+               |          |                     |          
+               |          |                      --10.00%--lv_obj_redraw
+               |          |                                |          
+               |          |                                |--8.57%--lv_obj_refr.part.0
+               |          |                                |          lv_obj_redraw
+               |          |                                |          |          
+               |          |                                |          |--4.64%--lv_obj_refr.part.0
+               |          |                                |          |          |          
+               |          |                                |          |           --4.29%--lv_obj_redraw
+               |          |                                |          |                     lv_obj_send_event
+               |          |                                |          |                     lv_obj_event_base
+               |          |                                |          |                     |          
+               |          |                                |          |                     |--2.14%--lv_line_event
+               |          |                                |          |                     |          |          
+               |          |                                |          |                     |           --1.43%--lv_draw_line
+               |          |                                |          |                     |                     lv_draw_finalize_task_creation
+               |          |                                |          |                     |                     lv_draw_dispatch_layer
+               |          |                                |          |                     |                     dispatch
+               |          |                                |          |                     |                     lv_draw_sw_line
+               |          |                                |          |                     |                     |          
+               |          |                                |          |                     |                      --0.71%--lv_draw_sw_blend
+               |          |                                |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+               |          |                                |          |                     |          
+               |          |                                |          |                      --1.43%--lv_label_event
+               |          |                                |          |                                |          
+               |          |                                |          |                                 --0.71%--lv_draw_finalize_task_creation
+               |          |                                |          |                                           lv_draw_dispatch_layer
+               |          |                                |          |          
+               |          |                                |           --3.57%--lv_obj_send_event
+               |          |                                |                     lv_obj_event_base
+               |          |                                |                     |          
+               |          |                                |                     |--2.50%--lv_image_event
+               |          |                                |                     |          lv_draw_image
+               |          |                                |                     |          lv_draw_finalize_task_creation
+               |          |                                |                     |          lv_draw_dispatch_layer
+               |          |                                |                     |          dispatch
+               |          |                                |                     |          lv_draw_image_normal_helper
+               |          |                                |                     |          img_decode_and_draw
+               |          |                                |                     |          img_draw_core
+               |          |                                |                     |          lv_draw_sw_blend
+               |          |                                |                     |          |          
+               |          |                                |                     |           --2.14%--lv_draw_sw_blend_image_to_rgb888
+               |          |                                |                     |          
+               |          |                                |                      --1.07%--lv_obj_draw
+               |          |                                |                                lv_draw_rect
+               |          |                                |                                lv_draw_finalize_task_creation
+               |          |                                |                                lv_draw_dispatch_layer
+               |          |                                |                                dispatch
+               |          |                                |                                |          
+               |          |                                |                                 --0.71%--lv_draw_sw_box_shadow
+               |          |                                |          
+               |          |                                 --1.43%--lv_obj_send_event
+               |          |                                           |          
+               |          |                                            --1.07%--lv_obj_event_base
+               |          |                                                      lv_obj_draw
+               |          |                                                      lv_draw_rect
+               |          |                                                      lv_draw_finalize_task_creation
+               |          |                                                      lv_draw_dispatch_layer
+               |          |                                                      dispatch
+               |          |                                                      lv_draw_sw_fill
+               |          |                                                      lv_draw_sw_blend
+               |          |                                                      lv_draw_sw_blend_color_to_rgb888
+               |          |          
+               |          |--1.43%--lv_obj_update_layout
+               |          |          |          
+               |          |           --0.71%--layout_update_core
+               |          |          
+               |           --0.71%--draw_buf_flush
+               |          
+                --1.07%--refresh_cb
+
+    12.86%     0.00%  main        [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               |          
+                --12.50%--do_syscall_64
+                          x64_sys_call
+                          |          
+                          |--7.14%--__x64_sys_writev
+                          |          do_writev
+                          |          vfs_writev
+                          |          |          
+                          |           --6.79%--do_iter_readv_writev
+                          |                     |          
+                          |                      --6.43%--sock_write_iter
+                          |                                inet_sendmsg
+                          |                                tcp_sendmsg
+                          |                                |          
+                          |                                 --5.71%--tcp_sendmsg_locked
+                          |                                           |          
+                          |                                           |--2.50%--sk_page_frag_refill
+                          |                                           |          skb_page_frag_refill
+                          |                                           |          alloc_pages
+                          |                                           |          alloc_pages_mpol
+                          |                                           |          __alloc_pages
+                          |                                           |          get_page_from_freelist
+                          |                                           |          |          
+                          |                                           |           --2.14%--clear_page_erms
+                          |                                           |          
+                          |                                           |--1.43%--tcp_push
+                          |                                           |          __tcp_push_pending_frames
+                          |                                           |          tcp_write_xmit
+                          |                                           |          |          
+                          |                                           |           --1.07%--__tcp_transmit_skb
+                          |                                           |                     ip_queue_xmit
+                          |                                           |                     __ip_queue_xmit
+                          |                                           |                     ip_local_out
+                          |                                           |                     ip_output
+                          |                                           |                     ip_finish_output
+                          |                                           |                     __ip_finish_output
+                          |                                           |                     ip_finish_output2
+                          |                                           |                     neigh_hh_output
+                          |                                           |                     __dev_queue_xmit
+                          |                                           |                     __local_bh_enable_ip
+                          |                                           |                     do_softirq.part.0
+                          |                                           |                     __do_softirq
+                          |                                           |                     handle_softirqs
+                          |                                           |                     net_rx_action
+                          |                                           |                     __napi_poll
+                          |                                           |                     process_backlog
+                          |                                           |                     __netif_receive_skb
+                          |                                           |                     __netif_receive_skb_one_core
+                          |                                           |                     ip_rcv
+                          |                                           |                     ip_local_deliver
+                          |                                           |                     ip_local_deliver_finish
+                          |                                           |                     ip_protocol_deliver_rcu
+                          |                                           |                     tcp_v4_rcv
+                          |                                           |                     |          
+                          |                                           |                      --0.71%--tcp_v4_do_rcv
+                          |                                           |                                tcp_rcv_established
+                          |                                           |          
+                          |                                           |--1.07%--tcp_push_one
+                          |                                           |          tcp_write_xmit
+                          |                                           |          |          
+                          |                                           |           --0.71%--__tcp_transmit_skb
+                          |                                           |                     ip_queue_xmit
+                          |                                           |                     __ip_queue_xmit
+                          |                                           |                     ip_local_out
+                          |                                           |                     ip_output
+                          |                                           |                     ip_finish_output
+                          |                                           |          
+                          |                                            --0.71%--skb_do_copy_data_nocache
+                          |                                                      _copy_from_iter
+                          |          
+                           --4.29%--__x64_sys_futex
+                                     do_futex
+                                     |          
+                                      --3.93%--futex_wake
+                                                |          
+                                                 --3.57%--wake_up_q
+                                                           try_to_wake_up
+                                                           _raw_spin_unlock_irqrestore
+
+    12.86%     0.36%  main        [kernel.kallsyms]      [k] x64_sys_call
+            |          
+             --12.50%--x64_sys_call
+                       |          
+                       |--7.14%--__x64_sys_writev
+                       |          do_writev
+                       |          vfs_writev
+                       |          |          
+                       |           --6.79%--do_iter_readv_writev
+                       |                     |          
+                       |                      --6.43%--sock_write_iter
+                       |                                inet_sendmsg
+                       |                                tcp_sendmsg
+                       |                                |          
+                       |                                 --5.71%--tcp_sendmsg_locked
+                       |                                           |          
+                       |                                           |--2.50%--sk_page_frag_refill
+                       |                                           |          skb_page_frag_refill
+                       |                                           |          alloc_pages
+                       |                                           |          alloc_pages_mpol
+                       |                                           |          __alloc_pages
+                       |                                           |          get_page_from_freelist
+                       |                                           |          |          
+                       |                                           |           --2.14%--clear_page_erms
+                       |                                           |          
+                       |                                           |--1.43%--tcp_push
+                       |                                           |          __tcp_push_pending_frames
+                       |                                           |          tcp_write_xmit
+                       |                                           |          |          
+                       |                                           |           --1.07%--__tcp_transmit_skb
+                       |                                           |                     ip_queue_xmit
+                       |                                           |                     __ip_queue_xmit
+                       |                                           |                     ip_local_out
+                       |                                           |                     ip_output
+                       |                                           |                     ip_finish_output
+                       |                                           |                     __ip_finish_output
+                       |                                           |                     ip_finish_output2
+                       |                                           |                     neigh_hh_output
+                       |                                           |                     __dev_queue_xmit
+                       |                                           |                     __local_bh_enable_ip
+                       |                                           |                     do_softirq.part.0
+                       |                                           |                     __do_softirq
+                       |                                           |                     handle_softirqs
+                       |                                           |                     net_rx_action
+                       |                                           |                     __napi_poll
+                       |                                           |                     process_backlog
+                       |                                           |                     __netif_receive_skb
+                       |                                           |                     __netif_receive_skb_one_core
+                       |                                           |                     ip_rcv
+                       |                                           |                     ip_local_deliver
+                       |                                           |                     ip_local_deliver_finish
+                       |                                           |                     ip_protocol_deliver_rcu
+                       |                                           |                     tcp_v4_rcv
+                       |                                           |                     |          
+                       |                                           |                      --0.71%--tcp_v4_do_rcv
+                       |                                           |                                tcp_rcv_established
+                       |                                           |          
+                       |                                           |--1.07%--tcp_push_one
+                       |                                           |          tcp_write_xmit
+                       |                                           |          |          
+                       |                                           |           --0.71%--__tcp_transmit_skb
+                       |                                           |                     ip_queue_xmit
+                       |                                           |                     __ip_queue_xmit
+                       |                                           |                     ip_local_out
+                       |                                           |                     ip_output
+                       |                                           |                     ip_finish_output
+                       |                                           |          
+                       |                                            --0.71%--skb_do_copy_data_nocache
+                       |                                                      _copy_from_iter
+                       |          
+                        --4.29%--__x64_sys_futex
+                                  do_futex
+                                  |          
+                                   --3.93%--futex_wake
+                                             |          
+                                              --3.57%--wake_up_q
+                                                        try_to_wake_up
+                                                        _raw_spin_unlock_irqrestore
+
+    12.86%     0.00%  main        main                   [.] lv_display_refr_timer
+            |
+            ---lv_display_refr_timer
+               |          
+               |--10.71%--refr_area
+               |          refr_configured_layer
+               |          |          
+               |           --10.36%--lv_obj_refr.part.0
+               |                     |          
+               |                      --10.00%--lv_obj_redraw
+               |                                |          
+               |                                |--8.57%--lv_obj_refr.part.0
+               |                                |          lv_obj_redraw
+               |                                |          |          
+               |                                |          |--4.64%--lv_obj_refr.part.0
+               |                                |          |          |          
+               |                                |          |           --4.29%--lv_obj_redraw
+               |                                |          |                     lv_obj_send_event
+               |                                |          |                     lv_obj_event_base
+               |                                |          |                     |          
+               |                                |          |                     |--2.14%--lv_line_event
+               |                                |          |                     |          |          
+               |                                |          |                     |           --1.43%--lv_draw_line
+               |                                |          |                     |                     lv_draw_finalize_task_creation
+               |                                |          |                     |                     lv_draw_dispatch_layer
+               |                                |          |                     |                     dispatch
+               |                                |          |                     |                     lv_draw_sw_line
+               |                                |          |                     |                     |          
+               |                                |          |                     |                      --0.71%--lv_draw_sw_blend
+               |                                |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+               |                                |          |                     |          
+               |                                |          |                      --1.43%--lv_label_event
+               |                                |          |                                |          
+               |                                |          |                                 --0.71%--lv_draw_finalize_task_creation
+               |                                |          |                                           lv_draw_dispatch_layer
+               |                                |          |          
+               |                                |           --3.57%--lv_obj_send_event
+               |                                |                     lv_obj_event_base
+               |                                |                     |          
+               |                                |                     |--2.50%--lv_image_event
+               |                                |                     |          lv_draw_image
+               |                                |                     |          lv_draw_finalize_task_creation
+               |                                |                     |          lv_draw_dispatch_layer
+               |                                |                     |          dispatch
+               |                                |                     |          lv_draw_image_normal_helper
+               |                                |                     |          img_decode_and_draw
+               |                                |                     |          img_draw_core
+               |                                |                     |          lv_draw_sw_blend
+               |                                |                     |          |          
+               |                                |                     |           --2.14%--lv_draw_sw_blend_image_to_rgb888
+               |                                |                     |          
+               |                                |                      --1.07%--lv_obj_draw
+               |                                |                                lv_draw_rect
+               |                                |                                lv_draw_finalize_task_creation
+               |                                |                                lv_draw_dispatch_layer
+               |                                |                                dispatch
+               |                                |                                |          
+               |                                |                                 --0.71%--lv_draw_sw_box_shadow
+               |                                |          
+               |                                 --1.43%--lv_obj_send_event
+               |                                           |          
+               |                                            --1.07%--lv_obj_event_base
+               |                                                      lv_obj_draw
+               |                                                      lv_draw_rect
+               |                                                      lv_draw_finalize_task_creation
+               |                                                      lv_draw_dispatch_layer
+               |                                                      dispatch
+               |                                                      lv_draw_sw_fill
+               |                                                      lv_draw_sw_blend
+               |                                                      lv_draw_sw_blend_color_to_rgb888
+               |          
+               |--1.43%--lv_obj_update_layout
+               |          |          
+               |           --0.71%--layout_update_core
+               |          
+                --0.71%--draw_buf_flush
+
+    12.50%     0.00%  main        [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+               x64_sys_call
+               |          
+               |--7.14%--__x64_sys_writev
+               |          do_writev
+               |          vfs_writev
+               |          |          
+               |           --6.79%--do_iter_readv_writev
+               |                     |          
+               |                      --6.43%--sock_write_iter
+               |                                inet_sendmsg
+               |                                tcp_sendmsg
+               |                                |          
+               |                                 --5.71%--tcp_sendmsg_locked
+               |                                           |          
+               |                                           |--2.50%--sk_page_frag_refill
+               |                                           |          skb_page_frag_refill
+               |                                           |          alloc_pages
+               |                                           |          alloc_pages_mpol
+               |                                           |          __alloc_pages
+               |                                           |          get_page_from_freelist
+               |                                           |          |          
+               |                                           |           --2.14%--clear_page_erms
+               |                                           |          
+               |                                           |--1.43%--tcp_push
+               |                                           |          __tcp_push_pending_frames
+               |                                           |          tcp_write_xmit
+               |                                           |          |          
+               |                                           |           --1.07%--__tcp_transmit_skb
+               |                                           |                     ip_queue_xmit
+               |                                           |                     __ip_queue_xmit
+               |                                           |                     ip_local_out
+               |                                           |                     ip_output
+               |                                           |                     ip_finish_output
+               |                                           |                     __ip_finish_output
+               |                                           |                     ip_finish_output2
+               |                                           |                     neigh_hh_output
+               |                                           |                     __dev_queue_xmit
+               |                                           |                     __local_bh_enable_ip
+               |                                           |                     do_softirq.part.0
+               |                                           |                     __do_softirq
+               |                                           |                     handle_softirqs
+               |                                           |                     net_rx_action
+               |                                           |                     __napi_poll
+               |                                           |                     process_backlog
+               |                                           |                     __netif_receive_skb
+               |                                           |                     __netif_receive_skb_one_core
+               |                                           |                     ip_rcv
+               |                                           |                     ip_local_deliver
+               |                                           |                     ip_local_deliver_finish
+               |                                           |                     ip_protocol_deliver_rcu
+               |                                           |                     tcp_v4_rcv
+               |                                           |                     |          
+               |                                           |                      --0.71%--tcp_v4_do_rcv
+               |                                           |                                tcp_rcv_established
+               |                                           |          
+               |                                           |--1.07%--tcp_push_one
+               |                                           |          tcp_write_xmit
+               |                                           |          |          
+               |                                           |           --0.71%--__tcp_transmit_skb
+               |                                           |                     ip_queue_xmit
+               |                                           |                     __ip_queue_xmit
+               |                                           |                     ip_local_out
+               |                                           |                     ip_output
+               |                                           |                     ip_finish_output
+               |                                           |          
+               |                                            --0.71%--skb_do_copy_data_nocache
+               |                                                      _copy_from_iter
+               |          
+                --4.29%--__x64_sys_futex
+                          do_futex
+                          |          
+                           --3.93%--futex_wake
+                                     |          
+                                      --3.57%--wake_up_q
+                                                try_to_wake_up
+                                                _raw_spin_unlock_irqrestore
+
+    10.71%     0.00%  main        main                   [.] refr_area
+            |
+            ---refr_area
+               refr_configured_layer
+               |          
+                --10.36%--lv_obj_refr.part.0
+                          |          
+                           --10.00%--lv_obj_redraw
+                                     |          
+                                     |--8.57%--lv_obj_refr.part.0
+                                     |          lv_obj_redraw
+                                     |          |          
+                                     |          |--4.64%--lv_obj_refr.part.0
+                                     |          |          |          
+                                     |          |           --4.29%--lv_obj_redraw
+                                     |          |                     lv_obj_send_event
+                                     |          |                     lv_obj_event_base
+                                     |          |                     |          
+                                     |          |                     |--2.14%--lv_line_event
+                                     |          |                     |          |          
+                                     |          |                     |           --1.43%--lv_draw_line
+                                     |          |                     |                     lv_draw_finalize_task_creation
+                                     |          |                     |                     lv_draw_dispatch_layer
+                                     |          |                     |                     dispatch
+                                     |          |                     |                     lv_draw_sw_line
+                                     |          |                     |                     |          
+                                     |          |                     |                      --0.71%--lv_draw_sw_blend
+                                     |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+                                     |          |                     |          
+                                     |          |                      --1.43%--lv_label_event
+                                     |          |                                |          
+                                     |          |                                 --0.71%--lv_draw_finalize_task_creation
+                                     |          |                                           lv_draw_dispatch_layer
+                                     |          |          
+                                     |           --3.57%--lv_obj_send_event
+                                     |                     lv_obj_event_base
+                                     |                     |          
+                                     |                     |--2.50%--lv_image_event
+                                     |                     |          lv_draw_image
+                                     |                     |          lv_draw_finalize_task_creation
+                                     |                     |          lv_draw_dispatch_layer
+                                     |                     |          dispatch
+                                     |                     |          lv_draw_image_normal_helper
+                                     |                     |          img_decode_and_draw
+                                     |                     |          img_draw_core
+                                     |                     |          lv_draw_sw_blend
+                                     |                     |          |          
+                                     |                     |           --2.14%--lv_draw_sw_blend_image_to_rgb888
+                                     |                     |          
+                                     |                      --1.07%--lv_obj_draw
+                                     |                                lv_draw_rect
+                                     |                                lv_draw_finalize_task_creation
+                                     |                                lv_draw_dispatch_layer
+                                     |                                dispatch
+                                     |                                |          
+                                     |                                 --0.71%--lv_draw_sw_box_shadow
+                                     |          
+                                      --1.43%--lv_obj_send_event
+                                                |          
+                                                 --1.07%--lv_obj_event_base
+                                                           lv_obj_draw
+                                                           lv_draw_rect
+                                                           lv_draw_finalize_task_creation
+                                                           lv_draw_dispatch_layer
+                                                           dispatch
+                                                           lv_draw_sw_fill
+                                                           lv_draw_sw_blend
+                                                           lv_draw_sw_blend_color_to_rgb888
+
+    10.71%     0.00%  main        main                   [.] refr_configured_layer
+            |
+            ---refr_configured_layer
+               |          
+                --10.36%--lv_obj_refr.part.0
+                          |          
+                           --10.00%--lv_obj_redraw
+                                     |          
+                                     |--8.57%--lv_obj_refr.part.0
+                                     |          lv_obj_redraw
+                                     |          |          
+                                     |          |--4.64%--lv_obj_refr.part.0
+                                     |          |          |          
+                                     |          |           --4.29%--lv_obj_redraw
+                                     |          |                     lv_obj_send_event
+                                     |          |                     lv_obj_event_base
+                                     |          |                     |          
+                                     |          |                     |--2.14%--lv_line_event
+                                     |          |                     |          |          
+                                     |          |                     |           --1.43%--lv_draw_line
+                                     |          |                     |                     lv_draw_finalize_task_creation
+                                     |          |                     |                     lv_draw_dispatch_layer
+                                     |          |                     |                     dispatch
+                                     |          |                     |                     lv_draw_sw_line
+                                     |          |                     |                     |          
+                                     |          |                     |                      --0.71%--lv_draw_sw_blend
+                                     |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+                                     |          |                     |          
+                                     |          |                      --1.43%--lv_label_event
+                                     |          |                                |          
+                                     |          |                                 --0.71%--lv_draw_finalize_task_creation
+                                     |          |                                           lv_draw_dispatch_layer
+                                     |          |          
+                                     |           --3.57%--lv_obj_send_event
+                                     |                     lv_obj_event_base
+                                     |                     |          
+                                     |                     |--2.50%--lv_image_event
+                                     |                     |          lv_draw_image
+                                     |                     |          lv_draw_finalize_task_creation
+                                     |                     |          lv_draw_dispatch_layer
+                                     |                     |          dispatch
+                                     |                     |          lv_draw_image_normal_helper
+                                     |                     |          img_decode_and_draw
+                                     |                     |          img_draw_core
+                                     |                     |          lv_draw_sw_blend
+                                     |                     |          |          
+                                     |                     |           --2.14%--lv_draw_sw_blend_image_to_rgb888
+                                     |                     |          
+                                     |                      --1.07%--lv_obj_draw
+                                     |                                lv_draw_rect
+                                     |                                lv_draw_finalize_task_creation
+                                     |                                lv_draw_dispatch_layer
+                                     |                                dispatch
+                                     |                                |          
+                                     |                                 --0.71%--lv_draw_sw_box_shadow
+                                     |          
+                                      --1.43%--lv_obj_send_event
+                                                |          
+                                                 --1.07%--lv_obj_event_base
+                                                           lv_obj_draw
+                                                           lv_draw_rect
+                                                           lv_draw_finalize_task_creation
+                                                           lv_draw_dispatch_layer
+                                                           dispatch
+                                                           lv_draw_sw_fill
+                                                           lv_draw_sw_blend
+                                                           lv_draw_sw_blend_color_to_rgb888
+
+    10.71%     0.00%  main        main                   [.] lv_obj_refr.part.0
+            |
+            ---lv_obj_refr.part.0
+               |          
+                --10.36%--lv_obj_redraw
+                          |          
+                          |--8.93%--lv_obj_refr.part.0
+                          |          lv_obj_redraw
+                          |          |          
+                          |          |--4.64%--lv_obj_refr.part.0
+                          |          |          |          
+                          |          |           --4.29%--lv_obj_redraw
+                          |          |                     lv_obj_send_event
+                          |          |                     lv_obj_event_base
+                          |          |                     |          
+                          |          |                     |--2.14%--lv_line_event
+                          |          |                     |          |          
+                          |          |                     |           --1.43%--lv_draw_line
+                          |          |                     |                     lv_draw_finalize_task_creation
+                          |          |                     |                     lv_draw_dispatch_layer
+                          |          |                     |                     dispatch
+                          |          |                     |                     lv_draw_sw_line
+                          |          |                     |                     |          
+                          |          |                     |                      --0.71%--lv_draw_sw_blend
+                          |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+                          |          |                     |          
+                          |          |                      --1.43%--lv_label_event
+                          |          |                                |          
+                          |          |                                 --0.71%--lv_draw_finalize_task_creation
+                          |          |                                           lv_draw_dispatch_layer
+                          |          |          
+                          |           --3.93%--lv_obj_send_event
+                          |                     lv_obj_event_base
+                          |                     |          
+                          |                     |--2.86%--lv_image_event
+                          |                     |          lv_draw_image
+                          |                     |          lv_draw_finalize_task_creation
+                          |                     |          lv_draw_dispatch_layer
+                          |                     |          dispatch
+                          |                     |          lv_draw_image_normal_helper
+                          |                     |          |          
+                          |                     |           --2.50%--img_decode_and_draw
+                          |                     |                     img_draw_core
+                          |                     |                     lv_draw_sw_blend
+                          |                     |                     |          
+                          |                     |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+                          |                     |          
+                          |                      --1.07%--lv_obj_draw
+                          |                                lv_draw_rect
+                          |                                lv_draw_finalize_task_creation
+                          |                                lv_draw_dispatch_layer
+                          |                                dispatch
+                          |                                |          
+                          |                                 --0.71%--lv_draw_sw_box_shadow
+                          |          
+                           --1.43%--lv_obj_send_event
+                                     |          
+                                      --1.07%--lv_obj_event_base
+                                                lv_obj_draw
+                                                lv_draw_rect
+                                                lv_draw_finalize_task_creation
+                                                lv_draw_dispatch_layer
+                                                dispatch
+                                                lv_draw_sw_fill
+                                                lv_draw_sw_blend
+                                                lv_draw_sw_blend_color_to_rgb888
+
+    10.36%     0.36%  main        main                   [.] lv_obj_redraw
+            |          
+             --10.00%--lv_obj_redraw
+                       |          
+                       |--8.57%--lv_obj_refr.part.0
+                       |          lv_obj_redraw
+                       |          |          
+                       |          |--4.64%--lv_obj_refr.part.0
+                       |          |          |          
+                       |          |           --4.29%--lv_obj_redraw
+                       |          |                     lv_obj_send_event
+                       |          |                     lv_obj_event_base
+                       |          |                     |          
+                       |          |                     |--2.14%--lv_line_event
+                       |          |                     |          |          
+                       |          |                     |           --1.43%--lv_draw_line
+                       |          |                     |                     lv_draw_finalize_task_creation
+                       |          |                     |                     lv_draw_dispatch_layer
+                       |          |                     |                     dispatch
+                       |          |                     |                     lv_draw_sw_line
+                       |          |                     |                     |          
+                       |          |                     |                      --0.71%--lv_draw_sw_blend
+                       |          |                     |                                lv_draw_sw_blend_color_to_rgb888
+                       |          |                     |          
+                       |          |                      --1.43%--lv_label_event
+                       |          |                                |          
+                       |          |                                 --0.71%--lv_draw_finalize_task_creation
+                       |          |                                           lv_draw_dispatch_layer
+                       |          |          
+                       |           --3.93%--lv_obj_send_event
+                       |                     lv_obj_event_base
+                       |                     |          
+                       |                     |--2.86%--lv_image_event
+                       |                     |          lv_draw_image
+                       |                     |          lv_draw_finalize_task_creation
+                       |                     |          lv_draw_dispatch_layer
+                       |                     |          dispatch
+                       |                     |          lv_draw_image_normal_helper
+                       |                     |          |          
+                       |                     |           --2.50%--img_decode_and_draw
+                       |                     |                     img_draw_core
+                       |                     |                     lv_draw_sw_blend
+                       |                     |                     |          
+                       |                     |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+                       |                     |          
+                       |                      --1.07%--lv_obj_draw
+                       |                                lv_draw_rect
+                       |                                lv_draw_finalize_task_creation
+                       |                                lv_draw_dispatch_layer
+                       |                                dispatch
+                       |                                |          
+                       |                                 --0.71%--lv_draw_sw_box_shadow
+                       |          
+                        --1.43%--lv_obj_send_event
+                                  |          
+                                   --1.07%--lv_obj_event_base
+                                             lv_obj_draw
+                                             lv_draw_rect
+                                             lv_draw_finalize_task_creation
+                                             lv_draw_dispatch_layer
+                                             dispatch
+                                             lv_draw_sw_fill
+                                             lv_draw_sw_blend
+                                             lv_draw_sw_blend_color_to_rgb888
+
+    10.00%     0.71%  main        main                   [.] lv_obj_send_event
+            |          
+            |--9.29%--lv_obj_send_event
+            |          lv_obj_event_base
+            |          |          
+            |          |--2.86%--lv_image_event
+            |          |          lv_draw_image
+            |          |          lv_draw_finalize_task_creation
+            |          |          lv_draw_dispatch_layer
+            |          |          dispatch
+            |          |          lv_draw_image_normal_helper
+            |          |          |          
+            |          |           --2.50%--img_decode_and_draw
+            |          |                     img_draw_core
+            |          |                     lv_draw_sw_blend
+            |          |                     |          
+            |          |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+            |          |          
+            |          |--2.14%--lv_line_event
+            |          |          |          
+            |          |           --1.43%--lv_draw_line
+            |          |                     lv_draw_finalize_task_creation
+            |          |                     lv_draw_dispatch_layer
+            |          |                     dispatch
+            |          |                     lv_draw_sw_line
+            |          |                     |          
+            |          |                      --0.71%--lv_draw_sw_blend
+            |          |                                lv_draw_sw_blend_color_to_rgb888
+            |          |          
+            |          |--2.14%--lv_obj_draw
+            |          |          lv_draw_rect
+            |          |          lv_draw_finalize_task_creation
+            |          |          lv_draw_dispatch_layer
+            |          |          dispatch
+            |          |          |          
+            |          |          |--1.43%--lv_draw_sw_fill
+            |          |          |          |          
+            |          |          |           --1.07%--lv_draw_sw_blend
+            |          |          |                     lv_draw_sw_blend_color_to_rgb888
+            |          |          |          
+            |          |           --0.71%--lv_draw_sw_box_shadow
+            |          |          
+            |           --1.43%--lv_label_event
+            |                     |          
+            |                      --0.71%--lv_draw_finalize_task_creation
+            |                                lv_draw_dispatch_layer
+            |          
+             --0.71%--__libc_start_call_main
+                       main
+                       lv_timer_handler.part.0
+                       lv_display_refr_timer
+                       refr_area
+                       refr_configured_layer
+                       lv_obj_refr.part.0
+
+     9.29%     0.00%  main        main                   [.] lv_obj_event_base
+            |
+            ---lv_obj_event_base
+               |          
+               |--2.86%--lv_image_event
+               |          lv_draw_image
+               |          lv_draw_finalize_task_creation
+               |          lv_draw_dispatch_layer
+               |          dispatch
+               |          lv_draw_image_normal_helper
+               |          |          
+               |           --2.50%--img_decode_and_draw
+               |                     img_draw_core
+               |                     lv_draw_sw_blend
+               |                     |          
+               |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+               |          
+               |--2.14%--lv_line_event
+               |          |          
+               |           --1.43%--lv_draw_line
+               |                     lv_draw_finalize_task_creation
+               |                     lv_draw_dispatch_layer
+               |                     dispatch
+               |                     lv_draw_sw_line
+               |                     |          
+               |                      --0.71%--lv_draw_sw_blend
+               |                                lv_draw_sw_blend_color_to_rgb888
+               |          
+               |--2.14%--lv_obj_draw
+               |          lv_draw_rect
+               |          lv_draw_finalize_task_creation
+               |          lv_draw_dispatch_layer
+               |          dispatch
+               |          |          
+               |          |--1.43%--lv_draw_sw_fill
+               |          |          |          
+               |          |           --1.07%--lv_draw_sw_blend
+               |          |                     lv_draw_sw_blend_color_to_rgb888
+               |          |          
+               |           --0.71%--lv_draw_sw_box_shadow
+               |          
+                --1.43%--lv_label_event
+                          |          
+                           --0.71%--lv_draw_finalize_task_creation
+                                     lv_draw_dispatch_layer
+
+     7.50%     0.00%  llvmpipe-0  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               |          
+                --6.79%--0x73ebf3116d33
+                          |          
+                          |--0.71%--0x73ebf65eb3e9
+                          |          
+                          |--0.71%--0x73ebf65eb357
+                          |          
+                           --0.71%--0x73ebf65ab3e9
+
+     7.14%     0.00%  main        libc.so.6              [.] __GI___writev
+            |
+            ---__GI___writev
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_writev
+               do_writev
+               vfs_writev
+               |          
+                --6.79%--do_iter_readv_writev
+                          |          
+                           --6.43%--sock_write_iter
+                                     inet_sendmsg
+                                     tcp_sendmsg
+                                     |          
+                                      --5.71%--tcp_sendmsg_locked
+                                                |          
+                                                |--2.50%--sk_page_frag_refill
+                                                |          skb_page_frag_refill
+                                                |          alloc_pages
+                                                |          alloc_pages_mpol
+                                                |          __alloc_pages
+                                                |          get_page_from_freelist
+                                                |          |          
+                                                |           --2.14%--clear_page_erms
+                                                |          
+                                                |--1.43%--tcp_push
+                                                |          __tcp_push_pending_frames
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --1.07%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |                     __ip_finish_output
+                                                |                     ip_finish_output2
+                                                |                     neigh_hh_output
+                                                |                     __dev_queue_xmit
+                                                |                     __local_bh_enable_ip
+                                                |                     do_softirq.part.0
+                                                |                     __do_softirq
+                                                |                     handle_softirqs
+                                                |                     net_rx_action
+                                                |                     __napi_poll
+                                                |                     process_backlog
+                                                |                     __netif_receive_skb
+                                                |                     __netif_receive_skb_one_core
+                                                |                     ip_rcv
+                                                |                     ip_local_deliver
+                                                |                     ip_local_deliver_finish
+                                                |                     ip_protocol_deliver_rcu
+                                                |                     tcp_v4_rcv
+                                                |                     |          
+                                                |                      --0.71%--tcp_v4_do_rcv
+                                                |                                tcp_rcv_established
+                                                |          
+                                                |--1.07%--tcp_push_one
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --0.71%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |          
+                                                 --0.71%--skb_do_copy_data_nocache
+                                                           _copy_from_iter
+
+     7.14%     0.00%  main        [kernel.kallsyms]      [k] __x64_sys_writev
+            |
+            ---__x64_sys_writev
+               do_writev
+               vfs_writev
+               |          
+                --6.79%--do_iter_readv_writev
+                          |          
+                           --6.43%--sock_write_iter
+                                     inet_sendmsg
+                                     tcp_sendmsg
+                                     |          
+                                      --5.71%--tcp_sendmsg_locked
+                                                |          
+                                                |--2.50%--sk_page_frag_refill
+                                                |          skb_page_frag_refill
+                                                |          alloc_pages
+                                                |          alloc_pages_mpol
+                                                |          __alloc_pages
+                                                |          get_page_from_freelist
+                                                |          |          
+                                                |           --2.14%--clear_page_erms
+                                                |          
+                                                |--1.43%--tcp_push
+                                                |          __tcp_push_pending_frames
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --1.07%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |                     __ip_finish_output
+                                                |                     ip_finish_output2
+                                                |                     neigh_hh_output
+                                                |                     __dev_queue_xmit
+                                                |                     __local_bh_enable_ip
+                                                |                     do_softirq.part.0
+                                                |                     __do_softirq
+                                                |                     handle_softirqs
+                                                |                     net_rx_action
+                                                |                     __napi_poll
+                                                |                     process_backlog
+                                                |                     __netif_receive_skb
+                                                |                     __netif_receive_skb_one_core
+                                                |                     ip_rcv
+                                                |                     ip_local_deliver
+                                                |                     ip_local_deliver_finish
+                                                |                     ip_protocol_deliver_rcu
+                                                |                     tcp_v4_rcv
+                                                |                     |          
+                                                |                      --0.71%--tcp_v4_do_rcv
+                                                |                                tcp_rcv_established
+                                                |          
+                                                |--1.07%--tcp_push_one
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --0.71%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |          
+                                                 --0.71%--skb_do_copy_data_nocache
+                                                           _copy_from_iter
+
+     7.14%     0.00%  main        [kernel.kallsyms]      [k] do_writev
+            |
+            ---do_writev
+               vfs_writev
+               |          
+                --6.79%--do_iter_readv_writev
+                          |          
+                           --6.43%--sock_write_iter
+                                     inet_sendmsg
+                                     tcp_sendmsg
+                                     |          
+                                      --5.71%--tcp_sendmsg_locked
+                                                |          
+                                                |--2.50%--sk_page_frag_refill
+                                                |          skb_page_frag_refill
+                                                |          alloc_pages
+                                                |          alloc_pages_mpol
+                                                |          __alloc_pages
+                                                |          get_page_from_freelist
+                                                |          |          
+                                                |           --2.14%--clear_page_erms
+                                                |          
+                                                |--1.43%--tcp_push
+                                                |          __tcp_push_pending_frames
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --1.07%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |                     __ip_finish_output
+                                                |                     ip_finish_output2
+                                                |                     neigh_hh_output
+                                                |                     __dev_queue_xmit
+                                                |                     __local_bh_enable_ip
+                                                |                     do_softirq.part.0
+                                                |                     __do_softirq
+                                                |                     handle_softirqs
+                                                |                     net_rx_action
+                                                |                     __napi_poll
+                                                |                     process_backlog
+                                                |                     __netif_receive_skb
+                                                |                     __netif_receive_skb_one_core
+                                                |                     ip_rcv
+                                                |                     ip_local_deliver
+                                                |                     ip_local_deliver_finish
+                                                |                     ip_protocol_deliver_rcu
+                                                |                     tcp_v4_rcv
+                                                |                     |          
+                                                |                      --0.71%--tcp_v4_do_rcv
+                                                |                                tcp_rcv_established
+                                                |          
+                                                |--1.07%--tcp_push_one
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --0.71%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |          
+                                                 --0.71%--skb_do_copy_data_nocache
+                                                           _copy_from_iter
+
+     7.14%     0.00%  main        [kernel.kallsyms]      [k] vfs_writev
+            |
+            ---vfs_writev
+               |          
+                --6.79%--do_iter_readv_writev
+                          |          
+                           --6.43%--sock_write_iter
+                                     inet_sendmsg
+                                     tcp_sendmsg
+                                     |          
+                                      --5.71%--tcp_sendmsg_locked
+                                                |          
+                                                |--2.50%--sk_page_frag_refill
+                                                |          skb_page_frag_refill
+                                                |          alloc_pages
+                                                |          alloc_pages_mpol
+                                                |          __alloc_pages
+                                                |          get_page_from_freelist
+                                                |          |          
+                                                |           --2.14%--clear_page_erms
+                                                |          
+                                                |--1.43%--tcp_push
+                                                |          __tcp_push_pending_frames
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --1.07%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |                     __ip_finish_output
+                                                |                     ip_finish_output2
+                                                |                     neigh_hh_output
+                                                |                     __dev_queue_xmit
+                                                |                     __local_bh_enable_ip
+                                                |                     do_softirq.part.0
+                                                |                     __do_softirq
+                                                |                     handle_softirqs
+                                                |                     net_rx_action
+                                                |                     __napi_poll
+                                                |                     process_backlog
+                                                |                     __netif_receive_skb
+                                                |                     __netif_receive_skb_one_core
+                                                |                     ip_rcv
+                                                |                     ip_local_deliver
+                                                |                     ip_local_deliver_finish
+                                                |                     ip_protocol_deliver_rcu
+                                                |                     tcp_v4_rcv
+                                                |                     |          
+                                                |                      --0.71%--tcp_v4_do_rcv
+                                                |                                tcp_rcv_established
+                                                |          
+                                                |--1.07%--tcp_push_one
+                                                |          tcp_write_xmit
+                                                |          |          
+                                                |           --0.71%--__tcp_transmit_skb
+                                                |                     ip_queue_xmit
+                                                |                     __ip_queue_xmit
+                                                |                     ip_local_out
+                                                |                     ip_output
+                                                |                     ip_finish_output
+                                                |          
+                                                 --0.71%--skb_do_copy_data_nocache
+                                                           _copy_from_iter
+
+     7.14%     0.00%  main        main                   [.] lv_draw_finalize_task_creation
+            |
+            ---lv_draw_finalize_task_creation
+               lv_draw_dispatch_layer
+               |          
+                --6.79%--dispatch
+                          |          
+                          |--2.86%--lv_draw_image_normal_helper
+                          |          |          
+                          |           --2.50%--img_decode_and_draw
+                          |                     img_draw_core
+                          |                     lv_draw_sw_blend
+                          |                     |          
+                          |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+                          |          
+                          |--1.43%--lv_draw_sw_line
+                          |          |          
+                          |           --0.71%--lv_draw_sw_blend
+                          |                     lv_draw_sw_blend_color_to_rgb888
+                          |          
+                          |--1.43%--lv_draw_sw_fill
+                          |          |          
+                          |           --1.07%--lv_draw_sw_blend
+                          |                     lv_draw_sw_blend_color_to_rgb888
+                          |          
+                           --0.71%--lv_draw_sw_box_shadow
+
+     7.14%     0.00%  main        main                   [.] lv_draw_dispatch_layer
+            |
+            ---lv_draw_dispatch_layer
+               |          
+                --6.79%--dispatch
+                          |          
+                          |--2.86%--lv_draw_image_normal_helper
+                          |          |          
+                          |           --2.50%--img_decode_and_draw
+                          |                     img_draw_core
+                          |                     lv_draw_sw_blend
+                          |                     |          
+                          |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+                          |          
+                          |--1.43%--lv_draw_sw_line
+                          |          |          
+                          |           --0.71%--lv_draw_sw_blend
+                          |                     lv_draw_sw_blend_color_to_rgb888
+                          |          
+                          |--1.43%--lv_draw_sw_fill
+                          |          |          
+                          |           --1.07%--lv_draw_sw_blend
+                          |                     lv_draw_sw_blend_color_to_rgb888
+                          |          
+                           --0.71%--lv_draw_sw_box_shadow
+
+     6.79%     0.36%  main        [kernel.kallsyms]      [k] do_iter_readv_writev
+            |          
+             --6.43%--do_iter_readv_writev
+                       sock_write_iter
+                       inet_sendmsg
+                       tcp_sendmsg
+                       |          
+                        --5.71%--tcp_sendmsg_locked
+                                  |          
+                                  |--2.50%--sk_page_frag_refill
+                                  |          skb_page_frag_refill
+                                  |          alloc_pages
+                                  |          alloc_pages_mpol
+                                  |          __alloc_pages
+                                  |          get_page_from_freelist
+                                  |          |          
+                                  |           --2.14%--clear_page_erms
+                                  |          
+                                  |--1.43%--tcp_push
+                                  |          __tcp_push_pending_frames
+                                  |          tcp_write_xmit
+                                  |          |          
+                                  |           --1.07%--__tcp_transmit_skb
+                                  |                     ip_queue_xmit
+                                  |                     __ip_queue_xmit
+                                  |                     ip_local_out
+                                  |                     ip_output
+                                  |                     ip_finish_output
+                                  |                     __ip_finish_output
+                                  |                     ip_finish_output2
+                                  |                     neigh_hh_output
+                                  |                     __dev_queue_xmit
+                                  |                     __local_bh_enable_ip
+                                  |                     do_softirq.part.0
+                                  |                     __do_softirq
+                                  |                     handle_softirqs
+                                  |                     net_rx_action
+                                  |                     __napi_poll
+                                  |                     process_backlog
+                                  |                     __netif_receive_skb
+                                  |                     __netif_receive_skb_one_core
+                                  |                     ip_rcv
+                                  |                     ip_local_deliver
+                                  |                     ip_local_deliver_finish
+                                  |                     ip_protocol_deliver_rcu
+                                  |                     tcp_v4_rcv
+                                  |                     |          
+                                  |                      --0.71%--tcp_v4_do_rcv
+                                  |                                tcp_rcv_established
+                                  |          
+                                  |--1.07%--tcp_push_one
+                                  |          tcp_write_xmit
+                                  |          |          
+                                  |           --0.71%--__tcp_transmit_skb
+                                  |                     ip_queue_xmit
+                                  |                     __ip_queue_xmit
+                                  |                     ip_local_out
+                                  |                     ip_output
+                                  |                     ip_finish_output
+                                  |          
+                                   --0.71%--skb_do_copy_data_nocache
+                                             _copy_from_iter
+
+     6.79%     0.00%  llvmpipe-0  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+               |          
+               |--0.71%--0x73ebf65eb3e9
+               |          
+               |--0.71%--0x73ebf65eb357
+               |          
+                --0.71%--0x73ebf65ab3e9
+
+     6.79%     0.00%  main        main                   [.] dispatch
+            |
+            ---dispatch
+               |          
+               |--2.86%--lv_draw_image_normal_helper
+               |          |          
+               |           --2.50%--img_decode_and_draw
+               |                     img_draw_core
+               |                     lv_draw_sw_blend
+               |                     |          
+               |                      --2.14%--lv_draw_sw_blend_image_to_rgb888
+               |          
+               |--1.43%--lv_draw_sw_line
+               |          |          
+               |           --0.71%--lv_draw_sw_blend
+               |                     lv_draw_sw_blend_color_to_rgb888
+               |          
+               |--1.43%--lv_draw_sw_fill
+               |          |          
+               |           --1.07%--lv_draw_sw_blend
+               |                     lv_draw_sw_blend_color_to_rgb888
+               |          
+                --0.71%--lv_draw_sw_box_shadow
+
+     6.43%     0.00%  main        [kernel.kallsyms]      [k] sock_write_iter
+            |
+            ---sock_write_iter
+               inet_sendmsg
+               tcp_sendmsg
+               |          
+                --5.71%--tcp_sendmsg_locked
+                          |          
+                          |--2.50%--sk_page_frag_refill
+                          |          skb_page_frag_refill
+                          |          alloc_pages
+                          |          alloc_pages_mpol
+                          |          __alloc_pages
+                          |          get_page_from_freelist
+                          |          |          
+                          |           --2.14%--clear_page_erms
+                          |          
+                          |--1.43%--tcp_push
+                          |          __tcp_push_pending_frames
+                          |          tcp_write_xmit
+                          |          |          
+                          |           --1.07%--__tcp_transmit_skb
+                          |                     ip_queue_xmit
+                          |                     __ip_queue_xmit
+                          |                     ip_local_out
+                          |                     ip_output
+                          |                     ip_finish_output
+                          |                     __ip_finish_output
+                          |                     ip_finish_output2
+                          |                     neigh_hh_output
+                          |                     __dev_queue_xmit
+                          |                     __local_bh_enable_ip
+                          |                     do_softirq.part.0
+                          |                     __do_softirq
+                          |                     handle_softirqs
+                          |                     net_rx_action
+                          |                     __napi_poll
+                          |                     process_backlog
+                          |                     __netif_receive_skb
+                          |                     __netif_receive_skb_one_core
+                          |                     ip_rcv
+                          |                     ip_local_deliver
+                          |                     ip_local_deliver_finish
+                          |                     ip_protocol_deliver_rcu
+                          |                     tcp_v4_rcv
+                          |                     |          
+                          |                      --0.71%--tcp_v4_do_rcv
+                          |                                tcp_rcv_established
+                          |          
+                          |--1.07%--tcp_push_one
+                          |          tcp_write_xmit
+                          |          |          
+                          |           --0.71%--__tcp_transmit_skb
+                          |                     ip_queue_xmit
+                          |                     __ip_queue_xmit
+                          |                     ip_local_out
+                          |                     ip_output
+                          |                     ip_finish_output
+                          |          
+                           --0.71%--skb_do_copy_data_nocache
+                                     _copy_from_iter
+
+     6.43%     0.00%  main        [kernel.kallsyms]      [k] inet_sendmsg
+            |
+            ---inet_sendmsg
+               tcp_sendmsg
+               |          
+                --5.71%--tcp_sendmsg_locked
+                          |          
+                          |--2.50%--sk_page_frag_refill
+                          |          skb_page_frag_refill
+                          |          alloc_pages
+                          |          alloc_pages_mpol
+                          |          __alloc_pages
+                          |          get_page_from_freelist
+                          |          |          
+                          |           --2.14%--clear_page_erms
+                          |          
+                          |--1.43%--tcp_push
+                          |          __tcp_push_pending_frames
+                          |          tcp_write_xmit
+                          |          |          
+                          |           --1.07%--__tcp_transmit_skb
+                          |                     ip_queue_xmit
+                          |                     __ip_queue_xmit
+                          |                     ip_local_out
+                          |                     ip_output
+                          |                     ip_finish_output
+                          |                     __ip_finish_output
+                          |                     ip_finish_output2
+                          |                     neigh_hh_output
+                          |                     __dev_queue_xmit
+                          |                     __local_bh_enable_ip
+                          |                     do_softirq.part.0
+                          |                     __do_softirq
+                          |                     handle_softirqs
+                          |                     net_rx_action
+                          |                     __napi_poll
+                          |                     process_backlog
+                          |                     __netif_receive_skb
+                          |                     __netif_receive_skb_one_core
+                          |                     ip_rcv
+                          |                     ip_local_deliver
+                          |                     ip_local_deliver_finish
+                          |                     ip_protocol_deliver_rcu
+                          |                     tcp_v4_rcv
+                          |                     |          
+                          |                      --0.71%--tcp_v4_do_rcv
+                          |                                tcp_rcv_established
+                          |          
+                          |--1.07%--tcp_push_one
+                          |          tcp_write_xmit
+                          |          |          
+                          |           --0.71%--__tcp_transmit_skb
+                          |                     ip_queue_xmit
+                          |                     __ip_queue_xmit
+                          |                     ip_local_out
+                          |                     ip_output
+                          |                     ip_finish_output
+                          |          
+                           --0.71%--skb_do_copy_data_nocache
+                                     _copy_from_iter
+
+     6.43%     0.00%  main        [kernel.kallsyms]      [k] tcp_sendmsg
+            |
+            ---tcp_sendmsg
+               |          
+                --5.71%--tcp_sendmsg_locked
+                          |          
+                          |--2.50%--sk_page_frag_refill
+                          |          skb_page_frag_refill
+                          |          alloc_pages
+                          |          alloc_pages_mpol
+                          |          __alloc_pages
+                          |          get_page_from_freelist
+                          |          |          
+                          |           --2.14%--clear_page_erms
+                          |          
+                          |--1.43%--tcp_push
+                          |          __tcp_push_pending_frames
+                          |          tcp_write_xmit
+                          |          |          
+                          |           --1.07%--__tcp_transmit_skb
+                          |                     ip_queue_xmit
+                          |                     __ip_queue_xmit
+                          |                     ip_local_out
+                          |                     ip_output
+                          |                     ip_finish_output
+                          |                     __ip_finish_output
+                          |                     ip_finish_output2
+                          |                     neigh_hh_output
+                          |                     __dev_queue_xmit
+                          |                     __local_bh_enable_ip
+                          |                     do_softirq.part.0
+                          |                     __do_softirq
+                          |                     handle_softirqs
+                          |                     net_rx_action
+                          |                     __napi_poll
+                          |                     process_backlog
+                          |                     __netif_receive_skb
+                          |                     __netif_receive_skb_one_core
+                          |                     ip_rcv
+                          |                     ip_local_deliver
+                          |                     ip_local_deliver_finish
+                          |                     ip_protocol_deliver_rcu
+                          |                     tcp_v4_rcv
+                          |                     |          
+                          |                      --0.71%--tcp_v4_do_rcv
+                          |                                tcp_rcv_established
+                          |          
+                          |--1.07%--tcp_push_one
+                          |          tcp_write_xmit
+                          |          |          
+                          |           --0.71%--__tcp_transmit_skb
+                          |                     ip_queue_xmit
+                          |                     __ip_queue_xmit
+                          |                     ip_local_out
+                          |                     ip_output
+                          |                     ip_finish_output
+                          |          
+                           --0.71%--skb_do_copy_data_nocache
+                                     _copy_from_iter
+
+     5.71%     0.00%  main        [kernel.kallsyms]      [k] tcp_sendmsg_locked
+            |
+            ---tcp_sendmsg_locked
+               |          
+               |--2.50%--sk_page_frag_refill
+               |          skb_page_frag_refill
+               |          alloc_pages
+               |          alloc_pages_mpol
+               |          __alloc_pages
+               |          get_page_from_freelist
+               |          |          
+               |           --2.14%--clear_page_erms
+               |          
+               |--1.43%--tcp_push
+               |          __tcp_push_pending_frames
+               |          tcp_write_xmit
+               |          |          
+               |           --1.07%--__tcp_transmit_skb
+               |                     ip_queue_xmit
+               |                     __ip_queue_xmit
+               |                     ip_local_out
+               |                     ip_output
+               |                     ip_finish_output
+               |                     __ip_finish_output
+               |                     ip_finish_output2
+               |                     neigh_hh_output
+               |                     __dev_queue_xmit
+               |                     __local_bh_enable_ip
+               |                     do_softirq.part.0
+               |                     __do_softirq
+               |                     handle_softirqs
+               |                     net_rx_action
+               |                     __napi_poll
+               |                     process_backlog
+               |                     __netif_receive_skb
+               |                     __netif_receive_skb_one_core
+               |                     ip_rcv
+               |                     ip_local_deliver
+               |                     ip_local_deliver_finish
+               |                     ip_protocol_deliver_rcu
+               |                     tcp_v4_rcv
+               |                     |          
+               |                      --0.71%--tcp_v4_do_rcv
+               |                                tcp_rcv_established
+               |          
+               |--1.07%--tcp_push_one
+               |          tcp_write_xmit
+               |          |          
+               |           --0.71%--__tcp_transmit_skb
+               |                     ip_queue_xmit
+               |                     __ip_queue_xmit
+               |                     ip_local_out
+               |                     ip_output
+               |                     ip_finish_output
+               |          
+                --0.71%--skb_do_copy_data_nocache
+                          _copy_from_iter
+
+     5.36%     0.00%  llvmpipe-7  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+
+     5.36%     0.00%  llvmpipe-7  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+
+     5.36%     0.00%  main        [unknown]              [k] 0x0000000100007fff
+            |
+            ---0x100007fff
+               __GI___writev
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_writev
+               do_writev
+               vfs_writev
+               |          
+                --5.00%--do_iter_readv_writev
+                          |          
+                           --4.64%--sock_write_iter
+                                     inet_sendmsg
+                                     tcp_sendmsg
+                                     |          
+                                      --3.93%--tcp_sendmsg_locked
+                                                |          
+                                                |--2.14%--sk_page_frag_refill
+                                                |          skb_page_frag_refill
+                                                |          alloc_pages
+                                                |          alloc_pages_mpol
+                                                |          __alloc_pages
+                                                |          get_page_from_freelist
+                                                |          |          
+                                                |           --1.79%--clear_page_erms
+                                                |          
+                                                |--0.71%--tcp_push_one
+                                                |          tcp_write_xmit
+                                                |          __tcp_transmit_skb
+                                                |          ip_queue_xmit
+                                                |          __ip_queue_xmit
+                                                |          ip_local_out
+                                                |          ip_output
+                                                |          ip_finish_output
+                                                |          
+                                                 --0.71%--tcp_push
+                                                           __tcp_push_pending_frames
+                                                           tcp_write_xmit
+
+     4.64%     4.64%  main        [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |          
+             --3.57%--pthread_cond_signal@@GLIBC_2.3.2
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       x64_sys_call
+                       __x64_sys_futex
+                       do_futex
+                       futex_wake
+                       wake_up_q
+                       try_to_wake_up
+                       _raw_spin_unlock_irqrestore
+
+     4.64%     0.00%  main        main                   [.] lv_draw_sw_blend
+            |
+            ---lv_draw_sw_blend
+               |          
+               |--2.14%--lv_draw_sw_blend_image_to_rgb888
+               |          
+                --2.14%--lv_draw_sw_blend_color_to_rgb888
+
+     4.29%     0.00%  llvmpipe-1  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+
+     4.29%     0.00%  llvmpipe-1  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+
+     4.29%     0.00%  llvmpipe-2  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               |          
+                --3.93%--0x73ebf3116d33
+                          |          
+                           --1.43%--0x73ebf65eb3e9
+
+     4.29%     0.00%  main        [kernel.kallsyms]      [k] __x64_sys_futex
+            |
+            ---__x64_sys_futex
+               do_futex
+               |          
+                --3.93%--futex_wake
+                          |          
+                           --3.57%--wake_up_q
+                                     try_to_wake_up
+                                     _raw_spin_unlock_irqrestore
+
+     4.29%     0.00%  main        [kernel.kallsyms]      [k] do_futex
+            |
+            ---do_futex
+               |          
+                --3.93%--futex_wake
+                          |          
+                           --3.57%--wake_up_q
+                                     try_to_wake_up
+                                     _raw_spin_unlock_irqrestore
+
+     3.93%     0.36%  main        [kernel.kallsyms]      [k] futex_wake
+            |          
+             --3.57%--futex_wake
+                       wake_up_q
+                       try_to_wake_up
+                       _raw_spin_unlock_irqrestore
+
+     3.93%     0.00%  llvmpipe-2  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+               |          
+                --1.43%--0x73ebf65eb3e9
+
+     3.93%     0.00%  main        libc.so.6              [.] pthread_cond_signal@@GLIBC_2.3.2
+            |
+            ---pthread_cond_signal@@GLIBC_2.3.2
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               |          
+                --3.57%--wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.36%  llvmpipe-7  libc.so.6              [.] pthread_barrier_wait@@GLIBC_2.34
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               |          
+                --3.21%--entry_SYSCALL_64_after_hwframe
+                          do_syscall_64
+                          x64_sys_call
+                          __x64_sys_futex
+                          do_futex
+                          futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  llvmpipe-4  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+
+     3.57%     0.00%  llvmpipe-4  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+
+     3.57%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               |          
+                --3.21%--futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               |          
+                --3.21%--futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] x64_sys_call
+            |
+            ---x64_sys_call
+               __x64_sys_futex
+               do_futex
+               |          
+                --3.21%--futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] __x64_sys_futex
+            |
+            ---__x64_sys_futex
+               do_futex
+               |          
+                --3.21%--futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] do_futex
+            |
+            ---do_futex
+               |          
+                --3.21%--futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  llvmpipe-7  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+               |          
+                --1.07%--0x73ebf65eb3e9
+
+     3.57%     0.00%  main        [kernel.kallsyms]      [k] wake_up_q
+            |
+            ---wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     3.57%     0.00%  main        [kernel.kallsyms]      [k] try_to_wake_up
+            |
+            ---try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     3.21%     3.21%  llvmpipe-7  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     3.21%     3.21%  main        swrast_dri.so          [.] 0x00000000000cf172
+            |
+            ---0x73ebf2acf172
+
+     3.21%     0.00%  llvmpipe-3  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               |          
+                --2.86%--0x73ebf3116d33
+                          |          
+                           --1.07%--0x73ebf65eb3e9
+
+     3.21%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] futex_wake
+            |
+            ---futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     3.21%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] wake_up_q
+            |
+            ---wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     3.21%     0.00%  llvmpipe-7  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               0x73ebf31192a8
+               |          
+                --1.07%--0x73ebf65eb3e9
+
+     3.21%     0.00%  llvmpipe-7  [kernel.kallsyms]      [k] try_to_wake_up
+            |
+            ---try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     3.21%     0.00%  main        swrast_dri.so          [.] 0x000073ebf2acf172
+            |
+            ---0x73ebf2acf172
+
+     2.86%     0.00%  llvmpipe-1  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               |          
+                --2.50%--0x73ebf31192a8
+
+     2.86%     0.00%  llvmpipe-1  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+
+     2.86%     0.00%  llvmpipe-3  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+               |          
+                --1.07%--0x73ebf65eb3e9
+
+     2.86%     0.00%  llvmpipe-6  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+               |          
+                --0.71%--0x73ebf65eb3e9
+
+     2.86%     0.00%  llvmpipe-6  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+               |          
+                --0.71%--0x73ebf65eb3e9
+
+     2.86%     0.00%  main        main                   [.] lv_image_event
+            |
+            ---lv_image_event
+               lv_draw_image
+               lv_draw_finalize_task_creation
+               lv_draw_dispatch_layer
+               dispatch
+               lv_draw_image_normal_helper
+               |          
+                --2.50%--img_decode_and_draw
+                          img_draw_core
+                          lv_draw_sw_blend
+                          |          
+                           --2.14%--lv_draw_sw_blend_image_to_rgb888
+
+     2.86%     0.00%  main        main                   [.] lv_draw_image
+            |
+            ---lv_draw_image
+               lv_draw_finalize_task_creation
+               lv_draw_dispatch_layer
+               dispatch
+               lv_draw_image_normal_helper
+               |          
+                --2.50%--img_decode_and_draw
+                          img_draw_core
+                          lv_draw_sw_blend
+                          |          
+                           --2.14%--lv_draw_sw_blend_image_to_rgb888
+
+     2.86%     0.00%  main        main                   [.] lv_draw_image_normal_helper
+            |
+            ---lv_draw_image_normal_helper
+               |          
+                --2.50%--img_decode_and_draw
+                          img_draw_core
+                          lv_draw_sw_blend
+                          |          
+                           --2.14%--lv_draw_sw_blend_image_to_rgb888
+
+     2.50%     0.71%  main        [kernel.kallsyms]      [k] handle_softirqs
+            |          
+            |--1.79%--handle_softirqs
+            |          net_rx_action
+            |          __napi_poll
+            |          |          
+            |           --1.43%--process_backlog
+            |                     __netif_receive_skb
+            |                     __netif_receive_skb_one_core
+            |                     |          
+            |                      --1.07%--ip_rcv
+            |                                ip_local_deliver
+            |                                ip_local_deliver_finish
+            |                                ip_protocol_deliver_rcu
+            |                                tcp_v4_rcv
+            |                                |          
+            |                                 --0.71%--tcp_v4_do_rcv
+            |                                           tcp_rcv_established
+            |          
+             --0.71%--__libc_start_call_main
+                       main
+                       lv_timer_handler.part.0
+                       lv_display_refr_timer
+                       refr_area
+                       refr_configured_layer
+                       lv_obj_refr.part.0
+                       lv_obj_redraw
+
+     2.50%     0.00%  llvmpipe-0  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               |          
+                --2.14%--0x73ebf31192a8
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] tcp_write_xmit
+            |
+            ---tcp_write_xmit
+               |          
+               |--1.79%--__tcp_transmit_skb
+               |          ip_queue_xmit
+               |          __ip_queue_xmit
+               |          ip_local_out
+               |          ip_output
+               |          ip_finish_output
+               |          |          
+               |           --1.43%--__ip_finish_output
+               |                     ip_finish_output2
+               |                     neigh_hh_output
+               |                     __dev_queue_xmit
+               |                     __local_bh_enable_ip
+               |                     do_softirq.part.0
+               |                     __do_softirq
+               |                     handle_softirqs
+               |                     net_rx_action
+               |                     __napi_poll
+               |                     process_backlog
+               |                     __netif_receive_skb
+               |                     __netif_receive_skb_one_core
+               |                     |          
+               |                      --1.07%--ip_rcv
+               |                                ip_local_deliver
+               |                                ip_local_deliver_finish
+               |                                ip_protocol_deliver_rcu
+               |                                tcp_v4_rcv
+               |                                |          
+               |                                 --0.71%--tcp_v4_do_rcv
+               |                                           tcp_rcv_established
+               |          
+                --0.71%--tcp_event_new_data_sent
+
+     2.50%     0.00%  main        main                   [.] lv_obj_draw
+            |
+            ---lv_obj_draw
+               |          
+                --2.14%--lv_draw_rect
+                          lv_draw_finalize_task_creation
+                          lv_draw_dispatch_layer
+                          dispatch
+                          |          
+                          |--1.43%--lv_draw_sw_fill
+                          |          |          
+                          |           --1.07%--lv_draw_sw_blend
+                          |                     lv_draw_sw_blend_color_to_rgb888
+                          |          
+                           --0.71%--lv_draw_sw_box_shadow
+
+     2.50%     0.00%  main        main                   [.] img_decode_and_draw
+            |
+            ---img_decode_and_draw
+               img_draw_core
+               lv_draw_sw_blend
+               |          
+                --2.14%--lv_draw_sw_blend_image_to_rgb888
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] sk_page_frag_refill
+            |
+            ---sk_page_frag_refill
+               skb_page_frag_refill
+               alloc_pages
+               alloc_pages_mpol
+               __alloc_pages
+               get_page_from_freelist
+               |          
+                --2.14%--clear_page_erms
+
+     2.50%     0.00%  main        main                   [.] img_draw_core
+            |
+            ---img_draw_core
+               lv_draw_sw_blend
+               |          
+                --2.14%--lv_draw_sw_blend_image_to_rgb888
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] skb_page_frag_refill
+            |
+            ---skb_page_frag_refill
+               alloc_pages
+               alloc_pages_mpol
+               __alloc_pages
+               get_page_from_freelist
+               |          
+                --2.14%--clear_page_erms
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] alloc_pages
+            |
+            ---alloc_pages
+               alloc_pages_mpol
+               __alloc_pages
+               get_page_from_freelist
+               |          
+                --2.14%--clear_page_erms
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] alloc_pages_mpol
+            |
+            ---alloc_pages_mpol
+               __alloc_pages
+               get_page_from_freelist
+               |          
+                --2.14%--clear_page_erms
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] __alloc_pages
+            |
+            ---__alloc_pages
+               get_page_from_freelist
+               |          
+                --2.14%--clear_page_erms
+
+     2.50%     0.00%  main        [kernel.kallsyms]      [k] get_page_from_freelist
+            |
+            ---get_page_from_freelist
+               |          
+                --2.14%--clear_page_erms
+
+     2.14%     1.79%  main        main                   [.] lv_draw_sw_blend_color_to_rgb888
+            |          
+             --1.79%--__libc_start_call_main
+                       main
+                       lv_timer_handler.part.0
+                       lv_display_refr_timer
+                       refr_area
+                       refr_configured_layer
+                       lv_obj_refr.part.0
+                       lv_obj_redraw
+                       |          
+                       |--1.07%--lv_obj_refr.part.0
+                       |          lv_obj_redraw
+                       |          |          
+                       |           --0.71%--lv_obj_refr.part.0
+                       |                     lv_obj_redraw
+                       |                     lv_obj_send_event
+                       |                     lv_obj_event_base
+                       |                     lv_line_event
+                       |                     lv_draw_line
+                       |                     lv_draw_finalize_task_creation
+                       |                     lv_draw_dispatch_layer
+                       |                     dispatch
+                       |                     lv_draw_sw_line
+                       |                     lv_draw_sw_blend
+                       |                     lv_draw_sw_blend_color_to_rgb888
+                       |          
+                        --0.71%--lv_obj_send_event
+                                  lv_obj_event_base
+                                  lv_obj_draw
+                                  lv_draw_rect
+                                  lv_draw_finalize_task_creation
+                                  lv_draw_dispatch_layer
+                                  dispatch
+                                  lv_draw_sw_fill
+                                  lv_draw_sw_blend
+                                  lv_draw_sw_blend_color_to_rgb888
+
+     2.14%     1.79%  main        main                   [.] lv_draw_sw_blend_image_to_rgb888
+            |          
+             --1.79%--__libc_start_call_main
+                       main
+                       lv_timer_handler.part.0
+                       lv_display_refr_timer
+                       refr_area
+                       refr_configured_layer
+                       lv_obj_refr.part.0
+                       lv_obj_redraw
+                       lv_obj_refr.part.0
+                       lv_obj_redraw
+                       lv_obj_send_event
+                       lv_obj_event_base
+                       lv_image_event
+                       lv_draw_image
+                       lv_draw_finalize_task_creation
+                       lv_draw_dispatch_layer
+                       dispatch
+                       lv_draw_image_normal_helper
+                       img_decode_and_draw
+                       img_draw_core
+                       lv_draw_sw_blend
+                       lv_draw_sw_blend_image_to_rgb888
+
+     2.14%     2.14%  main        [kernel.kallsyms]      [k] clear_page_erms
+            |          
+             --1.79%--0x100007fff
+                       __GI___writev
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       x64_sys_call
+                       __x64_sys_writev
+                       do_writev
+                       vfs_writev
+                       do_iter_readv_writev
+                       sock_write_iter
+                       inet_sendmsg
+                       tcp_sendmsg
+                       tcp_sendmsg_locked
+                       sk_page_frag_refill
+                       skb_page_frag_refill
+                       alloc_pages
+                       alloc_pages_mpol
+                       __alloc_pages
+                       get_page_from_freelist
+                       clear_page_erms
+
+     2.14%     0.36%  main        main                   [.] lv_line_event
+            |          
+             --1.79%--lv_line_event
+                       |          
+                        --1.43%--lv_draw_line
+                                  lv_draw_finalize_task_creation
+                                  lv_draw_dispatch_layer
+                                  dispatch
+                                  lv_draw_sw_line
+                                  |          
+                                   --0.71%--lv_draw_sw_blend
+                                             lv_draw_sw_blend_color_to_rgb888
+
+     2.14%     0.00%  llvmpipe-0  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+
+     2.14%     0.00%  main        main                   [.] lv_draw_rect
+            |
+            ---lv_draw_rect
+               lv_draw_finalize_task_creation
+               lv_draw_dispatch_layer
+               dispatch
+               |          
+               |--1.43%--lv_draw_sw_fill
+               |          |          
+               |           --1.07%--lv_draw_sw_blend
+               |                     lv_draw_sw_blend_color_to_rgb888
+               |          
+                --0.71%--lv_draw_sw_box_shadow
+
+     1.79%     0.36%  main        [kernel.kallsyms]      [k] ip_finish_output
+            |          
+             --1.43%--ip_finish_output
+                       __ip_finish_output
+                       ip_finish_output2
+                       neigh_hh_output
+                       __dev_queue_xmit
+                       __local_bh_enable_ip
+                       do_softirq.part.0
+                       __do_softirq
+                       handle_softirqs
+                       net_rx_action
+                       __napi_poll
+                       process_backlog
+                       __netif_receive_skb
+                       __netif_receive_skb_one_core
+                       |          
+                        --1.07%--ip_rcv
+                                  ip_local_deliver
+                                  ip_local_deliver_finish
+                                  ip_protocol_deliver_rcu
+                                  tcp_v4_rcv
+                                  |          
+                                   --0.71%--tcp_v4_do_rcv
+                                             tcp_rcv_established
+
+     1.79%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               |          
+                --1.07%--do_futex
+                          |          
+                           --0.71%--futex_wake
+                                     wake_up_q
+                                     try_to_wake_up
+                                     _raw_spin_unlock_irqrestore
+
+     1.79%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               |          
+                --1.07%--do_futex
+                          |          
+                           --0.71%--futex_wake
+                                     wake_up_q
+                                     try_to_wake_up
+                                     _raw_spin_unlock_irqrestore
+
+     1.79%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] x64_sys_call
+            |
+            ---x64_sys_call
+               __x64_sys_futex
+               |          
+                --1.07%--do_futex
+                          |          
+                           --0.71%--futex_wake
+                                     wake_up_q
+                                     try_to_wake_up
+                                     _raw_spin_unlock_irqrestore
+
+     1.79%     0.71%  llvmpipe-1  [kernel.kallsyms]      [k] __x64_sys_futex
+            |          
+             --1.07%--__x64_sys_futex
+                       do_futex
+                       |          
+                        --0.71%--futex_wake
+                                  wake_up_q
+                                  try_to_wake_up
+                                  _raw_spin_unlock_irqrestore
+
+     1.79%     0.00%  llvmpipe-2  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               |          
+                --1.43%--0x73ebf31192a8
+
+     1.79%     0.00%  llvmpipe-5  swrast_dri.so          [.] 0x000073ebf31169f4
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+               |          
+                --0.71%--0x73ebf65eb3e9
+
+     1.79%     0.00%  llvmpipe-5  swrast_dri.so          [.] 0x000073ebf3116d33
+            |
+            ---0x73ebf3116d33
+               |          
+                --0.71%--0x73ebf65eb3e9
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] __tcp_transmit_skb
+            |
+            ---__tcp_transmit_skb
+               ip_queue_xmit
+               __ip_queue_xmit
+               ip_local_out
+               ip_output
+               ip_finish_output
+               |          
+                --1.43%--__ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] ip_queue_xmit
+            |
+            ---ip_queue_xmit
+               __ip_queue_xmit
+               ip_local_out
+               ip_output
+               ip_finish_output
+               |          
+                --1.43%--__ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] __ip_queue_xmit
+            |
+            ---__ip_queue_xmit
+               ip_local_out
+               ip_output
+               ip_finish_output
+               |          
+                --1.43%--__ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] ip_local_out
+            |
+            ---ip_local_out
+               ip_output
+               ip_finish_output
+               |          
+                --1.43%--__ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] ip_output
+            |
+            ---ip_output
+               ip_finish_output
+               |          
+                --1.43%--__ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] net_rx_action
+            |
+            ---net_rx_action
+               __napi_poll
+               |          
+                --1.43%--process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.79%     0.00%  main        [kernel.kallsyms]      [k] __napi_poll
+            |
+            ---__napi_poll
+               |          
+                --1.43%--process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          |          
+                           --1.07%--ip_rcv
+                                     ip_local_deliver
+                                     ip_local_deliver_finish
+                                     ip_protocol_deliver_rcu
+                                     tcp_v4_rcv
+                                     |          
+                                      --0.71%--tcp_v4_do_rcv
+                                                tcp_rcv_established
+
+     1.43%     1.43%  llvmpipe-2  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+               0x73ebf65eb3e9
+
+     1.43%     1.43%  llvmpipe-7  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |          
+             --1.07%--0x73ebf305f021
+                       0x73ebf31192a8
+                       0x73ebf65eb3e9
+
+     1.43%     1.07%  llvmpipe-0  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |          
+             --0.71%--0x73ebf31169f4
+                       0x73ebf3116d33
+                       0x73ebf65eb3e9
+
+     1.43%     0.36%  main        main                   [.] lv_draw_sw_fill
+            |          
+             --1.07%--lv_draw_sw_fill
+                       lv_draw_sw_blend
+                       lv_draw_sw_blend_color_to_rgb888
+
+     1.43%     0.00%  llvmpipe-2  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+
+     1.43%     0.00%  llvmpipe-3  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               0x73ebf31192a8
+
+     1.43%     0.00%  llvmpipe-3  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+
+     1.43%     0.00%  llvmpipe-6  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               0x73ebf31192a8
+
+     1.43%     0.00%  llvmpipe-6  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] tcp_push
+            |
+            ---tcp_push
+               __tcp_push_pending_frames
+               tcp_write_xmit
+               |          
+                --1.07%--__tcp_transmit_skb
+                          ip_queue_xmit
+                          __ip_queue_xmit
+                          ip_local_out
+                          ip_output
+                          ip_finish_output
+                          __ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __tcp_push_pending_frames
+            |
+            ---__tcp_push_pending_frames
+               tcp_write_xmit
+               |          
+                --1.07%--__tcp_transmit_skb
+                          ip_queue_xmit
+                          __ip_queue_xmit
+                          ip_local_out
+                          ip_output
+                          ip_finish_output
+                          __ip_finish_output
+                          ip_finish_output2
+                          neigh_hh_output
+                          __dev_queue_xmit
+                          __local_bh_enable_ip
+                          do_softirq.part.0
+                          __do_softirq
+                          handle_softirqs
+                          net_rx_action
+                          __napi_poll
+                          process_backlog
+                          __netif_receive_skb
+                          __netif_receive_skb_one_core
+                          ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __ip_finish_output
+            |
+            ---__ip_finish_output
+               ip_finish_output2
+               neigh_hh_output
+               __dev_queue_xmit
+               __local_bh_enable_ip
+               do_softirq.part.0
+               __do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] ip_finish_output2
+            |
+            ---ip_finish_output2
+               neigh_hh_output
+               __dev_queue_xmit
+               __local_bh_enable_ip
+               do_softirq.part.0
+               __do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] neigh_hh_output
+            |
+            ---neigh_hh_output
+               __dev_queue_xmit
+               __local_bh_enable_ip
+               do_softirq.part.0
+               __do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __dev_queue_xmit
+            |
+            ---__dev_queue_xmit
+               __local_bh_enable_ip
+               do_softirq.part.0
+               __do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __local_bh_enable_ip
+            |
+            ---__local_bh_enable_ip
+               do_softirq.part.0
+               __do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] do_softirq.part.0
+            |
+            ---do_softirq.part.0
+               __do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __do_softirq
+            |
+            ---__do_softirq
+               handle_softirqs
+               net_rx_action
+               __napi_poll
+               process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] process_backlog
+            |
+            ---process_backlog
+               __netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __netif_receive_skb
+            |
+            ---__netif_receive_skb
+               __netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        [kernel.kallsyms]      [k] __netif_receive_skb_one_core
+            |
+            ---__netif_receive_skb_one_core
+               |          
+                --1.07%--ip_rcv
+                          ip_local_deliver
+                          ip_local_deliver_finish
+                          ip_protocol_deliver_rcu
+                          tcp_v4_rcv
+                          |          
+                           --0.71%--tcp_v4_do_rcv
+                                     tcp_rcv_established
+
+     1.43%     0.00%  main        main                   [.] lv_label_event
+            |
+            ---lv_label_event
+               |          
+                --0.71%--lv_draw_finalize_task_creation
+                          lv_draw_dispatch_layer
+
+     1.43%     0.00%  main        main                   [.] lv_draw_line
+            |
+            ---lv_draw_line
+               lv_draw_finalize_task_creation
+               lv_draw_dispatch_layer
+               dispatch
+               lv_draw_sw_line
+               |          
+                --0.71%--lv_draw_sw_blend
+                          lv_draw_sw_blend_color_to_rgb888
+
+     1.43%     0.00%  main        main                   [.] lv_obj_update_layout
+            |
+            ---lv_obj_update_layout
+               |          
+                --0.71%--layout_update_core
+
+     1.43%     0.00%  main        main                   [.] lv_draw_sw_line
+            |
+            ---lv_draw_sw_line
+               |          
+                --0.71%--lv_draw_sw_blend
+                          lv_draw_sw_blend_color_to_rgb888
+
+     1.07%     1.07%  llvmpipe-0  [JIT] tid 16021        [.] 0x000073ebf65ab3e9
+            |          
+             --0.71%--0x73ebf31169f4
+                       0x73ebf3116d33
+                       0x73ebf65ab3e9
+
+     1.07%     1.07%  llvmpipe-2  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     1.07%  llvmpipe-3  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+               0x73ebf65eb3e9
+
+     1.07%     1.07%  llvmpipe-6  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.71%  llvmpipe-6  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+     1.07%     0.36%  main        [kernel.kallsyms]      [k] tcp_v4_rcv
+            |          
+             --0.71%--tcp_v4_rcv
+                       tcp_v4_do_rcv
+                       tcp_rcv_established
+
+     1.07%     0.71%  main        libc.so.6              [.] __memset_avx2_unaligned_erms
+     1.07%     0.36%  main        main                   [.] refresh_cb
+            |          
+             --0.71%--refresh_cb
+
+     1.07%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] do_futex
+            |
+            ---do_futex
+               |          
+                --0.71%--futex_wake
+                          wake_up_q
+                          try_to_wake_up
+                          _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  libc.so.6              [.] pthread_barrier_wait@@GLIBC_2.34
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] x64_sys_call
+            |
+            ---x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] __x64_sys_futex
+            |
+            ---__x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] do_futex
+            |
+            ---do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] futex_wake
+            |
+            ---futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] wake_up_q
+            |
+            ---wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-2  [kernel.kallsyms]      [k] try_to_wake_up
+            |
+            ---try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-4  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+               |          
+                --0.71%--0x73ebf31192a8
+
+     1.07%     0.00%  llvmpipe-6  libc.so.6              [.] pthread_barrier_wait@@GLIBC_2.34
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] x64_sys_call
+            |
+            ---x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] __x64_sys_futex
+            |
+            ---__x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] do_futex
+            |
+            ---do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] futex_wake
+            |
+            ---futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] wake_up_q
+            |
+            ---wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  llvmpipe-6  [kernel.kallsyms]      [k] try_to_wake_up
+            |
+            ---try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] tcp_push_one
+            |
+            ---tcp_push_one
+               tcp_write_xmit
+               |          
+                --0.71%--__tcp_transmit_skb
+                          ip_queue_xmit
+                          __ip_queue_xmit
+                          ip_local_out
+                          ip_output
+                          ip_finish_output
+
+     1.07%     0.00%  main        [unknown]              [.] 0000000000000000
+            |
+            ---0
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] ip_rcv
+            |
+            ---ip_rcv
+               ip_local_deliver
+               ip_local_deliver_finish
+               ip_protocol_deliver_rcu
+               tcp_v4_rcv
+               |          
+                --0.71%--tcp_v4_do_rcv
+                          tcp_rcv_established
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] ip_local_deliver
+            |
+            ---ip_local_deliver
+               ip_local_deliver_finish
+               ip_protocol_deliver_rcu
+               tcp_v4_rcv
+               |          
+                --0.71%--tcp_v4_do_rcv
+                          tcp_rcv_established
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] ip_local_deliver_finish
+            |
+            ---ip_local_deliver_finish
+               ip_protocol_deliver_rcu
+               tcp_v4_rcv
+               |          
+                --0.71%--tcp_v4_do_rcv
+                          tcp_rcv_established
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] tcp_v4_do_rcv
+            |
+            ---tcp_v4_do_rcv
+               tcp_rcv_established
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] asm_exc_page_fault
+            |
+            ---asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               |          
+                --0.71%--handle_mm_fault
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] ip_protocol_deliver_rcu
+            |
+            ---ip_protocol_deliver_rcu
+               tcp_v4_rcv
+               |          
+                --0.71%--tcp_v4_do_rcv
+                          tcp_rcv_established
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] tcp_rcv_established
+            |
+            ---tcp_rcv_established
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] asm_common_interrupt
+            |
+            ---asm_common_interrupt
+               common_interrupt
+               irq_exit_rcu
+               __irq_exit_rcu
+               handle_softirqs
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] exc_page_fault
+            |
+            ---exc_page_fault
+               do_user_addr_fault
+               |          
+                --0.71%--handle_mm_fault
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] common_interrupt
+            |
+            ---common_interrupt
+               irq_exit_rcu
+               __irq_exit_rcu
+               handle_softirqs
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] do_user_addr_fault
+            |
+            ---do_user_addr_fault
+               |          
+                --0.71%--handle_mm_fault
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] irq_exit_rcu
+            |
+            ---irq_exit_rcu
+               __irq_exit_rcu
+               handle_softirqs
+
+     1.07%     0.00%  main        main                   [.] obj_invalidate_area_internal.isra.0
+            |
+            ---obj_invalidate_area_internal.isra.0
+               |          
+                --0.71%--lv_obj_tree_walk
+
+     1.07%     0.00%  main        [kernel.kallsyms]      [k] __irq_exit_rcu
+            |
+            ---__irq_exit_rcu
+               handle_softirqs
+
+     0.71%     0.00%  llvmpipe-0  [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+
+     0.71%     0.00%  llvmpipe-0  [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+
+     0.71%     0.71%  llvmpipe-0  [JIT] tid 16021        [.] 0x000073ebf65eb357
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+               0x73ebf65eb357
+
+     0.71%     0.71%  llvmpipe-0  swrast_dri.so          [.] 0x000000000065f132
+            |
+            ---0x73ebf305f132
+
+     0.71%     0.71%  llvmpipe-1  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.71%  llvmpipe-1  [JIT] tid 16021        [.] 0x000073ebf65ab3e9
+     0.71%     0.71%  llvmpipe-1  [JIT] tid 16021        [.] 0x000073ebf65ab456
+     0.71%     0.71%  llvmpipe-1  [JIT] tid 16021        [.] 0x000073ebf65ab8c6
+     0.71%     0.71%  llvmpipe-2  swrast_dri.so          [.] 0x000000000065f132
+            |
+            ---0x73ebf305f132
+
+     0.71%     0.71%  llvmpipe-3  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+     0.71%     0.71%  llvmpipe-4  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf305f021
+
+     0.71%     0.71%  llvmpipe-5  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf31169f4
+               0x73ebf3116d33
+               0x73ebf65eb3e9
+
+     0.71%     0.71%  llvmpipe-6  [JIT] tid 16021        [.] 0x000073ebf65ab3e9
+     0.71%     0.71%  llvmpipe-7  [JIT] tid 16021        [.] 0x000073ebf65eb689
+     0.71%     0.36%  main        main                   [.] get_selector_style_prop.constprop.0
+     0.71%     0.71%  main        [kernel.kallsyms]      [k] _copy_from_iter
+     0.71%     0.71%  main        main                   [.] lv_obj_get_child_count
+            |
+            ---__libc_start_call_main
+               main
+               lv_timer_handler.part.0
+               lv_display_refr_timer
+
+     0.71%     0.36%  main        main                   [.] lv_event_send.part.0
+     0.71%     0.36%  main        main                   [.] layout_update_core
+     0.71%     0.36%  main        main                   [.] draw_buf_flush
+     0.71%     0.71%  main        swrast_dri.so          [.] 0x00000000000cf182
+            |
+            ---0x73ebf2acf182
+
+     0.71%     0.71%  main        swrast_dri.so          [.] 0x00000000000cf185
+            |
+            ---0x73ebf2acf185
+
+     0.71%     0.36%  main        main                   [.] receive_client_data
+     0.71%     0.00%  llvmpipe-0  swrast_dri.so          [.] 0x000073ebf305f132
+            |
+            ---0x73ebf305f132
+
+     0.71%     0.00%  llvmpipe-1  libc.so.6              [.] pthread_barrier_wait@@GLIBC_2.34
+            |
+            ---pthread_barrier_wait@@GLIBC_2.34
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-1  libc.so.6              [.] __GI___futex_abstimed_wait_cancelable64
+            |
+            ---__GI___futex_abstimed_wait_cancelable64
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+
+     0.71%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] futex_wake
+            |
+            ---futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] wake_up_q
+            |
+            ---wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-1  [kernel.kallsyms]      [k] try_to_wake_up
+            |
+            ---try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-2  swrast_dri.so          [.] 0x000073ebf305f132
+            |
+            ---0x73ebf305f132
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] entry_SYSCALL_64_after_hwframe
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] do_syscall_64
+            |
+            ---do_syscall_64
+               x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] x64_sys_call
+            |
+            ---x64_sys_call
+               __x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] __x64_sys_futex
+            |
+            ---__x64_sys_futex
+               do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] do_futex
+            |
+            ---do_futex
+               futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] futex_wake
+            |
+            ---futex_wake
+               wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] wake_up_q
+            |
+            ---wake_up_q
+               try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-3  [kernel.kallsyms]      [k] try_to_wake_up
+            |
+            ---try_to_wake_up
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  llvmpipe-4  swrast_dri.so          [.] 0x000073ebf31192a8
+            |
+            ---0x73ebf31192a8
+
+     0.71%     0.00%  llvmpipe-5  swrast_dri.so          [.] 0x000073ebf305f021
+            |
+            ---0x73ebf305f021
+
+     0.71%     0.00%  main        [unknown]              [k] 0x0003f60300007fff
+            |
+            ---0x3f60300007fff
+               __GI___writev
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               x64_sys_call
+               __x64_sys_writev
+               do_writev
+               vfs_writev
+               do_iter_readv_writev
+               sock_write_iter
+               inet_sendmsg
+               tcp_sendmsg
+               tcp_sendmsg_locked
+
+     0.71%     0.00%  main        [kernel.kallsyms]      [k] tcp_event_new_data_sent
+            |
+            ---tcp_event_new_data_sent
+
+     0.71%     0.00%  main        main                   [.] lv_obj_refresh_style.part.0
+            |
+            ---lv_obj_refresh_style.part.0
+
+     0.71%     0.00%  main        [kernel.kallsyms]      [k] handle_mm_fault
+            |
+            ---handle_mm_fault
+
+     0.71%     0.00%  main        [unknown]              [.] 0x000060c107b10000
+            |
+            ---0x60c107b10000
+
+     0.71%     0.00%  main        main                   [.] lv_event_push_and_send
+            |
+            ---lv_event_push_and_send
+               lv_event_send.part.0
+
+     0.71%     0.00%  main        main                   [.] lv_obj_tree_walk
+            |
+            ---lv_obj_tree_walk
+
+     0.71%     0.00%  main        [kernel.kallsyms]      [k] tcp_data_ready
+            |
+            ---tcp_data_ready
+               sock_def_readable
+               __wake_up_sync_key
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  main        [kernel.kallsyms]      [k] sock_def_readable
+            |
+            ---sock_def_readable
+               __wake_up_sync_key
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  main        main                   [.] lv_draw_sw_box_shadow
+            |
+            ---lv_draw_sw_box_shadow
+
+     0.71%     0.00%  main        main                   [.] lv_obj_get_style_prop
+            |
+            ---lv_obj_get_style_prop
+               get_selector_style_prop.constprop.0
+
+     0.71%     0.00%  main        [kernel.kallsyms]      [k] __wake_up_sync_key
+            |
+            ---__wake_up_sync_key
+               _raw_spin_unlock_irqrestore
+
+     0.71%     0.00%  main        [kernel.kallsyms]      [k] skb_do_copy_data_nocache
+            |
+            ---skb_do_copy_data_nocache
+               _copy_from_iter
+
+     0.71%     0.00%  main        libc.so.6              [.] start_thread
+            |
+            ---start_thread
+               server_thread_main
+               receive_client_data
+
+     0.71%     0.00%  main        main                   [.] server_thread_main
+            |
+            ---server_thread_main
+               receive_client_data
+
+     0.71%     0.00%  main        swrast_dri.so          [.] 0x000073ebf2acf182
+            |
+            ---0x73ebf2acf182
+
+     0.71%     0.00%  main        swrast_dri.so          [.] 0x000073ebf2acf185
+            |
+            ---0x73ebf2acf185
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

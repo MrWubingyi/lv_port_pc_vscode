@@ -105,7 +105,7 @@ bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
                       soc->valueint <= 100;
 
   if (!ranges_valid) {
-    fprintf(stderr, "Vehicle field out of range\n");
+    // fprintf(stderr, "Vehicle field out of range\n");
     cJSON_Delete(root);
     return false;
   }
@@ -168,7 +168,7 @@ bool vehicle_state_parse_json(const char *json_text, vehicle_state_t *state) {
       read_optional_bool(root, "highBeam", &parsed.high_beam) &&
       read_optional_bool(root, "lowBeam", &parsed.low_beam);
   if (!optional_fields_valid) {
-    fprintf(stderr, "Invalid optional vehicle field\n");
+    // fprintf(stderr, "Invalid optional vehicle field\n");
     cJSON_Delete(root);
     return false;
   }
@@ -207,24 +207,23 @@ void vehicle_state_print(const vehicle_state_t *state) {
   static const char gear_chars[] = {'P', 'R', 'N', 'D'};
   char gear_char = (state->gear >= 0 && state->gear <= 3) ? gear_chars[state->gear] : '?';
 
-  printf("Parsed: seq=%" PRIu64 " time=%" PRIu64 " speed=%d km/h"
-         " rpm=%d"
-         " gear=%c(%d)"
-         " soc=%d%%"
-         " turnSignal=%d"
-         " doorLock=%s"
-         " beltWarn=%s"
-         " highBeam=%s"
-         " coolantTemp=%.1fC(warn=%s)"
-         " batteryWarn=%s\n",
-         state->sequence, state->timestamp_ms, state->speed_kph, state->rpm,
-         gear_char, state->gear, state->soc, state->turn_signal,
-         state->door_lock ? "locked" : "unlocked",
-         state->seatbelt_warning ? "WARN" : "OK",
-         state->high_beam ? "ON" : "OFF",
-         state->engine_coolant_temp, state->coolant_warning ? "YES" : "NO",
-         state->battery_warning ? "LOW" : "OK");
+  // printf("Parsed: seq=%" PRIu64 " time=%" PRIu64 " speed=%d km/h"
+  //        " rpm=%d"
+  //        " gear=%c(%d)"
+  //        " soc=%d%%"
+  //        " turnSignal=%d"
+  //        " doorLock=%s"
+  //        " beltWarn=%s"
+  //        " highBeam=%s"
+  //        " coolantTemp=%.1fC(warn=%s)"
+  //        " batteryWarn=%s\n",
+  //        state->sequence, state->timestamp_ms, state->speed_kph, state->rpm,
+  //        gear_char, state->gear, state->soc, state->turn_signal,
+  //        state->door_lock ? "locked" : "unlocked",
+  //        state->seatbelt_warning ? "WARN" : "OK",
+  //        state->high_beam ? "ON" : "OFF",
+  //        state->engine_coolant_temp, state->coolant_warning ? "YES" : "NO",
+  //        state->battery_warning ? "LOW" : "OK");
 
   fflush(stdout);
 }
-

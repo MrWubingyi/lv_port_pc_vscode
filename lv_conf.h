@@ -68,7 +68,9 @@
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
     /** Size of memory available for `lv_malloc()` in bytes (>= 2kB) */
-    #define LV_MEM_SIZE (1024 * 1024)
+    #ifndef LV_MEM_SIZE
+        #define LV_MEM_SIZE (1024 * 1024)
+    #endif
 
     /** Size of the memory expand for `lv_malloc()` in bytes */
     #define LV_MEM_POOL_EXPAND_SIZE 0
@@ -506,11 +508,21 @@
 
 /* Enable assertion failures if an operation fails or invalid data is found.
  * If LV_USE_LOG is enabled, an error message will be printed on failure. */
-#define LV_USE_ASSERT_NULL          1   /**< Check if the parameter is NULL. (Very fast, recommended) */
-#define LV_USE_ASSERT_MALLOC        1   /**< Checks is the memory is successfully allocated or no. (Very fast, recommended) */
-#define LV_USE_ASSERT_STYLE         1
-#define LV_USE_ASSERT_MEM_INTEGRITY 1
-#define LV_USE_ASSERT_OBJ           1
+#ifndef LV_USE_ASSERT_NULL
+    #define LV_USE_ASSERT_NULL          1   /**< Check if the parameter is NULL. (Very fast, recommended) */
+#endif
+#ifndef LV_USE_ASSERT_MALLOC
+    #define LV_USE_ASSERT_MALLOC        1   /**< Checks is the memory is successfully allocated or no. (Very fast, recommended) */
+#endif
+#ifndef LV_USE_ASSERT_STYLE
+    #define LV_USE_ASSERT_STYLE         1
+#endif
+#ifndef LV_USE_ASSERT_MEM_INTEGRITY
+    #define LV_USE_ASSERT_MEM_INTEGRITY 1
+#endif
+#ifndef LV_USE_ASSERT_OBJ
+    #define LV_USE_ASSERT_OBJ           1
+#endif
 
 /** Add a custom handler when assert happens e.g. to restart MCU. */
 #define LV_ASSERT_HANDLER_INCLUDE <stdint.h>
@@ -590,7 +602,9 @@
  *  If size is not set to 0, the decoder will fail to decode when the cache is full.
  *  If size is 0, the cache function is not enabled and the decoded memory will be
  *  released immediately after use. */
-#define LV_CACHE_DEF_SIZE       0
+#ifndef LV_CACHE_DEF_SIZE
+    #define LV_CACHE_DEF_SIZE   0
+#endif
 
 /** Default number of image header cache entries. The cache is used to store the headers of images
  *  The main logic is like `LV_CACHE_DEF_SIZE` but for image headers. */

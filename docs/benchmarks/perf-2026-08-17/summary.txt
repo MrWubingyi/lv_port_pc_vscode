@@ -1,0 +1,127 @@
+Dashboard image perf comparison
+Recorded at: 2026-08-17T10:30:26+08:00
+perf stat duration: 120 seconds per mode
+perf record duration: 30 seconds per mode
+Events: task-clock,context-switches,cpu-migrations,page-faults,cycles:u,instructions:u,branches:u,branch-misses:u,cache-references:u,cache-misses:u
+
+[c_array counters]
+# started on Mon Aug 17 10:30:26 2026
+
+12467.28;msec;task-clock;12467281710;100.00;0.104;CPUs utilized
+73495;;context-switches;12467281710;100.00;5.895;K/sec
+871;;cpu-migrations;12467281710;100.00;69.863;/sec
+13809;;page-faults;12467281710;100.00;1.108;K/sec
+<not supported>;;cycles:u;0;100.00;;
+<not supported>;;instructions:u;0;100.00;;
+<not supported>;;branches:u;0;100.00;;
+<not supported>;;branch-misses:u;0;100.00;;
+<not supported>;;cache-references:u;0;100.00;;
+<not supported>;;cache-misses:u;0;100.00;;
+
+[c_array hottest self-time symbols]
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 280  of event 'task-clock:ppp'
+# Event count (approx.): 2828282800
+#
+# Overhead  Command     Shared Object          Symbol                                  
+# ........  ..........  .....................  ........................................
+#
+     4.64%  main        [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               |          
+               |--3.57%--try_to_wake_up
+               |          wake_up_q
+               |          futex_wake
+               |          do_futex
+               |          __x64_sys_futex
+               |          x64_sys_call
+               |          do_syscall_64
+               |          entry_SYSCALL_64_after_hwframe
+               |          pthread_cond_signal@@GLIBC_2.3.2
+               |          
+                --0.71%--__wake_up_sync_key
+                          sock_def_readable
+                          tcp_data_ready
+
+     3.21%  llvmpipe-7  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               try_to_wake_up
+               wake_up_q
+               futex_wake
+               do_futex
+               __x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               pthread_barrier_wait@@GLIBC_2.34
+
+     3.21%  main        swrast_dri.so          [.] 0x00000000000cf172
+            |
+            ---0x73ebf2acf172
+
+[png counters]
+# started on Mon Aug 17 10:32:59 2026
+
+13177.87;msec;task-clock;13177873126;100.00;0.110;CPUs utilized
+73783;;context-switches;13177873126;100.00;5.599;K/sec
+935;;cpu-migrations;13177873126;100.00;70.952;/sec
+16373;;page-faults;13177873126;100.00;1.242;K/sec
+<not supported>;;cycles:u;0;100.00;;
+<not supported>;;instructions:u;0;100.00;;
+<not supported>;;branches:u;0;100.00;;
+<not supported>;;branch-misses:u;0;100.00;;
+<not supported>;;cache-references:u;0;100.00;;
+<not supported>;;cache-misses:u;0;100.00;;
+
+[png hottest self-time symbols]
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 299  of event 'task-clock:ppp'
+# Event count (approx.): 3020201990
+#
+# Overhead  Command     Shared Object         Symbol                                                                                        
+# ........  ..........  ....................  ..............................................................................................
+#
+     4.01%  main        [kernel.kallsyms]     [k] clear_page_erms
+            |
+            ---clear_page_erms
+               get_page_from_freelist
+               __alloc_pages
+               alloc_pages_mpol
+               |          
+                --3.68%--alloc_pages
+                          skb_page_frag_refill
+                          sk_page_frag_refill
+                          tcp_sendmsg_locked
+                          tcp_sendmsg
+                          inet_sendmsg
+                          sock_write_iter
+                          do_iter_readv_writev
+                          vfs_writev
+                          do_writev
+                          __x64_sys_writev
+                          x64_sys_call
+                          do_syscall_64
+                          entry_SYSCALL_64_after_hwframe
+                          __GI___writev
+                          |          
+                           --3.34%--0x100007ffd
+
+     3.34%  main        [kernel.kallsyms]     [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               |          
+                --2.68%--try_to_wake_up
+                          wake_up_q
+                          futex_wake
+                          do_futex
+                          __x64_sys_futex

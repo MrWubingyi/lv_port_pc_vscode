@@ -3,6 +3,7 @@
 #include "images.h"
 #include "actions.h"
 #include "vars.h"
+#include "ui_image_runtime.h"
 
 #include <string.h>
 
@@ -22,6 +23,7 @@ void loadScreen(enum ScreensEnum screenId) {
 }
 
 void ui_init() {
+    ui_image_runtime_init();
     create_screens();
     loadScreen(SCREEN_ID_MAIN);
 

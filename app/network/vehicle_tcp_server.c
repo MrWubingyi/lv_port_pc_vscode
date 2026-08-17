@@ -1,6 +1,9 @@
 #include "vehicle_tcp_server.h"
 #include "vehicle_state.h"
 #include "vehicle_data.h"
+#include "ui/ui_image_runtime.h"
+
+#include <cjson/cJSON.h>
 
 #include <pthread.h>
 #include <stdatomic.h>
@@ -40,11 +43,105 @@ static void signal_handler(int signal_number) {
   }
 }
 
-static void process_vehicle_frame(const char *frame) {
+static bool send_json(int socket_fd, cJSON *json) {
+  char *text = cJSON_PrintUnformatted(json);
+  if (text == NULL) return false;
+  size_t length = strlen(text);
+  size_t sent_total = 0;
+  bool ok = true;
+  while (sent_total < length + 1) {
+    const char newline = '\n';
+    const void *data = sent_total < length ? (const void *)(text + sent_total)
+                                           : (const void *)&newline;
+    size_t remaining = sent_total < length ? length - sent_total : 1;
+    ssize_t sent = send(socket_fd, data, remaining, MSG_NOSIGNAL);
+    if (sent <= 0) {
+      if (errno == EINTR) continue;
+      ok = false;
+      break;
+    }
+    sent_total += (size_t)sent;
+  }
+  cJSON_free(text);
+  return ok;
+}
+
+static void send_error(int socket_fd, const char *type, const char *message) {
+  cJSON *response = cJSON_CreateObject();
+  cJSON_AddStringToObject(response, "type", type);
+  cJSON_AddBoolToObject(response, "ok", false);
+  cJSON_AddStringToObject(response, "error", message);
+  send_json(socket_fd, response);
+  cJSON_Delete(response);
+}
+
+static void process_image_set(int socket_fd, const cJSON *root) {
+  const cJSON *name = cJSON_GetObjectItemCaseSensitive(root, "name");
+  const cJSON *path = cJSON_GetObjectItemCaseSensitive(root, "path");
+  if (!cJSON_IsString(name) || !cJSON_IsString(path)) {
+    send_error(socket_fd, "image.set.result", "name and path must be strings");
+    return;
+  }
+  char normalized[UI_IMAGE_RUNTIME_PATH_MAX];
+  char error[256];
+  if (!ui_image_runtime_request_change(name->valuestring, path->valuestring,
+                                       normalized, sizeof(normalized), error,
+                                       sizeof(error))) {
+    send_error(socket_fd, "image.set.result", error);
+    return;
+  }
+  cJSON *response = cJSON_CreateObject();
+  cJSON_AddStringToObject(response, "type", "image.set.result");
+  cJSON_AddBoolToObject(response, "ok", true);
+  cJSON_AddStringToObject(response, "status", "queued");
+  cJSON_AddStringToObject(response, "name", name->valuestring);
+  cJSON_AddStringToObject(response, "path", normalized);
+  send_json(socket_fd, response);
+  cJSON_Delete(response);
+}
+
+static void process_image_list(int socket_fd) {
+  cJSON *response = cJSON_CreateObject();
+  cJSON *array = cJSON_AddArrayToObject(response, "images");
+  cJSON_AddStringToObject(response, "type", "image.list.result");
+  cJSON_AddBoolToObject(response, "ok", true);
+  for (size_t i = 0; i < ui_image_runtime_count(); ++i) {
+    ui_image_runtime_info_t info;
+    if (!ui_image_runtime_get(i, &info)) continue;
+    cJSON *item = cJSON_CreateObject();
+    cJSON_AddStringToObject(item, "name", info.name);
+    if (info.path[0] != '\0') cJSON_AddStringToObject(item, "path", info.path);
+    else cJSON_AddNullToObject(item, "path");
+    if (info.pending_path[0] != '\0')
+      cJSON_AddStringToObject(item, "pendingPath", info.pending_path);
+    if (info.last_error[0] != '\0')
+      cJSON_AddStringToObject(item, "lastError", info.last_error);
+    cJSON_AddItemToArray(array, item);
+  }
+  send_json(socket_fd, response);
+  cJSON_Delete(response);
+}
+
+static void process_vehicle_frame(int socket_fd, const char *frame) {
+  cJSON *root = cJSON_Parse(frame);
+  if (root != NULL) {
+    const cJSON *type = cJSON_GetObjectItemCaseSensitive(root, "type");
+    if (cJSON_IsString(type) && strcmp(type->valuestring, "image.set") == 0) {
+      process_image_set(socket_fd, root);
+      cJSON_Delete(root);
+      return;
+    }
+    if (cJSON_IsString(type) && strcmp(type->valuestring, "image.list") == 0) {
+      process_image_list(socket_fd);
+      cJSON_Delete(root);
+      return;
+    }
+    cJSON_Delete(root);
+  }
   vehicle_state_t state;
 
   if (!vehicle_state_parse_json(frame, &state)) {
-    fprintf(stderr, "Discarded frame: %s\n", frame);
+    // fprintf(stderr, "Discarded frame: %s\n", frame);
     return;
   }
   vehicle_data_update_from_tcp(target_vehicle_data, &state);
@@ -83,7 +180,7 @@ static void receive_client_data(int socket_fd, const char *client_ip, uint16_t c
         line_buffer[line_length] = '\0';
 
         if (line_length > 0) {
-          process_vehicle_frame(line_buffer);
+          process_vehicle_frame(socket_fd, line_buffer);
         }
 
         line_length = 0;

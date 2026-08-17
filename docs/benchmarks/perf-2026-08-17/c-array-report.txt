@@ -1,0 +1,328 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 280  of event 'task-clock:ppp'
+# Event count (approx.): 2828282800
+#
+# Overhead  Command     Shared Object          Symbol                                  
+# ........  ..........  .....................  ........................................
+#
+     4.64%  main        [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               |          
+               |--3.57%--try_to_wake_up
+               |          wake_up_q
+               |          futex_wake
+               |          do_futex
+               |          __x64_sys_futex
+               |          x64_sys_call
+               |          do_syscall_64
+               |          entry_SYSCALL_64_after_hwframe
+               |          pthread_cond_signal@@GLIBC_2.3.2
+               |          
+                --0.71%--__wake_up_sync_key
+                          sock_def_readable
+                          tcp_data_ready
+
+     3.21%  llvmpipe-7  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               try_to_wake_up
+               wake_up_q
+               futex_wake
+               do_futex
+               __x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               pthread_barrier_wait@@GLIBC_2.34
+
+     3.21%  main        swrast_dri.so          [.] 0x00000000000cf172
+            |
+            ---0x73ebf2acf172
+
+     2.14%  main        [kernel.kallsyms]      [k] clear_page_erms
+            |
+            ---clear_page_erms
+               get_page_from_freelist
+               __alloc_pages
+               alloc_pages_mpol
+               alloc_pages
+               skb_page_frag_refill
+               sk_page_frag_refill
+               tcp_sendmsg_locked
+               tcp_sendmsg
+               inet_sendmsg
+               sock_write_iter
+               do_iter_readv_writev
+               vfs_writev
+               do_writev
+               __x64_sys_writev
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               __GI___writev
+               |          
+                --1.79%--0x100007fff
+
+     1.79%  main        main                   [.] lv_draw_sw_blend_color_to_rgb888
+            |
+            ---lv_draw_sw_blend_color_to_rgb888
+               lv_draw_sw_blend
+               |          
+               |--0.71%--lv_draw_sw_line
+               |          dispatch
+               |          lv_draw_dispatch_layer
+               |          lv_draw_finalize_task_creation
+               |          lv_draw_line
+               |          lv_line_event
+               |          lv_obj_event_base
+               |          lv_obj_send_event
+               |          lv_obj_redraw
+               |          lv_obj_refr.part.0
+               |          lv_obj_redraw
+               |          lv_obj_refr.part.0
+               |          lv_obj_redraw
+               |          lv_obj_refr.part.0
+               |          refr_configured_layer
+               |          refr_area
+               |          lv_display_refr_timer
+               |          lv_timer_handler.part.0
+               |          main
+               |          __libc_start_call_main
+               |          
+                --0.71%--lv_draw_sw_fill
+                          dispatch
+                          lv_draw_dispatch_layer
+                          lv_draw_finalize_task_creation
+                          lv_draw_rect
+                          lv_obj_draw
+                          lv_obj_event_base
+                          lv_obj_send_event
+                          lv_obj_redraw
+                          lv_obj_refr.part.0
+                          refr_configured_layer
+                          refr_area
+                          lv_display_refr_timer
+                          lv_timer_handler.part.0
+                          main
+                          __libc_start_call_main
+
+     1.79%  main        main                   [.] lv_draw_sw_blend_image_to_rgb888
+            |
+            ---lv_draw_sw_blend_image_to_rgb888
+               lv_draw_sw_blend
+               img_draw_core
+               img_decode_and_draw
+               lv_draw_image_normal_helper
+               dispatch
+               lv_draw_dispatch_layer
+               lv_draw_finalize_task_creation
+               lv_draw_image
+               lv_image_event
+               lv_obj_event_base
+               lv_obj_send_event
+               lv_obj_redraw
+               lv_obj_refr.part.0
+               lv_obj_redraw
+               lv_obj_refr.part.0
+               refr_configured_layer
+               refr_area
+               lv_display_refr_timer
+               lv_timer_handler.part.0
+               main
+               __libc_start_call_main
+
+     1.43%  llvmpipe-2  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+               0x73ebf3116d33
+               0x73ebf31169f4
+
+     1.43%  llvmpipe-7  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+               |          
+                --1.07%--0x73ebf31192a8
+                          0x73ebf305f021
+
+     1.07%  llvmpipe-0  [JIT] tid 16021        [.] 0x000073ebf65ab3e9
+            |
+            ---0x73ebf65ab3e9
+               |          
+                --0.71%--0x73ebf3116d33
+                          0x73ebf31169f4
+
+     1.07%  llvmpipe-0  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+               |          
+                --0.71%--0x73ebf3116d33
+                          0x73ebf31169f4
+
+     1.07%  llvmpipe-2  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               try_to_wake_up
+               wake_up_q
+               futex_wake
+               do_futex
+               __x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               pthread_barrier_wait@@GLIBC_2.34
+
+     1.07%  llvmpipe-3  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+               0x73ebf3116d33
+               0x73ebf31169f4
+
+     1.07%  llvmpipe-6  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               try_to_wake_up
+               wake_up_q
+               futex_wake
+               do_futex
+               __x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               pthread_barrier_wait@@GLIBC_2.34
+
+     0.71%  llvmpipe-0  [JIT] tid 16021        [.] 0x000073ebf65eb357
+            |
+            ---0x73ebf65eb357
+               0x73ebf3116d33
+               0x73ebf31169f4
+
+     0.71%  llvmpipe-0  swrast_dri.so          [.] 0x000000000065f132
+            |
+            ---0x73ebf305f132
+
+     0.71%  llvmpipe-1  [JIT] tid 16021        [.] 0x000073ebf65ab3e9
+            |
+            ---0x73ebf65ab3e9
+
+     0.71%  llvmpipe-1  [JIT] tid 16021        [.] 0x000073ebf65ab456
+            |
+            ---0x73ebf65ab456
+
+     0.71%  llvmpipe-1  [JIT] tid 16021        [.] 0x000073ebf65ab8c6
+            |
+            ---0x73ebf65ab8c6
+
+     0.71%  llvmpipe-1  [kernel.kallsyms]      [k] __x64_sys_futex
+            |
+            ---__x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               __GI___futex_abstimed_wait_cancelable64
+
+     0.71%  llvmpipe-1  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               try_to_wake_up
+               wake_up_q
+               futex_wake
+               do_futex
+               __x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               pthread_barrier_wait@@GLIBC_2.34
+
+     0.71%  llvmpipe-2  swrast_dri.so          [.] 0x000000000065f132
+            |
+            ---0x73ebf305f132
+
+     0.71%  llvmpipe-3  [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
+            |
+            ---_raw_spin_unlock_irqrestore
+               try_to_wake_up
+               wake_up_q
+               futex_wake
+               do_futex
+               __x64_sys_futex
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+
+     0.71%  llvmpipe-4  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+
+     0.71%  llvmpipe-5  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+               0x73ebf3116d33
+               0x73ebf31169f4
+
+     0.71%  llvmpipe-6  [JIT] tid 16021        [.] 0x000073ebf65ab3e9
+            |
+            ---0x73ebf65ab3e9
+
+     0.71%  llvmpipe-6  [JIT] tid 16021        [.] 0x000073ebf65eb3e9
+            |
+            ---0x73ebf65eb3e9
+
+     0.71%  llvmpipe-7  [JIT] tid 16021        [.] 0x000073ebf65eb689
+            |
+            ---0x73ebf65eb689
+
+     0.71%  main        [kernel.kallsyms]      [k] _copy_from_iter
+            |
+            ---_copy_from_iter
+               skb_do_copy_data_nocache
+               tcp_sendmsg_locked
+               tcp_sendmsg
+               inet_sendmsg
+               sock_write_iter
+               do_iter_readv_writev
+               vfs_writev
+               do_writev
+               __x64_sys_writev
+               x64_sys_call
+               do_syscall_64
+               entry_SYSCALL_64_after_hwframe
+               __GI___writev
+
+     0.71%  main        [kernel.kallsyms]      [k] handle_softirqs
+            |
+            ---handle_softirqs
+               __irq_exit_rcu
+               irq_exit_rcu
+               common_interrupt
+               asm_common_interrupt
+
+     0.71%  main        libc.so.6              [.] __memset_avx2_unaligned_erms
+            |
+            ---__memset_avx2_unaligned_erms
+
+     0.71%  main        main                   [.] lv_obj_get_child_count
+            |
+            ---lv_obj_get_child_count
+
+     0.71%  main        main                   [.] lv_obj_send_event
+            |
+            ---lv_obj_send_event
+
+     0.71%  main        swrast_dri.so          [.] 0x00000000000cf182
+            |
+            ---0x73ebf2acf182
+
+     0.71%  main        swrast_dri.so          [.] 0x00000000000cf185
+            |
+            ---0x73ebf2acf185
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

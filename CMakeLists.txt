@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.12.4)
 project(lvgl C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_BUILD_TYPE Debug)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
 # Set the correct FreeRTOS port for your system (e.g., Posix for WSL)
 set(FREERTOS_PORT GCC_POSIX CACHE STRING "Port for FreeRTOS on Posix environment")
 
@@ -51,6 +53,13 @@ option(LV_USE_LIBPNG "Use libpng to decode PNG" OFF)
 option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" OFF)
 option(LV_USE_FFMPEG "Use libffmpeg to display video using lv_ffmpeg" OFF)
 option(LV_USE_FREETYPE "Use freetype library" OFF)
+option(UI_USE_PNG_ASSETS "Load generated UI images from assets/*.png at runtime" OFF)
+option(LVGL_ENABLE_ASSERTS "Enable LVGL runtime assertions" ON)
+option(UI_PERF_PROFILING "Build with symbols and frame pointers for perf" OFF)
+set(UI_PNG_CACHE_SIZE 2097152 CACHE STRING
+    "Decoded PNG cache size in bytes (0 decodes on every draw and minimizes RAM)")
+set(UI_PNG_MEMORY_POOL_SIZE 8388608 CACHE STRING
+    "LVGL built-in memory pool size in PNG mode; lodepng needs decode scratch space")
 
 # Set C and C++ standards
 set(CMAKE_C_STANDARD 99)
@@ -73,6 +82,23 @@ add_compile_definitions($<$<BOOL:${LV_USE_FFMPEG}>:LV_USE_FFMPEG=1>)
 # Add LVGL subdirectory
 add_subdirectory(lvgl)
 
+if(NOT LVGL_ENABLE_ASSERTS)
+    target_compile_definitions(lvgl PUBLIC
+        LV_USE_ASSERT_NULL=0
+        LV_USE_ASSERT_MALLOC=0
+        LV_USE_ASSERT_STYLE=0
+        LV_USE_ASSERT_MEM_INTEGRITY=0
+        LV_USE_ASSERT_OBJ=0
+    )
+endif()
+
+if(UI_USE_PNG_ASSETS)
+    target_compile_definitions(lvgl PRIVATE
+        LV_CACHE_DEF_SIZE=${UI_PNG_CACHE_SIZE}
+        LV_MEM_SIZE=${UI_PNG_MEMORY_POOL_SIZE}
+    )
+endif()
+
 target_include_directories(lvgl
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
@@ -88,6 +114,12 @@ file(GLOB APP_SOURSE
     "${PROJECT_SOURCE_DIR}/app/model/*.c"
     "${PROJECT_SOURCE_DIR}/app/network/*.c"
 )
+
+if(UI_USE_PNG_ASSETS)
+    list(FILTER APP_SOURSE EXCLUDE REGEX "/ui/ui_image_.*\\.c$")
+    # Runtime manager shares the generated-file prefix but must remain linked.
+    list(APPEND APP_SOURSE "${PROJECT_SOURCE_DIR}/app/ui/ui_image_runtime.c")
+endif()
 
 set(APP_LIBS
    cjson)
@@ -183,12 +215,23 @@ endif()
 
 add_executable(main ${MAIN_SOURCES})
 
+if(UI_PERF_PROFILING)
+    target_compile_options(lvgl PRIVATE -g -fno-omit-frame-pointer)
+    target_compile_options(main PRIVATE -g -fno-omit-frame-pointer)
+    target_link_options(main PRIVATE -rdynamic)
+endif()
+
 target_include_directories(main PRIVATE
     ${SDL2_INCLUDE_DIRS}
     ${APP_INCLUDEIDR}
 )
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
+target_compile_definitions(main PRIVATE
+    UI_USE_PNG_ASSETS=$<BOOL:${UI_USE_PNG_ASSETS}>
+    UI_ASSET_ROOT="A:${PROJECT_SOURCE_DIR}/assets"
+    UI_ASSET_FS_ROOT="${PROJECT_SOURCE_DIR}/assets"
+)
 target_link_libraries(main ${MAIN_LIBS} ${APP_LIBS})
 
 # On Windows, GUI applications do not show a console by default,

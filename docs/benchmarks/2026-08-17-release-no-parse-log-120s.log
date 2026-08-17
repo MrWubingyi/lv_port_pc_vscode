@@ -1,0 +1,29 @@
+Command: ./tools/measure_image_runtime.sh /tmp/dashboard-image-benchmark 120
+Scenario: Release build, per-message Parsed logging disabled, TCP connection timed out after 3 seconds.
+
+[c_array]
+User time (seconds): 11.64
+System time (seconds): 2.63
+Percent of CPU this job got: 11%
+Elapsed (wall clock) time: 2:00.05
+Maximum resident set size (kbytes): 116352
+Major page faults: 0
+Minor page faults: 15172
+LVGL warning timestamp before server listen: 0.301 seconds
+Exit reason: timeout after 120 seconds (status 124)
+
+[png]
+User time (seconds): 11.85
+System time (seconds): 2.80
+Percent of CPU this job got: 12%
+Elapsed (wall clock) time: 2:00.02
+Maximum resident set size (kbytes): 118784
+Major page faults: 0
+Minor page faults: 15047
+LVGL warning timestamp before server listen: 0.380 seconds
+Exit reason: timeout after 120 seconds (status 124)
+
+Notes:
+- Both runs emitted LVGL warnings that memory-integrity, object-sanity and style-sanity assertions were enabled.
+- This is an optimized Release build, but not a test with all LVGL debug assertions disabled.
+- The TCP client connected in both runs, sent no sustained data, timed out after 3 seconds, and disconnected.

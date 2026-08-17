@@ -1,6 +1,7 @@
 #include "debug_panel.h"
 #include "ui/images.h"
 #include "hal/hal.h"
+#include "ui/ui_image_runtime.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -110,7 +111,7 @@ debug_panel_t *debug_panel_create(void)
         "Seat belt", "Handbrake", "Brake warning", "Engine warning",
         "Coolant warning", "High beam", "Low beam"
     };
-    static const lv_img_dsc_t *icon_sources[] = {
+    static const void *icon_sources[] = {
         &img_icon_seat_belt_16, &img_icon_brake_warning_16,
         &img_icon_brake_warning_16, &img_icon_check_engine_16,
         &img_icon_coolant_16, &img_icon_high_beam_16, &img_icon_high_beam_16
@@ -125,7 +126,7 @@ debug_panel_t *debug_panel_create(void)
                                              i + 1);
         panel->values[i] = lv_obj_get_child(value_button, 0);
         panel->icons[i] = lv_image_create(value_button);
-        lv_image_set_src(panel->icons[i], icon_sources[i]);
+        ui_image_runtime_bind(panel->icons[i], icon_sources[i]);
         lv_obj_set_pos(panel->icons[i], 9, 8);
         lv_obj_set_pos(panel->values[i], 30, 7);
     }
