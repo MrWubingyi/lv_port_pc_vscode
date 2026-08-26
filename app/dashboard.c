@@ -90,12 +90,22 @@ static void vehicle_refresh_timer_cb(lv_timer_t *timer) {
     return;
   }
 
-  dashboard_set_speed(state.speed_kph);
+  if (state.validity == VEHICLE_VALIDITY_INVALID_SPEED) {
+    dashboard_set_speed(0);
+  } else {
+    dashboard_set_speed(state.speed_kph);
+  }
   static const char gear_chars[] = {'P', 'R', 'N', 'D'};
   char gear_char = (state.gear >= 0 && state.gear <= 3) ? gear_chars[state.gear] : '-';
   dashboard_set_gear(gear_char);
 
-  dashboard_set_status(status_icon, dashboard_status_normal);
+  if (state.warning == VEHICLE_WARNING_CRITICAL) {
+    dashboard_set_status(status_icon, dashboard_status_error);
+  } else if (state.warning == VEHICLE_WARNING_GENERAL || state.validity != VEHICLE_VALIDITY_VALID) {
+    dashboard_set_status(status_icon, dashboard_status_warning);
+  } else {
+    dashboard_set_status(status_icon, dashboard_status_normal);
+  }
 }
 
 static void dashboard_styles_init(void) {

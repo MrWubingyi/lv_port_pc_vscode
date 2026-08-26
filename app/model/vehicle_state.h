@@ -4,6 +4,42 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/* Protocol Enums defined in PROTOCOL.md */
+typedef enum {
+    VEHICLE_GEAR_P = 0,
+    VEHICLE_GEAR_R = 1,
+    VEHICLE_GEAR_N = 2,
+    VEHICLE_GEAR_D = 3
+} vehicle_gear_t;
+
+typedef enum {
+    VEHICLE_TURN_SIGNAL_NONE   = 0,
+    VEHICLE_TURN_SIGNAL_LEFT   = 1,
+    VEHICLE_TURN_SIGNAL_RIGHT  = 2,
+    VEHICLE_TURN_SIGNAL_HAZARD = 3
+} vehicle_turn_signal_t;
+
+typedef enum {
+    VEHICLE_WARNING_NONE     = 0,
+    VEHICLE_WARNING_GENERAL  = 1,
+    VEHICLE_WARNING_CRITICAL = 2
+} vehicle_warning_t;
+
+typedef enum {
+    VEHICLE_VALIDITY_VALID         = 0,
+    VEHICLE_VALIDITY_INVALID_SPEED = 1,
+    VEHICLE_VALIDITY_INCOMPLETE    = 2,
+    VEHICLE_VALIDITY_STALE         = 3
+} vehicle_validity_t;
+
+typedef enum {
+    VEHICLE_DATA_STATUS_NORMAL                 = 0,
+    VEHICLE_DATA_STATUS_INVALID                = 1,
+    VEHICLE_DATA_STATUS_NO_DATA                = 2,
+    VEHICLE_DATA_STATUS_SOURCE_DISCONNECTED    = 3,
+    VEHICLE_DATA_STATUS_TRANSPORT_DISCONNECTED = 4
+} vehicle_data_status_t;
+
 typedef struct {
     int version;
     uint64_t sequence;

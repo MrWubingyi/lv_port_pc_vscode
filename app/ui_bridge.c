@@ -117,16 +117,35 @@ static void update_clock(void) {
     }
 }
 
-static void set_connection_state(bool connected) {
+static void set_connection_state(bool connected, const vehicle_state_t *state) {
     const char *title = "Waiting for vehicle";
     uint32_t color = 0xFF9F43;
-    if (connected) {
-        title = "Vehicle online";
-        color = 0x59D6EA;
+    if (connected && state != NULL) {
+        if (state->warning == VEHICLE_WARNING_CRITICAL) {
+            title = "CRITICAL FAULT";
+            color = 0xFF315A;
+        } else if (state->warning == VEHICLE_WARNING_GENERAL) {
+            title = "Vehicle warning";
+            color = 0xFFA500;
+        } else if (state->validity == VEHICLE_VALIDITY_INVALID_SPEED) {
+            title = "Speed invalid";
+            color = 0xFFA500;
+        } else if (state->validity == VEHICLE_VALIDITY_INCOMPLETE) {
+            title = "Data incomplete";
+            color = 0xFFA500;
+        } else if (state->validity == VEHICLE_VALIDITY_STALE) {
+            title = "Data stale";
+            color = 0xFFA500;
+        } else {
+            title = "Vehicle online";
+            color = 0x59D6EA;
+        }
     }
-    lv_label_set_text(objects.lbl_status_title, title);
-    lv_obj_set_style_text_color(
-        objects.lbl_status_title, lv_color_hex(color), LV_PART_MAIN);
+    if (objects.lbl_status_title != NULL) {
+        lv_label_set_text(objects.lbl_status_title, title);
+        lv_obj_set_style_text_color(
+            objects.lbl_status_title, lv_color_hex(color), LV_PART_MAIN);
+    }
 }
 
 static void update_active_lines(int speed, int rpm) {
@@ -166,7 +185,7 @@ static void refresh_cb(lv_timer_t *timer) {
     (void)last_receive_ms;
 
     update_clock();
-    set_connection_state(valid);
+    set_connection_state(valid, valid ? &state : NULL);
     debug_panel_update(dashboard_debug_panel, &state, valid);
     update_warning_icons();
     update_menu_navigation();
@@ -204,7 +223,7 @@ static void refresh_cb(lv_timer_t *timer) {
         return;
     }
 
-    int speed = state.speed_kph < 0 ? 0 : state.speed_kph;
+    int speed = state.speed_kph < 0 ? 0 : (state.speed_kph > 200 ? 200 : state.speed_kph);
     int soc = state.soc < 0 ? 0 : (state.soc > 100 ? 100 : state.soc);
     int load_max = state.load_max_tenths > 0 ? state.load_max_tenths : 1;
     int load_percent = state.load_tenths * 100 / load_max;
@@ -214,7 +233,11 @@ static void refresh_cb(lv_timer_t *timer) {
     static const char gear_chars[] = {'P', 'R', 'N', 'D'};
     char gear_str[2] = {(state.gear >= 0 && state.gear <= 3) ? gear_chars[state.gear] : '-', '\0'};
 
-    lv_label_set_text_fmt(objects.lbl_speed, "%d", speed);
+    if (state.validity == VEHICLE_VALIDITY_INVALID_SPEED) {
+        lv_label_set_text(objects.lbl_speed, "--");
+    } else {
+        lv_label_set_text_fmt(objects.lbl_speed, "%d", speed);
+    }
     lv_label_set_text(objects.lbl_gear, gear_str);
     lv_bar_set_value(objects.bar_fuel, soc, LV_ANIM_ON);
     lv_label_set_text_fmt(objects.lbl_range, "%d km", state.range_km);
@@ -229,7 +252,7 @@ static void refresh_cb(lv_timer_t *timer) {
     lv_label_set_text_fmt(objects.lbl_trip_distance, "T1 %d.%d km",
                           state.trip_tenths / 10, state.trip_tenths % 10);
 
-    /* Seat belt warning logic */
+    /* Warning 0: Seat belt warning */
     if (warning_icons[0] != NULL) {
         bool belt_warn = debug_panel_get_warning(dashboard_debug_panel, 0) || state.seatbelt_warning;
         lv_obj_set_style_opa(warning_icons[0],
@@ -243,22 +266,55 @@ static void refresh_cb(lv_timer_t *timer) {
         }
     }
 
-    /* High beam light indicator logic */
-    if (warning_icons[5] != NULL) {
-        lv_obj_set_style_opa(warning_icons[5],
-                             state.high_beam ? LV_OPA_COVER : LV_OPA_20,
+    /* Warning 1: Parking brake */
+    if (warning_icons[1] != NULL) {
+        bool park_brake = debug_panel_get_warning(dashboard_debug_panel, 1) || state.parking_brake || state.handbrake;
+        lv_obj_set_style_opa(warning_icons[1],
+                             park_brake ? LV_OPA_COVER : LV_OPA_20,
                              LV_PART_MAIN);
-        if (state.high_beam) {
-            lv_obj_set_style_image_recolor_opa(warning_icons[5], LV_OPA_COVER, LV_PART_MAIN);
-            lv_obj_set_style_image_recolor(warning_icons[5], lv_color_hex(0x2094FA), LV_PART_MAIN);
+        if (park_brake) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[1], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[1], lv_color_hex(0xFF3B30), LV_PART_MAIN);
         } else {
-            lv_obj_set_style_image_recolor_opa(warning_icons[5], LV_OPA_TRANSP, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor_opa(warning_icons[1], LV_OPA_TRANSP, LV_PART_MAIN);
         }
     }
 
-    /* Coolant / Engine temp warning logic */
+    /* Warning 2: Brake system warning */
+    if (warning_icons[2] != NULL) {
+        bool brake_warn = debug_panel_get_warning(dashboard_debug_panel, 2) || state.braking_warning;
+        lv_obj_set_style_opa(warning_icons[2],
+                             brake_warn ? LV_OPA_COVER : LV_OPA_20,
+                             LV_PART_MAIN);
+        if (brake_warn) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[2], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[2], lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(warning_icons[2], LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
+    /* Warning 3: Check engine / critical warning */
+    if (warning_icons[3] != NULL) {
+        bool eng_warn = debug_panel_get_warning(dashboard_debug_panel, 3) ||
+                        state.engine_warning || (state.warning >= VEHICLE_WARNING_GENERAL);
+        lv_obj_set_style_opa(warning_icons[3],
+                             eng_warn ? LV_OPA_COVER : LV_OPA_20,
+                             LV_PART_MAIN);
+        if (eng_warn) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[3], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[3],
+                                           state.warning == VEHICLE_WARNING_CRITICAL ? lv_color_hex(0xFF3B30) : lv_color_hex(0xFF9500),
+                                           LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(warning_icons[3], LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
+    /* Warning 4: Coolant / Engine temp warning */
     if (warning_icons[4] != NULL) {
-        bool coolant_warn = state.coolant_warning || (state.engine_coolant_temp > 105.0);
+        bool coolant_warn = debug_panel_get_warning(dashboard_debug_panel, 4) ||
+                            state.coolant_warning || (state.engine_coolant_temp > 105.0);
         lv_obj_set_style_opa(warning_icons[4],
                              coolant_warn ? LV_OPA_COVER : LV_OPA_20,
                              LV_PART_MAIN);
@@ -270,14 +326,28 @@ static void refresh_cb(lv_timer_t *timer) {
         }
     }
 
+    /* Warning 5: High beam indicator */
+    if (warning_icons[5] != NULL) {
+        bool high_beam = debug_panel_get_warning(dashboard_debug_panel, 5) || state.high_beam;
+        lv_obj_set_style_opa(warning_icons[5],
+                             high_beam ? LV_OPA_COVER : LV_OPA_20,
+                             LV_PART_MAIN);
+        if (high_beam) {
+            lv_obj_set_style_image_recolor_opa(warning_icons[5], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[5], lv_color_hex(0x2094FA), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_image_recolor_opa(warning_icons[5], LV_OPA_TRANSP, LV_PART_MAIN);
+        }
+    }
+
     /* EV Battery / SOC warning logic (SOC <= 15%) */
-    bool bat_low = state.battery_warning || (soc <= 15);
+    bool bat_low = state.battery_warning || (soc <= 15) || (state.ev_battery_level <= 15.0);
     if (objects.bar_fuel != NULL) {
         uint32_t fuel_color = bat_low ? 0xFF3B30 : 0x59D6EA;
         lv_obj_set_style_bg_color(objects.bar_fuel, lv_color_hex(fuel_color), LV_PART_INDICATOR);
     }
     if (objects.img_fuel != NULL) {
-        lv_obj_set_style_opa(objects.img_fuel, bat_low ? LV_OPA_COVER : LV_OPA_COVER, LV_PART_MAIN);
+        lv_obj_set_style_opa(objects.img_fuel, LV_OPA_COVER, LV_PART_MAIN);
         if (bat_low) {
             lv_obj_set_style_image_recolor_opa(objects.img_fuel, LV_OPA_COVER, LV_PART_MAIN);
             lv_obj_set_style_image_recolor(objects.img_fuel, lv_color_hex(0xFF3B30), LV_PART_MAIN);
@@ -297,8 +367,10 @@ static void refresh_cb(lv_timer_t *timer) {
     static uint32_t turn_blink_count = 0;
     turn_blink_count++;
     bool blink_on = (turn_blink_count / 5) % 2 == 0;
-    bool left_active = (state.turn_signal == 1 || state.turn_signal == 3);
-    bool right_active = (state.turn_signal == 2 || state.turn_signal == 3);
+    bool left_active = (state.turn_signal == VEHICLE_TURN_SIGNAL_LEFT ||
+                        state.turn_signal == VEHICLE_TURN_SIGNAL_HAZARD);
+    bool right_active = (state.turn_signal == VEHICLE_TURN_SIGNAL_RIGHT ||
+                         state.turn_signal == VEHICLE_TURN_SIGNAL_HAZARD);
 
     if (objects.turn_left != NULL) {
         uint8_t left_opa = (left_active && blink_on) ? LV_OPA_COVER : LV_OPA_20;
@@ -316,7 +388,7 @@ static void refresh_cb(lv_timer_t *timer) {
 void ui_bridge_init(vehicle_data_t *vehicle_data) {
     dashboard_vehicle_data = vehicle_data;
     update_clock();
-    set_connection_state(false);
+    set_connection_state(false, NULL);
     create_scale_ticks();
     warning_icons[0] = lv_obj_get_child(objects.panel_left_warning, 0);
     warning_icons[1] = lv_obj_get_child(objects.panel_left_warning, 1);

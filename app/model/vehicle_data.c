@@ -1,9 +1,12 @@
 #include "vehicle_data.h"
 
+#include <inttypes.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#define VEHICLE_TIMEOUT_MS 3000U
 
 struct vehicle_data {
     pthread_mutex_t mutex;
@@ -11,6 +14,8 @@ struct vehicle_data {
     vehicle_state_t uart_values;
     vehicle_data_fields_t uart_fields;
     uint64_t last_tcp_receive_ms;
+    uint64_t last_seq;
+    bool seq_initialized;
     bool tcp_valid;
 };
 
@@ -30,7 +35,7 @@ vehicle_data_t *vehicle_data_create(void)
         free(data);
         return NULL;
     }
-    data->tcp_state.gear = 0;
+    data->tcp_state.gear = VEHICLE_GEAR_P;
     data->tcp_state.door_lock = true;
     return data;
 }
@@ -47,6 +52,38 @@ void vehicle_data_update_from_tcp(vehicle_data_t *data,
 {
     if(data == NULL || state == NULL) return;
     pthread_mutex_lock(&data->mutex);
+
+    /* Check dataStatus: If explicit disconnect or no data reported, invalidate state */
+    if(state->data_status == VEHICLE_DATA_STATUS_SOURCE_DISCONNECTED ||
+       state->data_status == VEHICLE_DATA_STATUS_TRANSPORT_DISCONNECTED ||
+       state->data_status == VEHICLE_DATA_STATUS_NO_DATA) {
+        if(data->tcp_valid) {
+            data->tcp_valid = false;
+            printf("[VehicleData] Data status reported offline (status=%d)\n", state->data_status);
+            fflush(stdout);
+        }
+        pthread_mutex_unlock(&data->mutex);
+        return;
+    }
+
+    /* Monotonic sequence number check & packet loss detection */
+    if(data->seq_initialized) {
+        if(state->sequence < data->last_seq) {
+            printf("[VehicleData] Warning: Sequence decreased from %" PRIu64 " to %" PRIu64 " (reordered packet or reset)\n",
+                   data->last_seq, state->sequence);
+        } else if(state->sequence > data->last_seq + 1) {
+            printf("[VehicleData] Warning: Sequence gap detected: missed %" PRIu64 " packets (expected %" PRIu64 ", got %" PRIu64 ")\n",
+                   state->sequence - data->last_seq - 1, data->last_seq + 1, state->sequence);
+        }
+    }
+
+    if(!data->tcp_valid) {
+        printf("[VehicleData] Stream active, vehicle online (seq=%" PRIu64 ")\n", state->sequence);
+        fflush(stdout);
+    }
+
+    data->last_seq = state->sequence;
+    data->seq_initialized = true;
     data->tcp_state = *state;
     data->last_tcp_receive_ms = monotonic_time_ms();
     data->tcp_valid = true;
@@ -88,17 +125,16 @@ void vehicle_data_clear_uart_override(vehicle_data_t *data,
     pthread_mutex_unlock(&data->mutex);
 }
 
-#define VEHICLE_TIMEOUT_MS 3000U
-
 void vehicle_data_set_tcp_disconnected(vehicle_data_t *data)
 {
     if(data == NULL) return;
     pthread_mutex_lock(&data->mutex);
     if(data->tcp_valid) {
         data->tcp_valid = false;
-        printf("[VehicleData] TCP disconnected, state invalidated\n");
+        printf("[VehicleData] TCP disconnected, vehicle state offline\n");
         fflush(stdout);
     }
+    data->seq_initialized = false;
     pthread_mutex_unlock(&data->mutex);
 }
 
@@ -114,7 +150,7 @@ bool vehicle_data_get_snapshot(vehicle_data_t *data, vehicle_state_t *state,
         uint64_t now_ms = monotonic_time_ms();
         if(now_ms - data->last_tcp_receive_ms > VEHICLE_TIMEOUT_MS) {
             data->tcp_valid = false;
-            printf("[VehicleData] TCP receive timeout (> %u ms), state invalidated\n", VEHICLE_TIMEOUT_MS);
+            printf("[VehicleData] Watchdog: TCP receive timeout (> %u ms), vehicle state offline\n", VEHICLE_TIMEOUT_MS);
             fflush(stdout);
         }
     }
