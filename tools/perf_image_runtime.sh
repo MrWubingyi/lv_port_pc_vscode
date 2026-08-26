@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-project_dir=$(cd "$(dirname "$0")/.." && pwd)
 benchmark_dir=${1:-/tmp/dashboard-image-benchmark}
 stat_duration=${2:-120}
 record_duration=${3:-30}
@@ -34,10 +33,10 @@ fi
 mkdir -p "$benchmark_dir/perf"
 summary="$benchmark_dir/perf/summary.txt"
 {
-    printf 'Dashboard image perf comparison\n'
+    printf 'Dashboard C-array stability and performance baseline\n'
     printf 'Recorded at: %s\n' "$(date --iso-8601=seconds)"
-    printf 'perf stat duration: %s seconds per mode\n' "$stat_duration"
-    printf 'perf record duration: %s seconds per mode\n' "$record_duration"
+    printf 'perf stat duration: %s seconds\n' "$stat_duration"
+    printf 'perf record duration: %s seconds\n' "$record_duration"
     printf 'Events: %s\n' "$events"
 } > "$summary"
 
@@ -55,12 +54,12 @@ run_timed() {
     fi
 }
 
-for mode in c_array png; do
+for mode in c_array; do
     executable="$benchmark_dir/$mode/main"
     mode_dir="$benchmark_dir/perf/$mode"
     if [[ ! -x $executable ]]; then
-        printf 'Missing %s. Run %s/tools/benchmark_png_resources.sh first.\n' \
-            "$executable" "$project_dir" >&2
+        printf 'Missing C-array executable: %s. Build the C-array benchmark first.\n' \
+            "$executable" >&2
         exit 2
     fi
     mkdir -p "$mode_dir"
@@ -94,4 +93,3 @@ printf '\nResults written to %s/perf\n' "$benchmark_dir"
 printf 'Summary: %s\n' "$summary"
 printf 'Interactive inspection examples:\n'
 printf '  perf report -i %s/perf/c_array/perf.data\n' "$benchmark_dir"
-printf '  perf report -i %s/perf/png/perf.data\n' "$benchmark_dir"
