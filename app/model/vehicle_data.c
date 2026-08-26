@@ -138,6 +138,19 @@ void vehicle_data_set_tcp_disconnected(vehicle_data_t *data)
     pthread_mutex_unlock(&data->mutex);
 }
 
+void vehicle_data_report_invalid_frame(vehicle_data_t *data)
+{
+    if(data == NULL) return;
+    pthread_mutex_lock(&data->mutex);
+    data->tcp_state.data_status = VEHICLE_DATA_STATUS_INVALID;
+    data->tcp_state.validity = VEHICLE_VALIDITY_INVALID_SPEED;
+    data->last_tcp_receive_ms = monotonic_time_ms();
+    data->tcp_valid = true;
+    printf("[VehicleData] Invalid/corrupted frame reported, state marked invalid\n");
+    fflush(stdout);
+    pthread_mutex_unlock(&data->mutex);
+}
+
 #define APPLY_OVERRIDE(field_mask, member) \
     do { if((fields & (field_mask)) != 0U) state->member = uart.member; } while(0)
 

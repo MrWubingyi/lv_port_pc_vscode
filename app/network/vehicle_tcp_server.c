@@ -141,7 +141,8 @@ static void process_vehicle_frame(int socket_fd, const char *frame) {
   vehicle_state_t state;
 
   if (!vehicle_state_parse_json(frame, &state)) {
-    // fprintf(stderr, "Discarded frame: %s\n", frame);
+    /* Corrupted or unparseable frame: report invalid so UI does not show stale data */
+    vehicle_data_report_invalid_frame(target_vehicle_data);
     return;
   }
   vehicle_data_update_from_tcp(target_vehicle_data, &state);

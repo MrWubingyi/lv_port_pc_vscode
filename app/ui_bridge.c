@@ -121,14 +121,18 @@ static void set_connection_state(bool connected, const vehicle_state_t *state) {
     const char *title = "Waiting for vehicle";
     uint32_t color = 0xFF9F43;
     if (connected && state != NULL) {
-        if (state->warning == VEHICLE_WARNING_CRITICAL) {
+        if (state->data_status == VEHICLE_DATA_STATUS_INVALID) {
+            title = "Data invalid";
+            color = 0xFF315A;
+        } else if (state->validity == VEHICLE_VALIDITY_INVALID_SPEED ||
+                   state->speed_kph < 0 || state->speed_kph > 200) {
+            title = "Speed invalid";
+            color = 0xFF315A;
+        } else if (state->warning == VEHICLE_WARNING_CRITICAL) {
             title = "CRITICAL FAULT";
             color = 0xFF315A;
         } else if (state->warning == VEHICLE_WARNING_GENERAL) {
             title = "Vehicle warning";
-            color = 0xFFA500;
-        } else if (state->validity == VEHICLE_VALIDITY_INVALID_SPEED) {
-            title = "Speed invalid";
             color = 0xFFA500;
         } else if (state->validity == VEHICLE_VALIDITY_INCOMPLETE) {
             title = "Data incomplete";
@@ -223,6 +227,50 @@ static void refresh_cb(lv_timer_t *timer) {
         return;
     }
 
+    /* Check if frame reports invalid data status (非法数据) */
+    if (state.data_status == VEHICLE_DATA_STATUS_INVALID) {
+        /* 非法数据UI：不继续显示上一帧有效值，立即展示非法/错误状态 */
+        if (objects.lbl_speed != NULL) {
+            lv_label_set_text(objects.lbl_speed, "--");
+        }
+        if (objects.lbl_gear != NULL) {
+            lv_label_set_text(objects.lbl_gear, "-");
+        }
+        if (objects.bar_fuel != NULL) {
+            lv_bar_set_value(objects.bar_fuel, 0, LV_ANIM_OFF);
+            lv_obj_set_style_bg_color(objects.bar_fuel, lv_color_hex(0xFF3B30), LV_PART_INDICATOR);
+        }
+        if (objects.img_fuel != NULL) {
+            lv_obj_set_style_opa(objects.img_fuel, LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor_opa(objects.img_fuel, LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(objects.img_fuel, lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        }
+        if (objects.lbl_range != NULL) lv_label_set_text(objects.lbl_range, "-- km");
+        if (objects.lbl_load_current != NULL) lv_label_set_text(objects.lbl_load_current, "--");
+        if (objects.lbl_load_max != NULL) lv_label_set_text(objects.lbl_load_max, "--");
+        if (objects.bar_load != NULL) lv_bar_set_value(objects.bar_load, 0, LV_ANIM_OFF);
+        if (objects.lbl_outside_temperature != NULL) lv_label_set_text(objects.lbl_outside_temperature, "-- °C");
+        if (objects.lbl_trip_distance != NULL) lv_label_set_text(objects.lbl_trip_distance, "T1 -- km");
+
+        if (warning_icons[3] != NULL) {
+            lv_obj_set_style_opa(warning_icons[3], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor_opa(warning_icons[3], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[3], lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        }
+        if (warning_icons[2] != NULL) {
+            lv_obj_set_style_opa(warning_icons[2], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor_opa(warning_icons[2], LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_image_recolor(warning_icons[2], lv_color_hex(0xFF3B30), LV_PART_MAIN);
+        }
+
+        update_active_lines(0, 0);
+        update_scale_ticks(0, 0);
+        return;
+    }
+
+    bool speed_illegal = (state.validity == VEHICLE_VALIDITY_INVALID_SPEED ||
+                          state.speed_kph < 0 || state.speed_kph > 200);
+
     int speed = state.speed_kph < 0 ? 0 : (state.speed_kph > 200 ? 200 : state.speed_kph);
     int soc = state.soc < 0 ? 0 : (state.soc > 100 ? 100 : state.soc);
     int load_max = state.load_max_tenths > 0 ? state.load_max_tenths : 1;
@@ -233,7 +281,7 @@ static void refresh_cb(lv_timer_t *timer) {
     static const char gear_chars[] = {'P', 'R', 'N', 'D'};
     char gear_str[2] = {(state.gear >= 0 && state.gear <= 3) ? gear_chars[state.gear] : '-', '\0'};
 
-    if (state.validity == VEHICLE_VALIDITY_INVALID_SPEED) {
+    if (speed_illegal) {
         lv_label_set_text(objects.lbl_speed, "--");
     } else {
         lv_label_set_text_fmt(objects.lbl_speed, "%d", speed);

@@ -41,5 +41,6 @@ void vehicle_data_clear_uart_override(vehicle_data_t *data,
 bool vehicle_data_get_snapshot(vehicle_data_t *data, vehicle_state_t *state,
                                uint64_t *last_tcp_receive_ms);
 void vehicle_data_set_tcp_disconnected(vehicle_data_t *data);
+void vehicle_data_report_invalid_frame(vehicle_data_t *data);
 
 #endif

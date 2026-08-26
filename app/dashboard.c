@@ -90,8 +90,17 @@ static void vehicle_refresh_timer_cb(lv_timer_t *timer) {
     return;
   }
 
-  if (state.validity == VEHICLE_VALIDITY_INVALID_SPEED) {
+  if (state.data_status == VEHICLE_DATA_STATUS_INVALID) {
     dashboard_set_speed(0);
+    lv_label_set_text(speed_label, "--");
+    dashboard_set_gear('-');
+    dashboard_set_status(status_icon, dashboard_status_error);
+    return;
+  }
+
+  if (state.validity == VEHICLE_VALIDITY_INVALID_SPEED || state.speed_kph < 0 || state.speed_kph > 200) {
+    dashboard_set_speed(0);
+    lv_label_set_text(speed_label, "--");
   } else {
     dashboard_set_speed(state.speed_kph);
   }
